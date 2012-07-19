@@ -1,0 +1,69 @@
+__TOC__
+
+==O raporcie==
+* Generowany automatycznie
+* Źródło danych: <b>poland.osm.pbf  18-Jul-2012 06:20 152M</b>
+* Relacje dla dróg krajowych są wyszukiwane po tagu "name" wg wzorca "%krajowa%" z uwagi na brak spójnego nazewnictwa i używania "ref"
+
+Uwagi, problemy, życzenia - pisz: http://forum.openstreetmap.org/viewtopic.php?id=17439
+
+==Autostrady i drogi ekspresowe==
+{| class="wikitable" border="1" cellspacing="0" cellpadding="4"
+|- style="background-color:#E9E9E9"
+! Nazwa
+! Relacja
+! Status
+|-
+<% @report.each do |row| %>
+<% is_ok = ! row['id'].nil? %>
+<% if ! is_ok %>
+|-style="background:salmon"
+<% elsif ! row['cont_ok'] %>
+|-style="background:PaleGoldenrod"
+<% end %>
+| {{PL-<%= row['ref'].gsub('S', 'S|').gsub('A', 'A|') %>}}
+| {{Relation|<%= row['id'] %>}}
+|
+<% if ! row['id'] %>
+brak relacji
+<% else %>
+<% if ! row['cont_ok'] %>
+brak spójności relacji (liczba składowych: <%= row["cont_comp"] %>)
+<% end %>
+<% end %>
+|-
+<% end %>
+|}
+
+<% if @krajowe_numery %>
+
+==Drogi krajowe==
+{| class="wikitable" border="1" cellspacing="0" cellpadding="4"
+|- style="background-color:#E9E9E9"
+! Nazwa
+! Relacja
+! Status
+|-
+<% @krajowe_numery.each do |nr| %>
+<% row = @krajowe.fetch(nr, {}) %>
+<% ref = row['ref']%>
+<% is_ok = ! row['id'].nil? %>
+<% if ! is_ok %>
+|-style="background:salmon"
+<% elsif ! row['cont_ok'] %>
+|-style="background:PaleGoldenrod"
+<% end %>
+| DK<%= nr %>
+| {{Relation|<%= row['id'] %>}}
+|
+<% if ! row['id'] %>
+brak relacji
+<% else %>
+<% if ! row['cont_ok'] %>
+brak spójności relacji (liczba składowych: <%= row["cont_comp"] %>)
+<% end %>
+<% end %>
+|-
+<% end %>
+|}
+<% end %>
