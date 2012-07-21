@@ -1,5 +1,17 @@
 <% if ! status.road.relation %>
-brak relacji
+* <small>no relation</small>
 <% elsif ! status.connected %>
-brak ciągłości relacji
+* <small>relation disconnected (<%= status.components %>)</small>
+<% end %>
+
+<% if status.road.relation %>
+* <small>ways in relation: <%= status.road.relation_ways.size %></small>
+* <small>ways with {{tag|lanes}}: <%= status.road.percent_with_lanes %>%</small>
+* <small>ways with {{tag|maxspeed}}: <%= status.road.percent_with_maxspeed %>%</small>
+<% end %>
+
+* <small>ways with ref: <%= status.road.ways.size %></small>
+
+<% if status.road.relation and ! status.road.has_proper_network %>
+* <small>relation has wrong {{tag|network}} value (is <tt><%= status.road.get_network %></tt>, should be <tt><%= status.road.get_proper_network %></tt>)
 <% end %>

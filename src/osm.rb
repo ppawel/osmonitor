@@ -1,27 +1,54 @@
 require "./wiki"
 
+$relation_networks = { "A" => "pl:motorways", "S" => "pl:national", "DK" => "pl:national", "DW" => "pl:regional" }
+
+def get_relation_network(prefix)
+  return $relation_networks[prefix]
+end
+
 class Road
-  attr_accessor :ref
+  attr_accessor :ref_prefix
+  attr_accessor :ref_number
   attr_accessor :relation
   attr_accessor :row
+  attr_accessor :relation_ways
+  attr_accessor :ways
 
-  def initialize(road_ref, row)
-    self.ref = road_ref
+  def initialize(ref_prefix, ref_number, row)
+    self.ref_prefix = ref_prefix
+    self.ref_number = ref_number
     self.row = row
+    self.relation_ways = []
+    self.ways = []
   end
 
-  def get_type
-    return ref.scan(/^([^\d]+)/i)[0][0]
+  def get_network
+    return (relation and relation["tags"]["network"])
   end
 
-  def get_number
-    return ref.scan(/(\d+)$/i)[0][0]
+  def get_proper_network
+    return get_relation_network(ref_prefix)
+  end
+
+  def has_proper_network
+    return get_network == get_proper_network 
+  end
+
+  def percent_with_lanes
+    return if not relation_ways or relation_ways.empty?
+    return ((relation_ways.select { |way| way['tags'].has_key?('lanes') }.size / relation_ways.size.to_f) * 100).to_i
+  end
+
+  def percent_with_maxspeed
+    return if not relation_ways or relation_ways.empty?
+    return ((relation_ways.select { |way| way['tags'].has_key?('maxspeed') }.size / relation_ways.size.to_f) * 100).to_i
   end
 end
 
 class RoadStatus
   attr_accessor :road
   attr_accessor :connected
+  attr_accessor :components
 
   def initialize(road)
     self.road = road

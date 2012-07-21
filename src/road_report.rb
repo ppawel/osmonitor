@@ -44,13 +44,10 @@ def tables_to_roads(page)
     end
 
     table.rows.each do |row|
-      road_ref = nil
-
       m = row.row_text.scan(/PL\-(\w+)\|(\d+)/)
 
       if $1 and $2
-        road_ref = $1 + $2
-        roads << Road.new(road_ref, row)
+        roads << Road.new($1, $2, row)
       end
     end
   end
@@ -68,7 +65,7 @@ WHERE
   r.tags -> 'type' = 'route' AND
   r.tags -> 'route' = 'road' AND
   (not r.tags ? 'network' or r.tags -> 'network' != 'BAB') AND
-  (r.tags -> 'ref' ilike '#{road.ref}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref}')
+  (r.tags -> 'ref' ilike '#{road.ref_prefix + road.ref_number}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref_prefix + road.ref_number}')
     EOF
 
   sql["S"]=<<-EOF
@@ -78,7 +75,7 @@ WHERE
   r.tags -> 'type' = 'route' AND
   r.tags -> 'route' = 'road' AND
   (not r.tags ? 'network' or r.tags -> 'network' != 'BAB') AND
-  (r.tags -> 'ref' ilike '#{road.ref}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref}')
+  (r.tags -> 'ref' ilike '#{road.ref_prefix + road.ref_number}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref_prefix + road.ref_number}')
     EOF
 
   sql["DK"]=<<-EOF
@@ -87,8 +84,8 @@ FROM relations r
 WHERE
   r.tags -> 'type' = 'route' AND
   r.tags -> 'route' = 'road' AND
-  ((r.tags -> 'ref' ilike '#{road.ref}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref}') OR
-    (r.tags -> 'ref' = '#{road.get_number}'))
+  ((r.tags -> 'ref' ilike '#{road.ref_prefix + road.ref_number}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref_prefix + road.ref_number}') OR
+    (r.tags -> 'ref' = '#{road.ref_number}'))
     EOF
 
   sql["DW"]=<<-EOF
@@ -97,13 +94,13 @@ FROM relations r
 WHERE
   r.tags -> 'type' = 'route' AND
   r.tags -> 'route' = 'road' AND
-  ((r.tags -> 'ref' ilike '#{road.ref}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref}') OR
-    (r.tags -> 'ref' = '#{road.get_number}'))
+  ((r.tags -> 'ref' ilike '#{road.ref_prefix + road.ref_number}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref_prefix + road.ref_number}') OR
+    (r.tags -> 'ref' = '#{road.ref_number}'))
     EOF
 
-  result = @conn.query(sql[road.get_type])
+  result = @conn.query(sql[road.ref_prefix]).collect { |row| process_tags(row) }
 
-  return result.ntuples() > 0 ? result[0] : nil
+  return result.size > 0 ? result[0] : nil
 end
 
 def prepare_page(page)
@@ -148,28 +145,36 @@ def fill_road_status(status)
 end
 
 def run_report
-wiki_login
   page = get_wiki_page(@input_page)
   page_text = page.page_text.dup
 
   prepare_page(page)
 
   roads = tables_to_roads(page)
-  
+
   @log.debug "Got #{roads.size} road(s)"
 
   roads.each_with_index do |road, i|
+    status = RoadStatus.new(road)
     road.relation = get_road_relation(road)
 
-    @log.debug("Processing road #{road.ref} (#{i + 1} of #{roads.size})")
+    @log.debug("Processing road #{road.ref_prefix + road.ref_number} (#{i + 1} of #{roads.size})")
+
+    before = Time.now
+    fill_ways(road, @conn)
+    @log.debug("fill_ways took #{Time.now - before}")
 
     if road.relation
-      status = RoadStatus.new(road)
+      before = Time.now
+      fill_relation_ways(road, @conn)
+      @log.debug("fill_relation_ways took #{Time.now - before}")
+
       components, visited = road_connected(road, @conn)
-      @log.debug("components = #{components}")
+
+      @log.debug("components = #{components}, has_proper_network = #{road.has_proper_network}, % = #{road.percent_with_lanes}")
+
       status.connected = components == 1
-    else
-      status = RoadStatus.new(road)
+      status.components = components
     end
 
     fill_road_status(status)
@@ -212,13 +217,39 @@ INNER JOIN relation_members rm ON (rm.member_id = way_id AND rm.relation_id = #{
     end
   end
 
-  @log.debug "query took #{Time.now - before}"
+  @log.debug "road_connected: query took #{Time.now - before}"
 
   before = Time.now
   *a = bfs(@nodes)
   @log.debug "bfs took #{Time.now - before} (#{@nodes.size})"
 
   return a
+end
+
+def fill_relation_ways(road, conn)
+  return false if ! road.relation
+
+  @nodes = {}
+  before = Time.now
+
+  road.relation_ways = conn.query("
+SELECT distinct w.*
+FROM relation_members rm
+INNER JOIN ways w ON (w.id = rm.member_id)
+WHERE rm.relation_id = #{road.relation['id']}").collect { |row| process_tags(row) }
+end
+
+def fill_ways(road, conn)
+  return false if ! road.relation
+
+  @nodes = {}
+  before = Time.now
+
+  road.ways = conn.query("
+SELECT distinct w.*
+FROM ways w
+WHERE tags -> 'ref' = '#{road.ref_number}'
+      ").collect { |row| process_tags(row) }
 end
 
 def bfs(nodes, start_node = nil)
@@ -272,6 +303,11 @@ def bfs(nodes, start_node = nil)
   end
 
   return i, visited
+end
+
+def process_tags(row)
+  row['tags'] = eval("{#{row['tags']}}")
+  return row
 end
 
 def get_wiki_page(name)
