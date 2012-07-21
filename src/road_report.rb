@@ -2,7 +2,10 @@
 
 require 'net/http'
 require 'erb'
+require 'media_wiki'
 require 'pg'
+
+require './config'
 require './osm'
 require './pg_db'
 require './elogger'
@@ -20,6 +23,8 @@ TABLE_HEADER_MARKER = "<!-- OSMonitor HEADER -->"
 TABLE_CELL_MARKER = "<!-- OSMonitor REPORT -->"
 ERROR_COLOR = "Salmon"
 WARNING_COLOR = "PaleGoldenrod"
+
+@mw = MediaWiki::Gateway.new('https://wiki.openstreetmap.org/w/api.php')
 
 #@log = EnhancedLogger.new("osmonitor.log")
 @log = EnhancedLogger.new(STDOUT)
@@ -143,6 +148,7 @@ def fill_road_status(status)
 end
 
 def run_report
+wiki_login
   page = get_wiki_page(@input_page)
   page_text = page.page_text.dup
 
@@ -169,7 +175,8 @@ def run_report
     fill_road_status(status)
   end
 
-  puts page.page_text
+  wiki_login
+  edit_wiki_page(@output_page, page.page_text)
 end
 
 def road_connected(road, conn)
@@ -265,6 +272,18 @@ def bfs(nodes, start_node = nil)
   end
 
   return i, visited
+end
+
+def get_wiki_page(name)
+  return WikiPage.new(@mw.get name)
+end
+
+def edit_wiki_page(name, body)
+  @mw.create(name, body, :overwrite => true, :summary => 'Automated')
+end
+
+def wiki_login
+  @mw.login(@config['wiki_username'], @config['wiki_password'])
 end
 
 run_report

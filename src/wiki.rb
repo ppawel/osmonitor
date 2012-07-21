@@ -1,5 +1,3 @@
-require 'media_wiki'
-
 class WikiPage
   attr_accessor :page_text
   attr_accessor :tables
@@ -132,9 +130,4 @@ class WikiTableCell
     self.row = row
     self.cell_text = cell_text
   end
-end
-
-def get_wiki_page(name)
-  mw = MediaWiki::Gateway.new('https://wiki.openstreetmap.org/w/api.php')
-  return WikiPage.new(mw.get name)
 end
