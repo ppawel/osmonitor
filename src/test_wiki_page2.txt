@@ -1,0 +1,149 @@
+{| class="wikitable" border="1" cellspacing="0" cellpadding="4"
+|- style="background-color:#E9E9E9"
+! Numer
+! Relacja
+! Status
+! Opis
+! Uwagi
+! <!-- OSMonitor STATUS --> Bot report
+|-
+| {{PL-DK|90}}
+| {{Relation|1255621}}
+| {{progress|99}}
+| Mała Karczma - Opalenie - Korzeniewo - Mareza - Kwidzyn
+|
+|-
+| {{PL-DK|91}}
+| {{Relation|130522}}
+| {{progress|99}}
+| Gdańsk - Tczew - Węzeł "Nowe Marzy" (A1) - ... - Głuchów - Piotrków Trybunalski - Kamieńsk - Radomsko - Kłomice -
+Częstochowa
+| 
+|-
+| {{PL-DK|92}}
+| {{Relation|122709}}
+| {{progress|99}}
+| Miedzichowo - Lwówek - Pniewy - Poznań -  Swarzędz - Kostrzyn - Września - Słupca - Konin - Koło - Kłodawa -
+Krośniewice - Kutno - Łowicz 
+| 
+|-
+| {{PL-DK|93}}
+| {{Relation|111941}}
+| {{progress|99}}
+| granica państwa - Świnoujście (DK 3)
+| do sprawdzenia część z przeprawą promową
+|-
+| {{PL-DK|94}}
+| {{Relation|29371}}
+| {{progress|90}}
+|  Krzywa - Chojnów - Legnica - Środa Śląska - Wrocław - Brzeg - Opole - Pyskowice - Bytom - Siemianowice Śląskie -
+Sosnowiec - Dąbrowa Górnicza - Olkusz - Kraków 
+| Istnieje na odcinkach A4 - Brzeg oraz Opole - Kraków
+|}
+{| class="wikitable" border="1" cellspacing="0" cellpadding="4"
+|- style="background-color:#E9E9E9"
+! Numer
+! Relacja
+! Status
+! Opis
+! Uwagi
+! <!-- OSMonitor STATUS --> Bot report
+|-
+| {{PL-DK|90}}
+| {{Relation|1255621}}
+| {{progress|99}}
+| Mała Karczma - Opalenie - Korzeniewo - Mareza - Kwidzyn
+|
+|-
+| {{PL-DK|91}}
+| {{Relation|130522}}
+| {{progress|99}}
+| Gdańsk - Tczew - Węzeł "Nowe Marzy" (A1) - ... - Głuchów - Piotrków Trybunalski - Kamieńsk - Radomsko - Kłomice -
+Częstochowa
+| 
+|-
+| {{PL-DK|92}}
+| {{Relation|122709}}
+| {{progress|99}}
+| Miedzichowo - Lwówek - Pniewy - Poznań -  Swarzędz - Kostrzyn - Września - Słupca - Konin - Koło - Kłodawa -
+Krośniewice - Kutno - Łowicz 
+| 
+|-
+| {{PL-DK|93}}
+| {{Relation|111941}}
+| {{progress|99}}
+| granica państwa - Świnoujście (DK 3)
+| do sprawdzenia część z przeprawą promową
+|-
+| {{PL-DK|94}}
+| {{Relation|29371}}
+| {{progress|90}}
+|  Krzywa - Chojnów - Legnica - Środa Śląska - Wrocław - Brzeg - Opole - Pyskowice - Bytom - Siemianowice Śląskie -
+Sosnowiec - Dąbrowa Górnicza - Olkusz - Kraków 
+	
+| Istnieje na odcinkach A4 - Brzeg oraz Opole - Kraków
+|}
+
+{| class="wikitable" border="1" cellspacing="0" cellpadding="4"
+|- style="background-color:#E9E9E9"
+! Numer
+! Relacja
+! Status
+! Opis
+! Uwagi
+! <!-- OSMonitor STATUS --> Bot report
+|-
+| {{PL-DK|80}}
+| {{Relation|122354}}
+| {{progress|90}}
+| Pawłówek - Bydgoszcz - Strzyżawa - Zławieś Wielka - Górsk - Toruń - Lubicz 
+| porażka w Bydgoszczy
+|-
+| {{PL-DK|81}}
+| {{Relation|418927}}
+| {{progress|100}}
+| Katowice - Mikołów - Żory - Skoczów
+|
+|-
+| {{PL-DK|82}}
+| {{Relation|943880}}
+| {{progress|99}}
+| Lublin - Łęczna - Głębokie - Włodawa
+|
+|-
+| {{PL-DK|83}}
+| {{Relation|286571}}
+| {{progress|99}}
+| Turek - Dobra - Warta - Sieradz
+|
+|-
+| {{PL-DK|84}}
+| {{Relation|1255598}}
+| {{progress|99}}
+| Sanok - Zagórz - Lesko - Olszanica - Ustrzyki Dolne - Krościenko
+| brak od Krościenka do granicy
+|-
+| {{PL-DK|85}}
+| {{Relation|1241596}}
+| {{progress|99}}
+| Nowy Dwór Mazowiecki (DK62) - Kazuń (S7)
+|
+|-
+| {{PL-DK|86}}
+| {{Relation|1255487}}
+| {{progress|99}}
+| Wojkowice Kościelne - Będzin - Sosnowiec - Katowice - Tychy
+|
+|-
+| {{PL-DK|87}}
+| {{Relation|1136806}}
+| {{progress|100}}
+| Nowy Sącz - Stary Sącz - Piwniczna - granica państwa (Słowacja)
+|
+|-
+| {{PL-DK|88}}
+| {{Relation|114606}}
+| {{progress|100}}
+| Strzelce Opolskie — Nogowczyce — (A4) — Gliwice – Bytom
+| Odcinek Gliwice-Bytom jest w większości narysowany jako dwujezdniowy, mimo, że w rzeczywistości to jedna jezdnia
+|}

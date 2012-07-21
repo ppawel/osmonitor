@@ -1,7 +1,9 @@
 #!/bin/sh
 
-ROOT_DIR=`dirname $0`/../../..
+ROOT_DIR=`dirname $0`/..
 AUTH_FILE=$ROOT_DIR/authFile
+
+cd $ROOT_DIR/sql
 
 psql -f pgsnapshot_schema_0.6.sql -U postgres osmdb
 psql -f pgsnapshot_schema_0.6_action.sql -U postgres osmdb

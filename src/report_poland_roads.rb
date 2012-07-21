@@ -3,78 +3,113 @@
 require 'net/http'
 require 'erb'
 require 'pg'
-require 'media_wiki'
 require './osm'
 require './pg_db'
+require './elogger'
+require './wiki'
 
-#mw = MediaWiki::Gateway.new('https://wiki.openstreetmap.org/w/api.php')
-#puts mw.get "User:Ppawel/RaportDrogi"
-#exit
+TABLE_HEADER_MARKER = "<!-- OSMonitor HEADER -->"
+TABLE_CELL_MARKER = "<!-- OSMonitor REPORT -->"
+
+#@log = EnhancedLogger.new("osmonitor.log")
+@log = EnhancedLogger.new(STDOUT)
+@log.level = Logger::DEBUG
+
+@conn = PGconn.open( :host => "localhost", :dbname => 'osmdb', :user => "postgres" )
+
+def tables_to_roads(page)
+  roads = []
+
+  page.tables.each do |table|
+    if ! table.table_text.include?("{{PL")
+      @log.debug "Table with no roads - next"
+      next
+    end
+
+    table.rows.each do |row|
+      road_ref = nil
+
+      m = row.row_text.scan(/PL\-(\w+)\|(\d+)/)
+
+      if $1 and $2
+        road_ref = $1 + $2
+        roads << Road.new(road_ref, row)
+      end
+    end
+  end
+
+  return roads
+end
+
+def get_road_relation(road)
+  sql = {}
+
+  sql["A"]=<<-EOF
+SELECT *
+FROM relations r
+WHERE
+  r.tags -> 'type' = 'route' AND
+  r.tags -> 'route' = 'road' AND
+  (not r.tags ? 'network' or r.tags -> 'network' != 'BAB') AND
+  (r.tags -> 'ref' ilike '#{road.ref}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref}')
+    EOF
+
+  sql["DK"]=<<-EOF
+SELECT *
+FROM relations r
+WHERE
+  r.tags -> 'type' = 'route' AND
+  r.tags -> 'route' = 'road' AND
+  ((r.tags -> 'ref' ilike '#{road.ref}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref}') OR
+    (r.tags -> 'name' ilike '%krajowa%' AND r.tags -> 'ref' = '#{road.get_number}'))
+    EOF
+
+  result = @conn.query(sql[road.get_type])
+
+  return result.ntuples() > 0 ? result[0] : nil
+end
+
+def prepare_page(page)
+  page.tables.each do |table|
+    next if table.table_text.include?(TABLE_HEADER_MARKER)
+    table.add_column_header(TABLE_HEADER_MARKER + "Bot report")
+    table.add_cell(TABLE_CELL_MARKER)
+  end
+end
 
 def run_report
-  @conn = PGconn.open( :host => "localhost", :dbname => 'osmdb', :user => "postgres" )
-#puts cont(297112, @conn)
-#return
-  sql=<<-EOF
-select *
-from ref_relations rr
-left join relations r on (
-  r.tags -> 'type' = rr.type and
-  r.tags -> 'route' = rr.route and
-  (not r.tags ? 'network' or r.tags -> 'network' != 'BAB') and
-  (r.tags -> 'ref' ilike rr.ref or replace(r.tags -> 'ref', ' ', '') ilike rr.ref))
-where module = 'poland_mainroads'
-order by rr.id
-    EOF
-
   @report = []
+  page = get_wiki_page("User:Ppawel/RaportTest")
+  page_text = page.page_text.dup
+
+  prepare_page(page)
+
+  roads = tables_to_roads(page)
   
-  @conn.query(sql).each do |row|
-    #puts row
-    if row['tags']
-      row['tags'] = eval("{" + row['tags'] + "}")
-    end
-    add_cont_to_row(row, @conn)
-    @report << row
-    #puts "#{row["name"]} #{row["cont_ok"]}"
-  end
+  @log.debug "Got #{roads.size} road(s)"
 
-  data = Net::HTTP.get(URI.parse('http://pl.wikipedia.org/wiki/Drogi_krajowe_w_Polsce'))
+  roads.each_with_index do |road, i|
+    road.relation = get_road_relation(road)
 
-  @krajowe_numery = data.to_s.scan(/Droga krajowa nr (\d+)/).uniq.map { |x| x[0].to_i }.sort
-
-  sql=<<-EOF
-select *
-from relations
-where
-  tags -> 'type' = 'route' and
-  tags -> 'route' = 'road' and
-  (tags -> 'name' ilike '%krajowa%')
-    EOF
-
-    @krajowe = {}
-    @conn.query(sql).each do |row|
-      row['tags'] = eval("{" + row['tags'] + "}")
-      if row['tags'].include?'name'
-        @krajowe[name_to_nr_krajowy(row['tags']['name'])] = row
-      end
-#      add_cont_to_row(row, @conn)
-      if row['tags'].include?'name'
-        puts "#{row["tags"]["name"]} #{row["cont_ok"]}"
-      end
+    @log.debug("Processing road #{road.ref} (#{i + 1} of #{roads.size})")
+    
+    if road.relation
+      status = RoadStatus.new(road)
+      components, visited = road_connected(road.relation["id"], @conn)
+    else
+      status = RoadStatus.new(road)
     end
 
-    template = ERB.new File.read("erb/poland_roads.erb")
-    puts template.result
+    @report << status
+
+    @log.debug "Status: #{status.inspect}"
   end
 
-  def add_cont_to_row(row, conn)
-    components, visited = cont(row["id"], @conn)
-    row["cont_ok"] = components == 1
-    row["cont_comp"] = components
-  end
+  template = ERB.new File.read("erb/poland_roads.erb")
+  puts template.result
+end
 
-  def cont(relation_id, conn)
+  def road_connected(relation_id, conn)
     return false if ! relation_id
 
     @nodes = {}

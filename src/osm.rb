@@ -1,3 +1,33 @@
+require "./wiki"
+
+class Road
+  attr_accessor :ref
+  attr_accessor :relation
+  attr_accessor :row
+
+  def initialize(road_ref, row)
+    self.ref = road_ref
+    self.row = row
+  end
+
+  def get_type
+    return ref.scan(/^([^\d]+)/i)[0][0]
+  end
+
+  def get_number
+    return ref.scan(/(\d+)$/i)[0][0]
+  end
+end
+
+class RoadStatus
+  attr_accessor :road
+  attr_accessor :connected
+
+  def initialize(road)
+    self.road = road
+  end
+end
+
 module OSM
 
   module Taggable
