@@ -8,6 +8,14 @@ require './pg_db'
 require './elogger'
 require './wiki'
 
+if ARGV.size < 2
+  puts "Usage: road_report.rb <input page> <output page>"
+  exit
+end
+
+@input_page = ARGV[0]
+@output_page = ARGV[1]
+
 TABLE_HEADER_MARKER = "<!-- OSMonitor HEADER -->"
 TABLE_CELL_MARKER = "<!-- OSMonitor REPORT -->"
 ERROR_COLOR = "Salmon"
@@ -75,7 +83,17 @@ WHERE
   r.tags -> 'type' = 'route' AND
   r.tags -> 'route' = 'road' AND
   ((r.tags -> 'ref' ilike '#{road.ref}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref}') OR
-    (r.tags -> 'name' ilike '%krajowa%' AND r.tags -> 'ref' = '#{road.get_number}'))
+    (r.tags -> 'ref' = '#{road.get_number}'))
+    EOF
+
+  sql["DW"]=<<-EOF
+SELECT *
+FROM relations r
+WHERE
+  r.tags -> 'type' = 'route' AND
+  r.tags -> 'route' = 'road' AND
+  ((r.tags -> 'ref' ilike '#{road.ref}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref}') OR
+    (r.tags -> 'ref' = '#{road.get_number}'))
     EOF
 
   result = @conn.query(sql[road.get_type])
@@ -125,7 +143,7 @@ def fill_road_status(status)
 end
 
 def run_report
-  page = get_wiki_page("User:Ppawel/RaportDrogiKrajowe")
+  page = get_wiki_page(@input_page)
   page_text = page.page_text.dup
 
   prepare_page(page)
