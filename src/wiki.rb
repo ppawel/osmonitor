@@ -94,6 +94,17 @@ class WikiTableRow
     self.row_text = new_row
   end
 
+  def set_background_color(color)
+    if row_text.include?("background-color")
+      new_row = row_text.gsub(/background-color:(#)?\w+/i, "background-color:#{color}")
+    else
+      new_row = "|- style=\"background-color:#{color}\""
+    end
+
+    table.update_row_text(self, new_row)
+    self.row_text = new_row
+  end
+
   private
   
   def parse_cells(row_text)

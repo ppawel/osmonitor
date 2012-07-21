@@ -55,4 +55,13 @@ class WikiTest < Test::Unit::TestCase
     assert_equal(1, page.page_text.scan(/def/m).size)
   end
 
+  def test_add_column_cell
+    page = WikiPage.new(File.read("test_wiki_page.txt"))
+    assert(page.page_text.include?("676767"))
+    assert(!page.page_text.include?("EFEFEF"))
+
+    page.tables[0].rows[0].set_background_color("yellow")
+    assert(!page.page_text.include?("676767"))
+    assert(page.page_text.include?(":yellow"))
+  end
 end
