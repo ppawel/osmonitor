@@ -68,6 +68,8 @@ class WikiTable
       rows << WikiTableRow.new(self, "|-" + row)
     end
 
+    rows[-1].row_text.gsub!(/\|\}$/, '')
+    
     return rows
   end
 end
@@ -84,23 +86,25 @@ class WikiTableRow
 
   def add_header_cell(body)
     new_row = row_text + "! " + body + "\n"
-    table.update_row_text(self, new_row)
-    self.row_text = new_row
+    update_text(new_row)
   end
 
   def add_cell(body)
     new_row = row_text + "| " + body + "\n"
-    table.update_row_text(self, new_row)
-    self.row_text = new_row
+    update_text(new_row)
   end
 
   def set_background_color(color)
     if row_text.include?("background-color")
       new_row = row_text.gsub(/background-color:(#)?\w+/i, "background-color:#{color}")
     else
-      new_row = "|- style=\"background-color:#{color}\""
+      new_row = row_text.gsub(/^\|\-/, "|- style=\"background-color:#{color}\"")
     end
 
+    update_text(new_row)
+  end
+
+  def update_text(new_row)
     table.update_row_text(self, new_row)
     self.row_text = new_row
   end

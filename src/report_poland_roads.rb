@@ -17,6 +17,8 @@ WARNING_COLOR = "PaleGoldenrod"
 @log = EnhancedLogger.new(STDOUT)
 @log.level = Logger::DEBUG
 
+@status_template = ERB.new File.read("erb/road_status.erb")
+
 @conn = PGconn.open( :host => "localhost", :dbname => 'osmdb', :user => "postgres" )
 
 def tables_to_roads(page)
@@ -56,6 +58,16 @@ WHERE
   (r.tags -> 'ref' ilike '#{road.ref}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref}')
     EOF
 
+  sql["S"]=<<-EOF
+SELECT *
+FROM relations r
+WHERE
+  r.tags -> 'type' = 'route' AND
+  r.tags -> 'route' = 'road' AND
+  (not r.tags ? 'network' or r.tags -> 'network' != 'BAB') AND
+  (r.tags -> 'ref' ilike '#{road.ref}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref}')
+    EOF
+
   sql["DK"]=<<-EOF
 SELECT *
 FROM relations r
@@ -79,7 +91,22 @@ def prepare_page(page)
   end
 end
 
+def generate_status_text(status)
+  text = @status_template.result(binding)
+  return text.gsub(/^\s*$/, '')
+end
+
+def insert_relation_id(status)
+  return if ! status.road.relation
+
+  new_row = status.road.row.row_text.dup
+  new_row.gsub!(/{{relation\|\d*}}/im, "{{relation\|#{status.road.relation['id']}}}")
+  status.road.row.update_text(new_row)
+end
+
 def fill_road_status(status)
+  return if ! status.road.row.row_text.include?(TABLE_CELL_MARKER)
+
   color = nil
 
   if ! status.road.relation
@@ -89,11 +116,16 @@ def fill_road_status(status)
   end
 
   status.road.row.set_background_color(color) if color
+
+  insert_relation_id(status)
+
+  new_row = status.road.row.row_text.dup
+  new_row.gsub!(/#{Regexp.escape(TABLE_CELL_MARKER)}.*/im, TABLE_CELL_MARKER + generate_status_text(status) + "\n")
+  status.road.row.update_text(new_row)
 end
 
 def run_report
-  @report = []
-  page = get_wiki_page("User:Ppawel/RaportTest")
+  page = get_wiki_page("User:Ppawel/RaportDrogiKrajowe")
   page_text = page.page_text.dup
 
   prepare_page(page)
@@ -117,36 +149,29 @@ def run_report
     end
 
     fill_road_status(status)
-
-    @report << status
-
-    #@log.debug "Status: #{status.inspect}"
   end
 
-  template = ERB.new File.read("erb/poland_roads.erb")
-  puts template.result
+  puts page.page_text
 end
 
-  def road_connected(road, conn)
-    return false if ! road.relation
+def road_connected(road, conn)
+  return false if ! road.relation
 
-    @nodes = {}
-    before = Time.now
+  @nodes = {}
+  before = Time.now
 
-    conn.transaction do |dbconn|
-      
-
-      dbconn.query("
+  conn.transaction do |dbconn|
+    dbconn.query("
 SELECT distinct wn.node_id AS id
 FROM relation_members rm
 INNER JOIN way_nodes wn ON (wn.way_id = rm.member_id AND rm.relation_id = #{road.relation['id']})
 --INNER JOIN nodes n ON (n.id = wn.node_id)
       ").each do |row|
-        row["tags"] = "'a'=>2"
-        @nodes[row["id"].to_i] = OSM::Node[[0,0], row]
-      end
+      row["tags"] = "'a'=>2"
+      @nodes[row["id"].to_i] = OSM::Node[[0,0], row]
+    end
 
-      dbconn.query("SELECT DISTINCT node_id, ARRAY(SELECT DISTINCT
+    dbconn.query("SELECT DISTINCT node_id, ARRAY(SELECT DISTINCT
                 --wn.node_id,
                 wn_neigh.node_id
                 --wn.way_id
@@ -155,22 +180,22 @@ INNER JOIN way_nodes wn ON (wn.way_id = rm.member_id AND rm.relation_id = #{road
         ) AS neighs
 FROM way_nodes wn
 INNER JOIN relation_members rm ON (rm.member_id = way_id AND rm.relation_id = #{road.relation['id']})
-      ").each do |row|
-        row['neighs'].gsub!('{','[')
-        row['neighs'].gsub!('}',']')
-        @nodes[row["node_id"].to_i].neighs = eval(row['neighs']).collect {|x| x.to_i}
-      end
+    ").each do |row|
+      row['neighs'].gsub!('{','[')
+      row['neighs'].gsub!('}',']')
+      @nodes[row["node_id"].to_i].neighs += eval(row['neighs']).collect {|x| x.to_i}
     end
-
-    @log.debug "query took #{Time.now - before}"
-
-    before = Time.now
-    *a = bfs(@nodes)
-    @log.debug "bfs took #{Time.now - before} (#{@nodes.size})"
-
-    return a
   end
-  
+
+  @log.debug "query took #{Time.now - before}"
+
+  before = Time.now
+  *a = bfs(@nodes)
+  @log.debug "bfs took #{Time.now - before} (#{@nodes.size})"
+
+  return a
+end
+
 def bfs(nodes, start_node = nil)
   return {} if nodes.empty?
   visited = {}
@@ -198,12 +223,13 @@ def bfs(nodes, start_node = nil)
     end
 
     #@log.debug("candidate choice took #{Time.now - before}")
-    
+
     visited[next_root] = i
     queue = [next_root]
     
     #puts "------------------ INCREASING i to #{i}, next_root = #{next_root}"
-  
+    
+    count = 0
 
     while(!queue.empty?)
       node = queue.pop()
@@ -214,6 +240,7 @@ def bfs(nodes, start_node = nil)
         if ! visited.has_key?(neigh) and nodes.include?(neigh) then
            queue.push(neigh)
            visited[neigh] = i
+           count += 1
          end
       end
     end
