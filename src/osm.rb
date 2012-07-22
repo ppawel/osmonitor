@@ -10,6 +10,7 @@ class Road
   attr_accessor :ref_prefix
   attr_accessor :ref_number
   attr_accessor :relation
+  attr_accessor :other_relations
   attr_accessor :row
   attr_accessor :relation_ways
   attr_accessor :ways
@@ -18,6 +19,7 @@ class Road
     self.ref_prefix = ref_prefix
     self.ref_number = ref_number
     self.row = row
+    self.other_relations = []
     self.relation_ways = []
     self.ways = []
   end
@@ -32,6 +34,10 @@ class Road
 
   def has_proper_network
     return get_network == get_proper_network 
+  end
+
+  def has_many_relations
+    return !other_relations.empty?
   end
 
   def percent_with_lanes

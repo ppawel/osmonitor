@@ -63,11 +63,10 @@ end
 # Generates SQL that limits road relation ways to certain country. Otherwise we may end up selecting US road relation for a Polish road
 # simply because of matching "ref" tag values.
 def get_sql_limiting_bbox
-  return " AND ((SELECT bbox FROM relation_boundaries WHERE relation_id = 49715 LIMIT 1) ~ OSM_GetRelationBBox(r.id))
-"
+  return " AND ((SELECT bbox FROM relation_boundaries WHERE relation_id = 49715 LIMIT 1) ~ OSM_GetRelationBBox(r.id))"
 end
 
-def get_road_relation(road)
+def fill_road_relation(road)
   sql = {}
 
   sql["A"]=<<-EOF
@@ -76,7 +75,6 @@ FROM relations r
 WHERE
   r.tags -> 'type' = 'route' AND
   r.tags -> 'route' = 'road' AND
-  (not r.tags ? 'network' or r.tags -> 'network' != 'BAB') AND
   (r.tags -> 'ref' ilike '#{road.ref_prefix + road.ref_number}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref_prefix + road.ref_number}')
     EOF
 
@@ -86,7 +84,6 @@ FROM relations r
 WHERE
   r.tags -> 'type' = 'route' AND
   r.tags -> 'route' = 'road' AND
-  (not r.tags ? 'network' or r.tags -> 'network' != 'BAB') AND
   (r.tags -> 'ref' ilike '#{road.ref_prefix + road.ref_number}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref_prefix + road.ref_number}')
     EOF
 
@@ -97,7 +94,7 @@ WHERE
   r.tags -> 'type' = 'route' AND
   r.tags -> 'route' = 'road' AND
   ((r.tags -> 'ref' ilike '#{road.ref_prefix + road.ref_number}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref_prefix + road.ref_number}') OR
-    (r.tags -> 'ref' = '#{road.ref_number}'))
+  (r.tags -> 'ref' = '#{road.ref_number}'))
     EOF
 
   sql["DW"]=<<-EOF
@@ -107,12 +104,17 @@ WHERE
   r.tags -> 'type' = 'route' AND
   r.tags -> 'route' = 'road' AND
   ((r.tags -> 'ref' ilike '#{road.ref_prefix + road.ref_number}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref_prefix + road.ref_number}') OR
-    (r.tags -> 'ref' = '#{road.ref_number}'))
+  (r.tags -> 'ref' = '#{road.ref_number}'))
     EOF
 
-  result = @conn.query(sql[road.ref_prefix] + get_sql_limiting_bbox).collect { |row| process_tags(row) }
+  result = @conn.query(sql[road.ref_prefix] + get_sql_limiting_bbox + " ORDER BY r.id").collect { |row| process_tags(row) }
 
-  return result.size > 0 ? result[0] : nil
+  road.relation = result[0] if result.size > 0
+
+  if result.size > 1
+    # More than one match is bad.
+    road.other_relations = result[1..-1]
+  end
 end
 
 def prepare_page(page)
@@ -148,7 +150,7 @@ def fill_road_status(status)
 
   color = nil
 
-  if !status.road.relation
+  if !status.road.relation or status.road.has_many_relations
     color = ERROR_COLOR
   elsif !status.connected or !status.road.has_proper_network
     color = WARNING_COLOR
@@ -191,7 +193,7 @@ def run_report
 
   roads.each_with_index do |road, i|
     status = RoadStatus.new(road)
-    road.relation = get_road_relation(road)
+    fill_road_relation(road)
 
     @log.debug("Processing road #{road.ref_prefix + road.ref_number} (#{i + 1} of #{roads.size})")
 
