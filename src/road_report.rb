@@ -55,6 +55,13 @@ def tables_to_roads(page)
   return roads
 end
 
+# Generates SQL that limits road relation ways to certain country. Otherwise we may end up selecting US road relation for a Polish road
+# simply because of matching "ref" tag values.
+def get_sql_limiting_bbox
+  return " AND ((SELECT bbox FROM relation_boundaries WHERE relation_id = 49715 LIMIT 1) ~ OSM_GetRelationBBox(r.id))
+"
+end
+
 def get_road_relation(road)
   sql = {}
 
@@ -98,7 +105,7 @@ WHERE
     (r.tags -> 'ref' = '#{road.ref_number}'))
     EOF
 
-  result = @conn.query(sql[road.ref_prefix]).collect { |row| process_tags(row) }
+  result = @conn.query(sql[road.ref_prefix] + get_sql_limiting_bbox).collect { |row| process_tags(row) }
 
   return result.size > 0 ? result[0] : nil
 end
@@ -113,7 +120,9 @@ end
 
 def generate_status_text(status)
   text = @status_template.result(binding)
-  return text.gsub(/^\s*$/, '')
+  text.gsub!(/^\s*$/, '')
+  text.gsub!("\n\n", "\n")
+  return text
 end
 
 def insert_relation_id(status)
