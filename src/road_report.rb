@@ -11,17 +11,22 @@ require './pg_db'
 require './elogger'
 require './wiki'
 
-if ARGV.size < 2
+if ARGV.size == 0
   puts "Usage: road_report.rb <input page> <output page>"
   exit
+elsif ARGV.size == 1
+  @input_page = @output_page = ARGV[0]
+else
+  @input_page = ARGV[0]
+  @output_page = ARGV[1]
 end
-
-@input_page = ARGV[0]
-@output_page = ARGV[1]
 
 TABLE_HEADER_MARKER = "<!-- OSMonitor HEADER -->"
 TABLE_CELL_MARKER = "<!-- OSMonitor REPORT -->"
-ERROR_COLOR = "Salmon"
+TIMESTAMP_BEGIN = "<!-- OSMonitor TIMESTAMP -->"
+TIMESTAMP_END = "<!-- OSMonitor /TIMESTAMP -->"
+OK_COLOR = "PaleGreen"
+ERROR_COLOR = "LightSalmon"
 WARNING_COLOR = "PaleGoldenrod"
 
 @mw = MediaWiki::Gateway.new('https://wiki.openstreetmap.org/w/api.php')
@@ -133,24 +138,44 @@ def insert_relation_id(status)
   status.road.row.update_text(new_row)
 end
 
+def remove_relation_id(status)
+  new_row = status.road.row.row_text.dup.gsub(/{{relation\|\d*[}]+/im, "{{relation|}}")
+  status.road.row.update_text(new_row)
+end
+
 def fill_road_status(status)
   return if ! status.road.row.row_text.include?(TABLE_CELL_MARKER)
 
   color = nil
 
-  if ! status.road.relation
+  if !status.road.relation
     color = ERROR_COLOR
-  elsif ! status.connected
+  elsif !status.connected or !status.road.has_proper_network
     color = WARNING_COLOR
+  else
+    color = OK_COLOR
   end
 
-  status.road.row.set_background_color(color) if color
+  status.road.row.set_background_color(color)
 
-  insert_relation_id(status)
+  if status.road.relation
+    insert_relation_id(status)
+  else
+    remove_relation_id(status)
+  end
 
   new_row = status.road.row.row_text.dup
   new_row.gsub!(/#{Regexp.escape(TABLE_CELL_MARKER)}.*/im, TABLE_CELL_MARKER + generate_status_text(status) + "\n")
   status.road.row.update_text(new_row)
+end
+
+def get_data_timestamp
+  return @conn.query("SELECT OSM_GetDataTimestamp()").getvalue(0, 0)
+end
+
+def insert_data_timestamp(page)
+  page.page_text.gsub!(/#{Regexp.escape(TIMESTAMP_BEGIN)}.*?#{Regexp.escape(TIMESTAMP_END)}/,
+    TIMESTAMP_BEGIN + get_data_timestamp + TIMESTAMP_END)
 end
 
 def run_report
@@ -158,6 +183,7 @@ def run_report
   page_text = page.page_text.dup
 
   prepare_page(page)
+  insert_data_timestamp(page)
 
   roads = tables_to_roads(page)
 
@@ -199,21 +225,18 @@ def road_connected(road, conn)
   @nodes = {}
   before = Time.now
 
-  conn.transaction do |dbconn|
-    dbconn.query("
+  @conn.query("
 SELECT distinct wn.node_id AS id
 FROM relation_members rm
 INNER JOIN way_nodes wn ON (wn.way_id = rm.member_id AND rm.relation_id = #{road.relation['id']})
 --INNER JOIN nodes n ON (n.id = wn.node_id)
       ").each do |row|
-      row["tags"] = "'a'=>2"
-      @nodes[row["id"].to_i] = OSM::Node[[0,0], row]
-    end
+    row["tags"] = "'a'=>2"
+    @nodes[row["id"].to_i] = OSM::Node[[0,0], row]
+  end
 
-    dbconn.query("SELECT DISTINCT node_id, ARRAY(SELECT DISTINCT
-                --wn.node_id,
+  @conn.query("SELECT DISTINCT node_id, ARRAY(SELECT DISTINCT
                 wn_neigh.node_id
-                --wn.way_id
         FROM  way_nodes wn_neigh
         WHERE wn_neigh.way_id = wn.way_id AND (wn_neigh.sequence_id = wn.sequence_id - 1 OR wn_neigh.sequence_id = wn.sequence_id + 1)
         ) AS neighs
@@ -223,7 +246,6 @@ INNER JOIN relation_members rm ON (rm.member_id = way_id AND rm.relation_id = #{
       row['neighs'].gsub!('{','[')
       row['neighs'].gsub!('}',']')
       @nodes[row["node_id"].to_i].neighs += eval(row['neighs']).collect {|x| x.to_i}
-    end
   end
 
   @log.debug "road_connected: query took #{Time.now - before}"

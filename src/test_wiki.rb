@@ -72,4 +72,23 @@ class WikiTest < Test::Unit::TestCase
     assert(page.page_text.include?("Legnica"))
     assert_equal(page.tables[0].rows.size, page.page_text.scan(/REDREDRED/m).size)
   end
+
+  def test_remove_style
+    page = WikiPage.new(File.read("test_wiki_page2.txt"))
+
+    page.tables[0].rows[0].set_background_color("yellow")
+    assert(page.page_text.include?("yellow"))
+
+    page.tables[1].rows[2].set_background_color("REDRED")
+    assert(page.page_text.include?("yellow"))
+    assert(page.page_text.include?("REDRED"))
+
+    page.tables[0].rows[0].remove_style
+    assert(!page.page_text.include?("yellow"))
+    assert(page.page_text.include?("REDRED"))
+
+    page.tables[1].rows[2].remove_style
+    assert(!page.page_text.include?("yellow"))
+    assert(!page.page_text.include?("REDRED"))
+  end
 end

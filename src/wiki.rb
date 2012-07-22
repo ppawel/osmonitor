@@ -102,6 +102,11 @@ class WikiTableRow
     update_text(new_row)
   end
 
+  def remove_style
+    new_row = row_text.gsub(/style=".*?"/i, "")
+    update_text(new_row)
+  end
+
   def update_text(new_row)
     table.update_row_text(self, new_row)
     self.row_text = new_row

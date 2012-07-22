@@ -1,4 +1,4 @@
-﻿DROP FUNCTION OSM_GetDataTimestamp;
+﻿DROP FUNCTION OSM_GetDataTimestamp();
 
 CREATE FUNCTION OSM_GetDataTimestamp() RETURNS TIMESTAMP AS $$
 	SELECT MAX(tstamp) FROM relations
