@@ -13,6 +13,15 @@ CREATE FUNCTION OSM_GetRelationBBox(bigint) RETURNS geometry AS $$
 	WHERE rm.relation_id = $1 AND member_type = 'W'
 $$ LANGUAGE SQL;
 
+DROP FUNCTION OSM_GetRelationLength(bigint);
+
+CREATE FUNCTION OSM_GetRelationLength(bigint) RETURNS integer AS $$
+	SELECT SUM(ST_Length(linestring::geography))::integer
+	FROM relation_members rm
+	INNER JOIN ways w ON (w.id = rm.member_id)
+	WHERE rm.relation_id = $1 AND member_type = 'W'
+$$ LANGUAGE SQL;
+
 DROP TABLE relation_boundaries;
 
 CREATE TABLE relation_boundaries (

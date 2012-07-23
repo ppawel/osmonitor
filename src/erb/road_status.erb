@@ -9,6 +9,7 @@
 <% end %>
 
 <% if status.road.relation %>
+* <small>length: <%= status.road.relation['length'].to_i / 1000.0 %> km</small>
 * <small>ways with {{tag|lanes}}: <%= status.road.percent_with_lanes %>%</small>
 * <small>ways with {{tag|maxspeed}}: <%= status.road.percent_with_maxspeed %>%</small>
 <% end %>

@@ -70,7 +70,7 @@ def fill_road_relation(road)
   sql = {}
 
   sql["A"]=<<-EOF
-SELECT *
+SELECT *, OSM_GetRelationLength(r.id) AS length
 FROM relations r
 WHERE
   r.tags -> 'type' = 'route' AND
@@ -79,7 +79,7 @@ WHERE
     EOF
 
   sql["S"]=<<-EOF
-SELECT *
+SELECT *, OSM_GetRelationLength(r.id) AS length
 FROM relations r
 WHERE
   r.tags -> 'type' = 'route' AND
@@ -88,7 +88,7 @@ WHERE
     EOF
 
   sql["DK"]=<<-EOF
-SELECT *
+SELECT *, OSM_GetRelationLength(r.id) AS length
 FROM relations r
 WHERE
   r.tags -> 'type' = 'route' AND
@@ -98,7 +98,7 @@ WHERE
     EOF
 
   sql["DW"]=<<-EOF
-SELECT *
+SELECT *, OSM_GetRelationLength(r.id) AS length
 FROM relations r
 WHERE
   r.tags -> 'type' = 'route' AND
