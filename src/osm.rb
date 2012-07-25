@@ -40,6 +40,10 @@ class Road
     return !other_relations.empty?
   end
 
+  def has_many_covered_relations
+    return other_relations.select {|x| x['covered'] == 't'}.size > 0
+  end
+
   def percent_with_lanes
     return if not relation_ways or relation_ways.empty?
     return ((relation_ways.select { |way| way['tags'].has_key?('lanes') }.size / relation_ways.size.to_f) * 100).to_i

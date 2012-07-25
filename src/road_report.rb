@@ -60,61 +60,43 @@ def tables_to_roads(page)
   return roads
 end
 
-# Generates SQL that limits road relation ways to certain country. Otherwise we may end up selecting US road relation for a Polish road
-# simply because of matching "ref" tag values.
-def get_sql_limiting_bbox
-  return " AND ((SELECT bbox FROM relation_boundaries WHERE relation_id = 49715 LIMIT 1) ~ OSM_GetRelationBBox(r.id))"
-end
-
 def fill_road_relation(road)
-  sql = {}
 
-  sql["A"]=<<-EOF
-SELECT *, OSM_GetRelationLength(r.id) AS length
+	sql_select = "SELECT *, OSM_GetRelationLength(r.id) AS length, OSM_IsMostlyCoveredBy(936128, r.id) AS covered
 FROM relations r
 WHERE
   r.tags -> 'type' = 'route' AND
   r.tags -> 'route' = 'road' AND
+"
+
+  sql = {}
+
+  sql["A"]=<<-EOF
   (r.tags -> 'ref' ilike '#{road.ref_prefix + road.ref_number}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref_prefix + road.ref_number}')
     EOF
 
   sql["S"]=<<-EOF
-SELECT *, OSM_GetRelationLength(r.id) AS length
-FROM relations r
-WHERE
-  r.tags -> 'type' = 'route' AND
-  r.tags -> 'route' = 'road' AND
   (r.tags -> 'ref' ilike '#{road.ref_prefix + road.ref_number}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref_prefix + road.ref_number}')
     EOF
 
   sql["DK"]=<<-EOF
-SELECT *, OSM_GetRelationLength(r.id) AS length
-FROM relations r
-WHERE
-  r.tags -> 'type' = 'route' AND
-  r.tags -> 'route' = 'road' AND
   ((r.tags -> 'ref' ilike '#{road.ref_prefix + road.ref_number}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref_prefix + road.ref_number}') OR
   (r.tags -> 'ref' = '#{road.ref_number}'))
     EOF
 
   sql["DW"]=<<-EOF
-SELECT *, OSM_GetRelationLength(r.id) AS length
-FROM relations r
-WHERE
-  r.tags -> 'type' = 'route' AND
-  r.tags -> 'route' = 'road' AND
   ((r.tags -> 'ref' ilike '#{road.ref_prefix + road.ref_number}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref_prefix + road.ref_number}') OR
   (r.tags -> 'ref' = '#{road.ref_number}'))
     EOF
 
-  result = @conn.query(sql[road.ref_prefix] + get_sql_limiting_bbox + " ORDER BY r.id").collect { |row| process_tags(row) }
+  query = sql_select + sql[road.ref_prefix] + " ORDER BY covered DESC"
+
+  #puts query
+
+  result = @conn.query(query).collect { |row| process_tags(row) }
 
   road.relation = result[0] if result.size > 0
-
-  if result.size > 1
-    # More than one match is bad.
-    road.other_relations = result[1..-1]
-  end
+  road.other_relations = result[1..-1] if result.size > 1
 end
 
 def prepare_page(page)
@@ -150,7 +132,7 @@ def fill_road_status(status)
 
   color = nil
 
-  if !status.road.relation or status.road.has_many_relations
+  if !status.road.relation or status.road.has_many_covered_relations
     color = ERROR_COLOR
   elsif !status.connected or !status.road.has_proper_network
     color = WARNING_COLOR
@@ -316,7 +298,7 @@ def bfs(nodes, start_node = nil)
     visited[next_root] = i
     queue = [next_root]
     
-    #puts "------------------ INCREASING i to #{i}, next_root = #{next_root}"
+    puts "------------------ INCREASING i to #{i}, next_root = #{next_root}"
     
     count = 0
 

@@ -4,7 +4,7 @@
 * <small>relation disconnected (<%= status.components %>)</small>
 <% end %>
 
-<% if status.road.has_many_relations %>
+<% if status.road.has_many_covered_relations %>
 * <small>has more than one relation: <% status.road.other_relations.each { |rel| %><%= rel['id'] %>; <% } %>
 <% end %>
 
