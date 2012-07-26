@@ -70,6 +70,11 @@ class Road
     return if not relation_ways or relation_ways.empty?
     return ((relation_ways.select { |way| way['tags'].has_key?('maxspeed') }.size / relation_ways.size.to_f) * 100).to_i
   end
+
+  def ways_without_highway_tag
+    return [] if not relation_ways or relation_ways.empty?
+    return relation_ways.select { |way| !way['tags'].has_key?('highway') }
+  end
 end
 
 class RoadStatus
@@ -105,6 +110,11 @@ class RoadStatus
     return if !road.relation
 
     add_error('has_many_covered_relations') if road.has_many_covered_relations
+
+    if !road.ways_without_highway_tag.empty?
+      add_error('has_ways_without_highway_tag', {:ways => road.ways_without_highway_tag})
+    end
+    
     add_warning('relation_disconnected', {:components => components}) if !connected
     add_warning('wrong_network') if !road.has_proper_network
     add_warning('wrong_length') if !road.has_proper_length.nil? and !road.has_proper_length
