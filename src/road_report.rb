@@ -193,11 +193,11 @@ def run_report
       fill_relation_ways(road, @conn)
       @log.debug("fill_relation_ways took #{Time.now - before}")
 
-      components, visited = road_connected(road, @conn)
+      connected, components = road_connected(road, @conn)
 
       @log.debug("components = #{components}, has_proper_network = #{road.has_proper_network}, % = #{road.percent_with_lanes}")
 
-      status.connected = components == 1
+      status.connected = connected
       status.components = components
     end
 
@@ -211,17 +211,21 @@ end
 def road_connected(road, conn)
   return false if ! road.relation
 
-  @nodes = {}
+  nodes = {}
   before = Time.now
 
   @conn.query("
-SELECT distinct wn.node_id AS id
+SELECT distinct wn.node_id AS id, rm.*, wn.way_id
 FROM relation_members rm
 INNER JOIN way_nodes wn ON (wn.way_id = rm.member_id AND rm.relation_id = #{road.relation['id']})
 --INNER JOIN nodes n ON (n.id = wn.node_id)
       ").each do |row|
-    row["tags"] = "'a'=>2"
-    @nodes[row["id"].to_i] = OSM::Node[[0,0], row]
+    row = process_tags(row)
+    if !nodes.include? row["id"].to_i
+	  nodes[row["id"].to_i] = Node.new(row)
+	else
+	  nodes[row["id"].to_i].row['member_role'] = '' if row['member_role'] == '' or row['member_role'] == 'member'
+	end
   end
 
   @conn.query("SELECT DISTINCT node_id, ARRAY(SELECT DISTINCT
@@ -234,16 +238,30 @@ INNER JOIN relation_members rm ON (rm.member_id = way_id AND rm.relation_id = #{
     ").each do |row|
       row['neighs'].gsub!('{','[')
       row['neighs'].gsub!('}',']')
-      @nodes[row["node_id"].to_i].neighs += eval(row['neighs']).collect {|x| x.to_i}
+      nodes[row["node_id"].to_i].neighs += eval(row['neighs']).collect {|x| x.to_i}
   end
 
   @log.debug "road_connected: query took #{Time.now - before}"
 
   before = Time.now
-  *a = bfs(@nodes)
-  @log.debug "bfs took #{Time.now - before} (#{@nodes.size})"
 
-  return a
+  has_roles = nodes.select {|id, node| node.row['member_role'] == 'backward' or node.row['member_role'] == 'forward' }.size > 0
+
+  if has_roles
+    *forward = bfs(nodes.select {|id, node| node.row['member_role'] == '' or node.row['member_role'] == 'member' or node.row['member_role'] == 'forward' })
+	*backward = bfs(nodes.select {|id, node| node.row['member_role'] == '' or node.row['member_role'] == 'member' or node.row['member_role'] == 'backward' })
+
+    @log.debug "backward = #{backward[0]}, forward = #{forward[0]}"
+
+    if forward[0] == 1 and backward[0] == 1
+	  return true, 1
+	else
+	  return false, forward[0] + backward[0]
+    end
+  else
+    *a = bfs(nodes)
+    return a[0] == 1, a[0]
+  end
 end
 
 def fill_relation_ways(road, conn)
@@ -273,17 +291,14 @@ WHERE tags -> 'ref' = '#{road.ref_number}'
 end
 
 def bfs(nodes, start_node = nil)
-  return {} if nodes.empty?
+  return 0, {} if nodes.empty?
   visited = {}
   i = 0
 
   #puts nodes
 
   while (visited.size < nodes.size)
-    #puts "#{visited.size} <? #{nodes.size}"
     i += 1
-
-    before = Time.now
 
     if i == 1 and start_node
       next_root = start_node
@@ -298,18 +313,16 @@ def bfs(nodes, start_node = nil)
       end
     end
 
-    #@log.debug("candidate choice took #{Time.now - before}")
-
     visited[next_root] = i
     queue = [next_root]
-    
-    puts "------------------ INCREASING i to #{i}, next_root = #{next_root}"
-    
+
+    puts "------------------ INCREASING i to #{i}, next_root = #{next_root} (way_id = #{nodes[next_root].row['way_id']})"
+
     count = 0
 
     while(!queue.empty?)
       node = queue.pop()
-      #puts "visiting #{node}"
+      #puts "visiting #{nodes[node].inspect}"
       #puts nodes[node]
       nodes[node].neighs.each do |neigh|
         #puts "neigh #{neigh} visited - #{visited.has_key?(neigh)}"
