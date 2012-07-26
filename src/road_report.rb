@@ -83,7 +83,7 @@ WHERE
 
   result = @conn.query(query).collect { |row| process_tags(row) }
 
-  road.relation = result[0] if result.size > 0
+  road.relation = result[0] if result.size > 0 and result[0]['covered'] == 't'
   road.other_relations = result[1..-1] if result.size > 1
 end
 
@@ -164,7 +164,7 @@ def run_report
     @log.debug("Processing road #{road.ref_prefix + road.ref_number} (#{i + 1} of #{roads.size}) (input length = #{road.input_length})")
 
     before = Time.now
-    fill_ways(road, @conn)
+    #fill_ways(road, @conn)
     @log.debug("fill_ways took #{Time.now - before}")
 
     if road.relation
