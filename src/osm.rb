@@ -14,6 +14,8 @@ class Road
   attr_accessor :row
   attr_accessor :relation_ways
   attr_accessor :ways
+  attr_accessor :input_length
+  attr_accessor :osm_length
 
   def initialize(ref_prefix, ref_number, row)
     self.ref_prefix = ref_prefix
@@ -22,6 +24,21 @@ class Road
     self.other_relations = []
     self.relation_ways = []
     self.ways = []
+    self.input_length = nil
+    self.osm_length = nil
+  end
+
+  def get_osm_length
+    relation['length'].to_i / 1000 if relation
+  end
+
+  def length_diff
+    return (get_osm_length - input_length).abs.to_i
+  end
+
+  def has_proper_length
+    return nil if !relation or !input_length
+    return length_diff < 2
   end
 
   def get_network

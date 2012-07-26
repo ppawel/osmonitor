@@ -80,6 +80,7 @@ class WikiTableRow
   def initialize(table, row_text)
     self.table = table
     self.row_text = row_text
+    self.cells = parse_cells(row_text)
   end
 
   def add_header_cell(body)
@@ -117,14 +118,12 @@ class WikiTableRow
   def parse_cells(row_text)
     cells = []
 
-    row_text.split("\n|").each do |cell_text|
-      cells << WikiTableCell(self, cell_text)
+    row_text.split("\n|").drop(1).each do |cell_text|
+      cells << WikiTableCell.new(self, cell_text)
     end
 
     return cells
   end
-  
-
 end
 
 class WikiTableCell

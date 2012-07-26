@@ -52,7 +52,12 @@ def tables_to_roads(page)
       m = row.row_text.scan(/PL\-(\w+)\|(\d+)/)
 
       if $1 and $2
-        roads << Road.new($1, $2, row)
+        road = Road.new($1, $2, row)
+
+        # Now let's try to parse input length for the road.
+        length_text = row.cells[2].cell_text.strip.gsub('km', '').gsub(',', '.')
+        road.input_length = length_text.to_f if !length_text.empty?
+        roads << road
       end
     end
   end
@@ -134,7 +139,7 @@ def fill_road_status(status)
 
   if !status.road.relation or status.road.has_many_covered_relations
     color = ERROR_COLOR
-  elsif !status.connected or !status.road.has_proper_network
+  elsif !status.connected or !status.road.has_proper_network or (!status.road.has_proper_length.nil? and !status.road.has_proper_length)
     color = WARNING_COLOR
   else
     color = OK_COLOR
@@ -177,7 +182,7 @@ def run_report
     status = RoadStatus.new(road)
     fill_road_relation(road)
 
-    @log.debug("Processing road #{road.ref_prefix + road.ref_number} (#{i + 1} of #{roads.size})")
+    @log.debug("Processing road #{road.ref_prefix + road.ref_number} (#{i + 1} of #{roads.size}) (input length = #{road.input_length})")
 
     before = Time.now
     fill_ways(road, @conn)
