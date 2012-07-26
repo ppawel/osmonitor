@@ -76,9 +76,53 @@ class RoadStatus
   attr_accessor :road
   attr_accessor :connected
   attr_accessor :components
+  attr_accessor :issues
 
   def initialize(road)
     self.road = road
+    self.issues = []
+  end
+
+  def add_error(name, data = {})
+    issues << RoadIssue.new(:ERROR, name, data)
+  end
+
+  def add_warning(name, data = {})
+    issues << RoadIssue.new(:WARNING, name, data)
+  end
+
+  def add_info(name, data = {})
+    issues << RoadIssue.new(:INFO, name, data)
+  end
+
+  def get_issues(type)
+    return issues.select {|issue| issue.type == type}
+  end
+
+  def validate
+    add_error('no_relation') if !road.relation
+
+    return if !road.relation
+
+    add_error('has_many_covered_relations') if road.has_many_covered_relations
+    add_warning('relation_disconnected', {:components => components}) if !connected
+    add_warning('wrong_network') if !road.has_proper_network
+    add_warning('wrong_length') if !road.has_proper_length.nil? and !road.has_proper_length
+    add_info('osm_length', road.get_osm_length)
+    add_info('percent_with_lanes', road.percent_with_lanes)
+    add_info('percent_with_maxspeed', road.percent_with_maxspeed)
+  end
+end
+
+class RoadIssue
+  attr_accessor :name
+  attr_accessor :type
+  attr_accessor :data
+
+  def initialize(type, name, data)
+    self.type = type
+    self.name = name
+    self.data = data
   end
 end
 

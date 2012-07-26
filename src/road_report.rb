@@ -39,6 +39,10 @@ WARNING_COLOR = "PaleGoldenrod"
 
 @conn = PGconn.open( :host => "localhost", :dbname => 'osmdb', :user => "postgres" )
 
+def render_issue_template(file, issue, status)
+  return ERB.new(File.read("#{file}")).result(binding())
+end
+
 def tables_to_roads(page)
   roads = []
 
@@ -133,17 +137,13 @@ def remove_relation_id(status)
 end
 
 def fill_road_status(status)
-  return if ! status.road.row.row_text.include?(TABLE_CELL_MARKER)
+  return if !status.road.row.row_text.include?(TABLE_CELL_MARKER)
 
-  color = nil
+  status.validate
 
-  if !status.road.relation or status.road.has_many_covered_relations
-    color = ERROR_COLOR
-  elsif !status.connected or !status.road.has_proper_network or (!status.road.has_proper_length.nil? and !status.road.has_proper_length)
-    color = WARNING_COLOR
-  else
-    color = OK_COLOR
-  end
+  color = OK_COLOR
+  color = WARNING_COLOR if status.get_issues(:WARNING).size > 0
+  color = ERROR_COLOR if status.get_issues(:ERROR).size > 0
 
   status.road.row.set_background_color(color)
 
