@@ -21,10 +21,10 @@ CREATE FUNCTION OSM_IsMostlyCoveredBy(bigint, bigint) RETURNS boolean AS $$
 			FROM relation_members rm
 			INNER JOIN ways w ON (w.id = rm.member_id)
 			WHERE rm.relation_id = $2 AND member_type = 'W') AS covered WHERE covered.is)::float * 100
-		  > ((SELECT COUNT(*)
+		  > (SELECT COUNT(*)
 		FROM relation_members rm
 		INNER JOIN ways w ON (w.id = rm.member_id)
-		WHERE rm.relation_id = $2 AND member_type = 'W') + 1)::float * 50
+		WHERE rm.relation_id = $2 AND member_type = 'W')::float * 33
 $$ LANGUAGE SQL;
 
 DROP FUNCTION OSM_GetRelationLength(bigint);
