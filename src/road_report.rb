@@ -75,30 +75,9 @@ def fill_road_relation(road)
 FROM relations r
 WHERE
   r.tags -> 'type' = 'route' AND
-  r.tags -> 'route' = 'road' AND
-"
+  r.tags -> 'route' = 'road' AND"
 
-  sql = {}
-
-  sql["A"]=<<-EOF
-  (r.tags -> 'ref' ilike '#{road.ref_prefix + road.ref_number}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref_prefix + road.ref_number}')
-    EOF
-
-  sql["S"]=<<-EOF
-  (r.tags -> 'ref' ilike '#{road.ref_prefix + road.ref_number}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref_prefix + road.ref_number}')
-    EOF
-
-  sql["DK"]=<<-EOF
-  ((r.tags -> 'ref' ilike '#{road.ref_prefix + road.ref_number}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref_prefix + road.ref_number}') OR
-  (r.tags -> 'ref' = '#{road.ref_number}'))
-    EOF
-
-  sql["DW"]=<<-EOF
-  ((r.tags -> 'ref' ilike '#{road.ref_prefix + road.ref_number}' OR replace(r.tags -> 'ref', ' ', '') ilike '#{road.ref_prefix + road.ref_number}') OR
-  (r.tags -> 'ref' = '#{road.ref_number}'))
-    EOF
-
-  query = sql_select + sql[road.ref_prefix] + " ORDER BY covered DESC"
+  query = sql_select + eval(@sql_where_by_road_type[road.ref_prefix], binding()) + " ORDER BY covered DESC"
 
   #puts query
 
@@ -278,16 +257,17 @@ WHERE rm.relation_id = #{road.relation['id']}").collect { |row| process_tags(row
 end
 
 def fill_ways(road, conn)
-  return false if ! road.relation
+  sql_where = eval(@sql_where_by_road_type[road.ref_prefix], binding())
+  
+  sql = "
+SELECT distinct r.*
+FROM ways r
+WHERE #{sql_where} AND
+(SELECT ST_Contains((SELECT hull FROM relation_boundaries WHERE relation_id = 936128), linestring)) = True"
 
-  @nodes = {}
-  before = Time.now
+  sql += " AND NOT EXISTS (SELECT * FROM relation_members WHERE member_id = r.id AND relation_id = #{road.relation['id']}) " if road.relation
 
-  road.ways = conn.query("
-SELECT distinct w.*
-FROM ways w
-WHERE tags -> 'ref' = '#{road.ref_number}'
-      ").collect { |row| process_tags(row) }
+  road.ways = conn.query(sql).collect { |row| process_tags(row) }
 end
 
 def bfs(nodes, start_node = nil)

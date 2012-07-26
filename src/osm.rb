@@ -115,6 +115,8 @@ class RoadStatus
       add_error('has_ways_without_highway_tag', {:ways => road.ways_without_highway_tag})
     end
 
+    #add_warning('ways_not_in_relation', {:ways => road.ways}) if road.ways.size > 0
+
     add_warning('relation_disconnected', {:components => components}) if !connected
     add_warning('wrong_network') if !road.has_proper_network
     add_warning('wrong_length') if !road.has_proper_length.nil? and !road.has_proper_length
