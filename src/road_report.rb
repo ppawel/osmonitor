@@ -84,7 +84,7 @@ WHERE
   result = @conn.query(query).collect { |row| process_tags(row) }
 
   road.relation = result[0] if result.size > 0 and result[0]['covered'] == 't'
-  road.other_relations = result[1..-1] if result.size > 1
+  road.other_relations = result[1..-1].select {|r| r['covered'] == 't'} if result.size > 1
 end
 
 def prepare_page(page)
@@ -163,9 +163,10 @@ def run_report
 
     @log.debug("Processing road #{road.ref_prefix + road.ref_number} (#{i + 1} of #{roads.size}) (input length = #{road.input_length})")
 
-    before = Time.now
+    # Not used for now, commented out for performance reasons.
+    #before = Time.now
     #fill_ways(road, @conn)
-    @log.debug("fill_ways took #{Time.now - before}")
+    #@log.debug("fill_ways took #{Time.now - before}")
 
     if road.relation
       before = Time.now
@@ -228,7 +229,7 @@ INNER JOIN relation_members rm ON (rm.member_id = way_id AND rm.relation_id = #{
 
   if has_roles
     *forward = bfs(nodes.select {|id, node| node.row['member_role'] == '' or node.row['member_role'] == 'member' or node.row['member_role'] == 'forward' })
-	*backward = bfs(nodes.select {|id, node| node.row['member_role'] == '' or node.row['member_role'] == 'member' or node.row['member_role'] == 'backward' })
+    *backward = bfs(nodes.select {|id, node| node.row['member_role'] == '' or node.row['member_role'] == 'member' or node.row['member_role'] == 'backward' })
 
     @log.debug "backward = #{backward[0]}, forward = #{forward[0]}"
 
