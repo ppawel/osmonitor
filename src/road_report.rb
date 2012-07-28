@@ -106,12 +106,12 @@ def insert_relation_id(status)
   return if ! status.road.relation
 
   new_row = status.road.row.row_text.dup
-  new_row.gsub!(/\{\{relation\|\d*}}/im, "{{relation\|#{status.road.relation['id']}}}")
+  new_row.gsub!(/\{\{relation\|\d*\}\}/im, "{{relation\|#{status.road.relation['id']}}}")
   status.road.row.update_text(new_row)
 end
 
 def remove_relation_id(status)
-  new_row = status.road.row.row_text.dup.gsub(/\{\{relation\|\d*[}]+/im, "{{relation|}}")
+  new_row = status.road.row.row_text.dup.gsub(/\{\{relation\|\d*[\}]+/im, "{{relation|}}")
   status.road.row.update_text(new_row)
 end
 
