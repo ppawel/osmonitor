@@ -8,7 +8,7 @@ class WikiPage
   end
 
   def update_table_text(table, new_text)
-    self.page_text.gsub!(table.table_text, new_text)
+    self.page_text[table.table_text] = new_text
   end
 
   private
