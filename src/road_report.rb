@@ -37,7 +37,7 @@ WARNING_COLOR = "PaleGoldenrod"
 
 @status_template = ERB.new File.read("erb/road_status.erb")
 
-@conn = PGconn.open( :host => "localhost", :dbname => 'osmdb', :user => "postgres" )
+@conn = PGconn.open( :host => @config['host'], :dbname => @config['dbname'], :user => @config['user'], :password => @config['password'] )
 
 def render_issue_template(file, issue, status)
   return ERB.new(File.read("#{file}")).result(binding())

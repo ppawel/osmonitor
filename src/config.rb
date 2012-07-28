@@ -1,7 +1,11 @@
 @config = {
 
-'wiki_username' => '',
-'wiki_password' => ''
+  'wiki_username' => 'osmonitor',
+  'wiki_password' => 'jakieshaslo',
+  'host' => 'localhost',
+  'dbname' => 'osmdb',
+  'user' => 'postgres',
+  'password' => ''
 
 }
 
