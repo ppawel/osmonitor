@@ -1,4 +1,9 @@
-ROOT_DIR=`dirname $0`/..
+#!/bin/sh
 
-cd $ROOT_DIR/data/replication
-osmosis -v 3 --rri workingDirectory=. --wxc diff.osc.gz
+ROOT_DIR=`dirname $0`/..
+AUTH_FILE=$ROOT_DIR/authFile
+
+JAVACMD_OPTIONS=-Djava.io.tmpdir=/var/tmp
+export JAVACMD_OPTIONS
+
+osmosis --rri workingDirectory=$ROOT_DIR/data/replication --log-progress-change --buffer-change bufferCapacity=6666 --write-pgsql-change authFile=$AUTH_FILE
