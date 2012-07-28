@@ -228,19 +228,19 @@ INNER JOIN relation_members rm ON (rm.member_id = way_id AND rm.relation_id = #{
   has_roles = nodes.select {|id, node| node.row['member_role'] == 'backward' or node.row['member_role'] == 'forward' }.size > 0
 
   if has_roles
-    *forward = bfs(nodes.select {|id, node| node.row['member_role'] == '' or node.row['member_role'] == 'member' or node.row['member_role'] == 'forward' })
-    *backward = bfs(nodes.select {|id, node| node.row['member_role'] == '' or node.row['member_role'] == 'member' or node.row['member_role'] == 'backward' })
+    forward = bfs(Hash[nodes.select {|id, node| node.row['member_role'] == '' or node.row['member_role'] == 'member' or node.row['member_role'] == 'forward' }])
+    backward = bfs(Hash[nodes.select {|id, node| node.row['member_role'] == '' or node.row['member_role'] == 'member' or node.row['member_role'] == 'backward' }])
 
-    @log.debug "backward = #{backward[0]}, forward = #{forward[0]}"
+    @log.debug "backward = #{backward}, forward = #{forward}"
 
-    if forward[0] == 1 and backward[0] == 1
+    if forward == 1 and backward == 1
 	  return true, 1
 	else
-	  return false, forward[0] + backward[0]
+	  return false, forward + backward
     end
   else
-    *a = bfs(nodes)
-    return a[0] == 1, a[0]
+    a = bfs(nodes)
+    return a == 1, a
   end
 end
 
@@ -316,7 +316,7 @@ def bfs(nodes, start_node = nil)
     end
   end
 
-  return i, visited
+  return i
 end
 
 def process_tags(row)
