@@ -25,6 +25,8 @@ TABLE_HEADER_MARKER = "<!-- OSMonitor HEADER -->"
 TABLE_CELL_MARKER = "<!-- OSMonitor REPORT -->"
 TIMESTAMP_BEGIN = "<!-- OSMonitor TIMESTAMP -->"
 TIMESTAMP_END = "<!-- OSMonitor /TIMESTAMP -->"
+STATS_BEGIN = "<!-- OSMonitor STATS -->"
+STATS_END = "<!-- OSMonitor /STATS -->"
 OK_COLOR = "PaleGreen"
 ERROR_COLOR = "LightSalmon"
 WARNING_COLOR = "PaleGoldenrod"
@@ -115,6 +117,12 @@ def remove_relation_id(status)
   status.road.row.update_text(new_row)
 end
 
+def insert_stats(page, report)
+  stats_text = ERB.new(File.read("erb/road_report_stats.erb")).result(binding())
+  page.page_text.gsub!(/#{Regexp.escape(STATS_BEGIN)}.*?#{Regexp.escape(STATS_END)}/mi,
+    STATS_BEGIN + stats_text + STATS_END)
+end
+
 def fill_road_status(status)
   return if !status.road.row.row_text.include?(TABLE_CELL_MARKER)
 
@@ -149,8 +157,9 @@ end
 def run_report
   page = get_wiki_page(@input_page)
   page_text = page.page_text.dup
+  report = RoadReport.new
 
-  prepare_page(page)
+  #prepare_page(page)
   insert_data_timestamp(page)
 
   roads = tables_to_roads(page)
@@ -182,7 +191,10 @@ def run_report
     end
 
     fill_road_status(status)
+    report.add_status(status)
   end
+
+  insert_stats(page, report)
 
   wiki_login
   edit_wiki_page(@output_page, page.page_text)

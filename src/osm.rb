@@ -138,6 +138,26 @@ class RoadIssue
   end
 end
 
+class RoadReport
+  attr_accessor :statuses
+
+  def initialize
+    self.statuses = []
+  end
+
+  def add_status(status)
+    statuses << status
+  end
+
+  # Returns percent_green, percent_yellow, percent_red.
+  def get_percentages
+    green = statuses.select {|status| status.get_issues(:WARNING).size == 0 and status.get_issues(:ERROR).size == 0}.size
+    yellow = statuses.select {|status| status.get_issues(:WARNING).size > 0 and status.get_issues(:ERROR).size == 0}.size
+    red = statuses.select {|status| status.get_issues(:ERROR).size > 0}.size
+    return (green / statuses.size.to_f * 100).to_i, (yellow / statuses.size.to_f * 100).to_i, (red / statuses.size.to_f * 100).to_i
+  end
+end
+
 class Node
   attr_accessor :row
   attr_accessor :neighs

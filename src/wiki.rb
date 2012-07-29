@@ -62,6 +62,8 @@ class WikiTable
 
     self.header = WikiTableRow.new(self, "|-" + r[0])
 
+    return [] if r.size == 1
+
     r.drop(1).each do |row|
       rows << WikiTableRow.new(self, "|-" + row)
     end

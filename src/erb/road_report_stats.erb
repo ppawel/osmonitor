@@ -1,0 +1,7 @@
+<% percent_green, percent_yellow, percent_red = report.get_percentages %>
+{| width="66%"
+|-
+| width="<%= percent_green %>%" bgcolor="<%= OK_COLOR %>" align="center" | <b><%= percent_green %></b>%
+| width="<%= percent_yellow %>%" bgcolor="<%= WARNING_COLOR %>" align="center" | <b><%= percent_yellow %></b>%
+| width="<%= percent_red %>%" bgcolor="<%= ERROR_COLOR %>" align="center" | <b><%= percent_red %></b>%
+|}
