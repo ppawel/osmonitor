@@ -272,7 +272,7 @@ WHERE #{sql_where} AND
 end
 
 def bfs(nodes, start_node = nil)
-  return 0, {} if nodes.empty?
+  return 0 if nodes.empty?
   visited = {}
   i = 0
 
