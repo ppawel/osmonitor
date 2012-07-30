@@ -1,9 +1,8 @@
+require "./config"
 require "./wiki"
 
-$relation_networks = { "A" => "pl:motorways", "S" => "pl:national", "DK" => "pl:national", "DW" => "pl:regional" }
-
 def get_relation_network(prefix)
-  return $relation_networks[prefix]
+  return $road_type_network_tag[prefix]
 end
 
 class Road
@@ -71,9 +70,22 @@ class Road
     return ((relation_ways.select { |way| way['tags'].has_key?('maxspeed') }.size / relation_ways.size.to_f) * 100).to_i
   end
 
+  # Returns a list of strings representing the "ref" tag. This is a list because sometimes this tag contains many values, e.g. "34; S1".
+  def get_refs(way)
+    return [] if !way['tags'].has_key?('ref')
+    return way['tags']['ref'].split(/(;|,)/).collect {|ref| ref.strip}
+  end
+
+  # Finds ways without "highway" tag (exception is ferry ways, see http://www.openstreetmap.org/browse/way/23541424).
   def ways_without_highway_tag
     return [] if not relation_ways or relation_ways.empty?
-    return relation_ways.select { |way| !way['tags'].has_key?('highway') }
+    return relation_ways.select { |way| !way['tags'].has_key?('highway') and (!way['tags'].has_key?('route') or way['tags']['route'] == 'ferry') }
+  end
+
+  # Finds ways without "ref" tag or with wrong tag value.
+  def ways_with_wrong_ref
+    return [] if not relation_ways or relation_ways.empty?
+    return relation_ways.select { |way| !way['tags'].has_key?('ref') or !get_refs(way).include?(eval($road_type_ref_tag[ref_prefix], binding())) }
   end
 end
 
@@ -113,6 +125,10 @@ class RoadStatus
 
     if !road.ways_without_highway_tag.empty?
       add_error('has_ways_without_highway_tag', {:ways => road.ways_without_highway_tag})
+    end
+
+    if !road.ways_with_wrong_ref.empty?
+      add_error('ways_with_wrong_ref', {:ways => road.ways_with_wrong_ref})
     end
 
     #add_warning('ways_not_in_relation', {:ways => road.ways}) if road.ways.size > 0

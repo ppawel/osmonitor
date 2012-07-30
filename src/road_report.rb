@@ -39,7 +39,7 @@ WARNING_COLOR = "PaleGoldenrod"
 
 @status_template = ERB.new File.read("erb/road_status.erb")
 
-@conn = PGconn.open( :host => @config['host'], :dbname => @config['dbname'], :user => @config['user'], :password => @config['password'] )
+@conn = PGconn.open( :host => $config['host'], :dbname => $config['dbname'], :user => $config['user'], :password => $config['password'] )
 
 def render_issue_template(file, issue, status)
   return ERB.new(File.read("#{file}")).result(binding())
@@ -79,7 +79,7 @@ WHERE
   r.tags -> 'type' = 'route' AND
   r.tags -> 'route' = 'road' AND"
 
-  query = sql_select + eval(@sql_where_by_road_type[road.ref_prefix], binding()) + " ORDER BY covered DESC, r.id"
+  query = sql_select + eval($sql_where_by_road_type[road.ref_prefix], binding()) + " ORDER BY covered DESC, r.id"
 
   #puts query
 
@@ -270,7 +270,7 @@ WHERE rm.relation_id = #{road.relation['id']}").collect { |row| process_tags(row
 end
 
 def fill_ways(road, conn)
-  sql_where = eval(@sql_where_by_road_type[road.ref_prefix], binding())
+  sql_where = eval($sql_where_by_road_type[road.ref_prefix], binding())
   
   sql = "
 SELECT distinct r.*
@@ -345,7 +345,7 @@ def edit_wiki_page(name, body)
 end
 
 def wiki_login
-  @mw.login(@config['wiki_username'], @config['wiki_password'])
+  @mw.login($config['wiki_username'], $config['wiki_password'])
 end
 
 run_report
