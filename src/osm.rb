@@ -79,7 +79,7 @@ class Road
   # Finds ways without "highway" tag (exception is ferry ways, see http://www.openstreetmap.org/browse/way/23541424).
   def ways_without_highway_tag
     return [] if not relation_ways or relation_ways.empty?
-    return relation_ways.select { |way| !way['tags'].has_key?('highway') and (!way['tags'].has_key?('route') or way['tags']['route'] == 'ferry') }
+    return relation_ways.select { |way| !way['tags'].has_key?('highway') and (!way['tags'].has_key?('route') or way['tags']['route'] != 'ferry') }
   end
 
   # Finds ways without "ref" tag or with wrong tag value.
