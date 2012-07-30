@@ -127,9 +127,9 @@ class RoadStatus
       add_error('has_ways_without_highway_tag', {:ways => road.ways_without_highway_tag})
     end
 
-    if !road.ways_with_wrong_ref.empty?
-      add_error('ways_with_wrong_ref', {:ways => road.ways_with_wrong_ref})
-    end
+    #if !road.ways_with_wrong_ref.empty?
+    #  add_error('ways_with_wrong_ref', {:ways => road.ways_with_wrong_ref})
+    #end
 
     #add_warning('ways_not_in_relation', {:ways => road.ways}) if road.ways.size > 0
 
