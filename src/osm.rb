@@ -91,9 +91,9 @@ end
 
 class RoadStatus
   attr_accessor :road
-  attr_accessor :connected
-  attr_accessor :components
   attr_accessor :issues
+  attr_accessor :backward
+  attr_accessor :forward
 
   def initialize(road)
     self.road = road
@@ -116,6 +116,10 @@ class RoadStatus
     return issues.select {|issue| issue.type == type}
   end
 
+  def connected
+    return (backward == 1 and (forward == 1 or forward.nil?))
+  end
+
   def validate
     add_error('no_relation') if !road.relation
 
@@ -133,7 +137,7 @@ class RoadStatus
 
     #add_warning('ways_not_in_relation', {:ways => road.ways}) if road.ways.size > 0
 
-    add_warning('relation_disconnected', {:components => components}) if !connected
+    add_warning('relation_disconnected') if !connected
     add_warning('wrong_network') if !road.has_proper_network
     add_warning('wrong_length') if !road.has_proper_length.nil? and !road.has_proper_length
     add_info('osm_length', road.get_osm_length)

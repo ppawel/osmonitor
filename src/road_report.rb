@@ -182,12 +182,12 @@ def run_report
       fill_relation_ways(road, @conn)
       @log.debug("fill_relation_ways took #{Time.now - before}")
 
-      connected, components = road_connected(road, @conn)
+      backward, forward = road_connected(road, @conn)
 
-      @log.debug("components = #{components}, has_proper_network = #{road.has_proper_network}, % = #{road.percent_with_lanes}")
+      @log.debug("backward = #{backward}, forward = #{forward}, has_proper_network = #{road.has_proper_network}, % = #{road.percent_with_lanes}")
 
-      status.connected = connected
-      status.components = components
+      status.backward = backward
+      status.forward = forward
     end
 
     fill_road_status(status)
@@ -201,7 +201,7 @@ def run_report
 end
 
 def road_connected(road, conn)
-  return false if ! road.relation
+  return nil, nil if !road.relation
 
   nodes = {}
   before = Time.now
@@ -242,17 +242,9 @@ INNER JOIN relation_members rm ON (rm.member_id = way_id AND rm.relation_id = #{
   if has_roles
     forward = bfs(Hash[nodes.select {|id, node| node.row['member_role'] == '' or node.row['member_role'] == 'member' or node.row['member_role'] == 'forward' }])
     backward = bfs(Hash[nodes.select {|id, node| node.row['member_role'] == '' or node.row['member_role'] == 'member' or node.row['member_role'] == 'backward' }])
-
-    @log.debug "backward = #{backward}, forward = #{forward}"
-
-    if forward == 1 and backward == 1
-	  return true, 1
-	else
-	  return false, forward + backward
-    end
+    return backward, forward
   else
-    a = bfs(nodes)
-    return a == 1, a
+    return bfs(nodes)
   end
 end
 
@@ -326,6 +318,13 @@ def bfs(nodes, start_node = nil)
          end
       end
     end
+  end
+
+  components = {}
+
+  visited.each do |node, i|
+    components[i] = [] if !components.has_key?(i)
+    components[i] << node
   end
 
   return i

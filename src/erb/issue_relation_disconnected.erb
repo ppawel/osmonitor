@@ -1,1 +1,1 @@
-* <small>relation disconnected (<%= status.components %>)</small>
+* <small>relation disconnected <% if status.forward.nil? %>(<%= status.backward %>)<% else %>(backward = <%= status.backward %>, forward = <%= status.forward %>)<% end %></small>
