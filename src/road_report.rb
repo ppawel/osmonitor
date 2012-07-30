@@ -73,13 +73,13 @@ end
 
 def fill_road_relation(road)
 
-	sql_select = "SELECT *, OSM_GetRelationLength(r.id) AS length, OSM_IsMostlyCoveredBy(936128, r.id) AS covered
+  sql_select = "SELECT *, OSM_GetRelationLength(r.id) AS length, OSM_IsMostlyCoveredBy(936128, r.id) AS covered
 FROM relations r
 WHERE
   r.tags -> 'type' = 'route' AND
   r.tags -> 'route' = 'road' AND"
 
-  query = sql_select + eval(@sql_where_by_road_type[road.ref_prefix], binding()) + " ORDER BY covered DESC"
+  query = sql_select + eval(@sql_where_by_road_type[road.ref_prefix], binding()) + " ORDER BY covered DESC, r.id"
 
   #puts query
 
