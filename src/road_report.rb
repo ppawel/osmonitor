@@ -327,9 +327,9 @@ def bfs(nodes, start_node = nil)
 
   components = {}
 
-  visited.each do |node, i|
-    components[i] = [] if !components.has_key?(i)
-    components[i] << node
+  visited.each do |node, component|
+    components[component] = [] if !components.has_key?(component)
+    components[component] << node
   end
 
   components.each {|id, n| puts "#{id} = #{n.size} node(s)"}
