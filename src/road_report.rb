@@ -213,11 +213,16 @@ INNER JOIN way_nodes wn ON (wn.way_id = rm.member_id AND rm.relation_id = #{road
 --INNER JOIN nodes n ON (n.id = wn.node_id)
       ").each do |row|
     row = process_tags(row)
-    if !nodes.include? row["id"].to_i
-	  nodes[row["id"].to_i] = Node.new(row)
-	else
-	  nodes[row["id"].to_i].row['member_role'] = '' if row['member_role'] == '' or row['member_role'] == 'member'
-	end
+    node_id = row["id"].to_i
+
+    if !nodes.include? node_id
+      nodes[node_id] = Node.new(row)
+    else
+      node = nodes[node_id]
+      node.row['member_role'] = '' if row['member_role'] == '' or row['member_role'] == 'member'
+      node.row['member_role'] = '' if node.row['member_role'] == 'forward' and row['member_role'] == 'backward'
+      node.row['member_role'] = '' if node.row['member_role'] == 'backward' and row['member_role'] == 'forward'
+    end
   end
 
   @conn.query("SELECT DISTINCT node_id, ARRAY(SELECT DISTINCT
@@ -244,7 +249,7 @@ INNER JOIN relation_members rm ON (rm.member_id = way_id AND rm.relation_id = #{
     backward = bfs(Hash[nodes.select {|id, node| node.row['member_role'] == '' or node.row['member_role'] == 'member' or node.row['member_role'] == 'backward' }])
     return backward, forward
   else
-    return bfs(nodes)
+    return bfs(nodes), nil
   end
 end
 
@@ -326,6 +331,8 @@ def bfs(nodes, start_node = nil)
     components[i] = [] if !components.has_key?(i)
     components[i] << node
   end
+
+  components.each {|id, n| puts "#{id} = #{n.size} node(s)"}
 
   return i
 end
