@@ -248,7 +248,9 @@ class Node
 end
 
 def road_walk(nodes, role = nil)
-  return 0 if nodes.empty?
+  return nil if nodes.empty?
+
+  end_nodes = []
   visited = {}
   skipped_nodes = 0
   i = 0
@@ -278,19 +280,23 @@ def road_walk(nodes, role = nil)
 
     puts "------------------ INCREASING i to #{i}, role = #{role}, next_root = #{next_root}"
 
+    current_node = nil
+
     while(!queue.empty?)
       node_id = queue.pop()
-      node = nodes[node_id]
+      current_node = nodes[node_id]
       #puts "visiting #{nodes[node_id].inspect}"
       #puts nodes[node]
-      node.neighbors.each do |neighbor|
+      current_node.neighbors.each do |neighbor|
         #puts "neighbor #{neighbor.id} - #{node.can_go_to(neighbor, role).to_s.inspect}"
-        if !visited.has_key?(neighbor.id) and nodes.include?(neighbor.id) and node.can_go_to(neighbor, role)
+        if !visited.has_key?(neighbor.id) and nodes.include?(neighbor.id) and current_node.can_go_to(neighbor, role)
            queue.push(neighbor.id)
            visited[neighbor.id] = i
         end
       end
     end
+
+    end_nodes << current_node
   end
 
   components = {}
@@ -302,5 +308,5 @@ def road_walk(nodes, role = nil)
 
   components.each {|id, n| puts "#{id} = #{n.size} node(s)"}
 
-  return i
+  return end_nodes
 end

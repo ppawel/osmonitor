@@ -12,7 +12,7 @@ class ModelTest < Test::Unit::TestCase
     a = road.connectivity
     
     assert_equal(2, a.size)
-    assert_equal(1, a[0])
+    assert_equal(1, a[0].size)
     assert_equal(nil, a[1])
   end
 
@@ -27,7 +27,7 @@ class ModelTest < Test::Unit::TestCase
     a = road.connectivity
     
     assert_equal(2, a.size)
-    assert_equal(2, a[0])
+    assert_equal(2, a[0].size)
     assert_equal(nil, a[1])
   end
 
@@ -46,8 +46,8 @@ class ModelTest < Test::Unit::TestCase
     a = road.connectivity
 
     assert_equal(2, a.size)
-    assert_equal(1, a[0])
-    assert_equal(1, a[1])
+    assert_equal(1, a[0].size)
+    assert_equal(1, a[1].size)
   end
 
   def test_road_walk_with_roles_broken_neighbors
@@ -65,8 +65,8 @@ class ModelTest < Test::Unit::TestCase
     a = road.connectivity
 
     assert_equal(2, a.size)
-    assert_equal(2, a[0])
-    assert_equal(1, a[1])
+    assert_equal(2, a[0].size)
+    assert_equal(1, a[1].size)
   end
 
   def test_road_walk_with_roles_broken_backward_roles
@@ -84,8 +84,8 @@ class ModelTest < Test::Unit::TestCase
     a = road.connectivity
 
     assert_equal(2, a.size)
-    assert_equal(2, a[0])
-    assert_equal(2, a[1])
+    assert_equal(2, a[0].size)
+    assert_equal(2, a[1].size)
   end
 
   def test_road_walk_with_roles_broken_forward_roles
@@ -103,7 +103,7 @@ class ModelTest < Test::Unit::TestCase
     a = road.connectivity
 
     assert_equal(2, a.size)
-    assert_equal(2, a[0])
-    assert_equal(2, a[1])
+    assert_equal(2, a[0].size)
+    assert_equal(2, a[1].size)
   end
 end

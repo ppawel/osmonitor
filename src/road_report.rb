@@ -178,7 +178,7 @@ def run_report
 
       backward, forward = road_connected(road, @conn)
 
-      @log.debug("backward = #{backward}, forward = #{forward}, has_proper_network = #{road.has_proper_network}, % = #{road.percent_with_lanes}")
+      @log.debug("backward = #{backward.size}, forward = #{forward.size}, has_proper_network = #{road.has_proper_network}, % = #{road.percent_with_lanes}")
 
       status.backward = backward
       status.forward = forward

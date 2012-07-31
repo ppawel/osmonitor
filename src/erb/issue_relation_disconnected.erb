@@ -1,1 +1,7 @@
-* <small>relation disconnected <% if status.forward.nil? %>(<%= status.backward %>)<% else %>(backward = <%= status.backward %>, forward = <%= status.forward %>)<% end %></small>
+* <small>relation disconnected <% if status.forward.nil? %>(<%= status.backward.size %>)<% else %>(backward = <%= status.backward.size %>, forward = <%= status.forward.size %>)<% end %></small>
+<% if status.backward.size > 1 %>
+* <small><% if !status.forward.nil? %>backward <% end %>end nodes: <% status.backward.each {|end_node| %>{{node|<%= end_node.id %>}} <% } %>
+<% end %>
+<% if !status.forward.nil? and status.forward.size > 1 %>
+* <small>forward end nodes: <% status.forward.each {|end_node| %>{{node|<%= end_node.id %>}} <% } %>
+<% end %>
