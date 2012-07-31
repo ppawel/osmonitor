@@ -172,14 +172,8 @@ def run_report
     #@log.debug("fill_ways took #{Time.now - before}")
 
     if road.relation
-      before = Time.now
       fill_relation_ways(road, @conn)
-      @log.debug("fill_relation_ways took #{Time.now - before}")
-
       backward, forward = road_connected(road, @conn)
-
-      @log.debug("backward = #{backward.size}, forward = #{forward.size}, has_proper_network = #{road.has_proper_network}, % = #{road.percent_with_lanes}")
-
       status.backward = backward
       status.forward = forward
     end
