@@ -71,7 +71,6 @@ def tables_to_roads(page)
 end
 
 def fill_road_relation(road)
-
   sql_select = "SELECT *, OSM_GetRelationLength(r.id) AS length, OSM_IsMostlyCoveredBy(936128, r.id) AS covered
 FROM relations r
 WHERE
@@ -79,11 +78,7 @@ WHERE
   r.tags -> 'route' = 'road' AND"
 
   query = sql_select + eval($sql_where_by_road_type[road.ref_prefix], binding()) + " ORDER BY covered DESC, r.id"
-
-  #puts query
-
   result = @conn.query(query).collect { |row| process_tags(row) }
-
   road.relation = result[0] if result.size > 0 and result[0]['covered'] == 't'
   road.other_relations = result[1..-1].select {|r| r['covered'] == 't'} if result.size > 1
 end
@@ -166,10 +161,10 @@ def run_report
   @log.debug "Got #{roads.size} road(s)"
 
   roads.each_with_index do |road, i|
+    @log.debug("Processing road #{road.ref_prefix + road.ref_number} (#{i + 1} of #{roads.size}) (input length = #{road.input_length})")
+
     status = RoadStatus.new(road)
     fill_road_relation(road)
-
-    @log.debug("Processing road #{road.ref_prefix + road.ref_number} (#{i + 1} of #{roads.size}) (input length = #{road.input_length})")
 
     # Not used for now, commented out for performance reasons.
     #before = Time.now
@@ -202,9 +197,6 @@ end
 def road_connected(road, conn)
   return nil, nil if !road.relation
 
-  nodes = {}
-  before = Time.now
-
   @conn.query("
 SELECT distinct wn.node_id AS id, rm.*, wn.way_id
 FROM relation_members rm
@@ -212,16 +204,7 @@ INNER JOIN way_nodes wn ON (wn.way_id = rm.member_id AND rm.relation_id = #{road
 --INNER JOIN nodes n ON (n.id = wn.node_id)
       ").each do |row|
     row = process_tags(row)
-    node_id = row["id"].to_i
-
-    if !nodes.include? node_id
-      nodes[node_id] = Node.new(row)
-    else
-      node = nodes[node_id]
-      node.row['member_role'] = '' if row['member_role'] == '' or row['member_role'] == 'member'
-      node.row['member_role'] = '' if node.row['member_role'] == 'forward' and row['member_role'] == 'backward'
-      node.row['member_role'] = '' if node.row['member_role'] == 'backward' and row['member_role'] == 'forward'
-    end
+    road.add_node_role(row["id"].to_i, row['member_role'])
   end
 
   @conn.query("SELECT DISTINCT node_id, ARRAY(SELECT DISTINCT
@@ -234,22 +217,10 @@ INNER JOIN relation_members rm ON (rm.member_id = way_id AND rm.relation_id = #{
     ").each do |row|
       row['neighs'].gsub!('{','[')
       row['neighs'].gsub!('}',']')
-      nodes[row["node_id"].to_i].neighs += eval(row['neighs']).collect {|x| x.to_i}
+      road.add_node_neighs(row["node_id"].to_i, eval(row['neighs']).collect {|x| x.to_i})
   end
 
-  @log.debug "road_connected: query took #{Time.now - before}"
-
-  before = Time.now
-
-  has_roles = nodes.select {|id, node| node.row['member_role'] == 'backward' or node.row['member_role'] == 'forward' }.size > 0
-
-  if has_roles
-    forward = bfs(Hash[nodes.select {|id, node| node.row['member_role'] == '' or node.row['member_role'] == 'member' or node.row['member_role'] == 'forward' }])
-    backward = bfs(Hash[nodes.select {|id, node| node.row['member_role'] == '' or node.row['member_role'] == 'member' or node.row['member_role'] == 'backward' }])
-    return backward, forward
-  else
-    return bfs(nodes), nil
-  end
+  return road.connectivity
 end
 
 def fill_relation_ways(road, conn)

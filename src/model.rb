@@ -15,6 +15,7 @@ class Road
   attr_accessor :ways
   attr_accessor :input_length
   attr_accessor :osm_length
+  attr_accessor :nodes
 
   def initialize(ref_prefix, ref_number, row)
     self.ref_prefix = ref_prefix
@@ -25,6 +26,7 @@ class Road
     self.ways = []
     self.input_length = nil
     self.osm_length = nil
+    self.nodes = {}
   end
 
   def get_osm_length
@@ -86,6 +88,28 @@ class Road
   def ways_with_wrong_ref
     return [] if not relation_ways or relation_ways.empty?
     return relation_ways.select { |way| !way['tags'].has_key?('ref') or !get_refs(way).include?(eval($road_type_ref_tag[ref_prefix], binding())) }
+  end
+
+  def add_node_role(node_id, member_role)
+    nodes[node_id] = Node.new if !nodes.include? node_id
+    nodes[node_id].add_role(member_role)
+  end
+
+  def add_node_neighs(node_id, neighs)
+    nodes[node_id].add_neighs(neighs)
+  end
+
+  def connectivity
+    has_roles = nodes.select {|id, node| node.roles.include?('backward' )or node.roles.include?('forward')}.size > 0
+
+    if has_roles
+      forward = road_walk(nodes, 'forward')
+      backward = road_walk(nodes, 'backward')
+      #backward = road_walk(Hash[nodes.select {|id, node| node.row['member_role'] == '' or node.row['member_role'] == 'member' or node.row['member_role'] == 'backward' }])
+      return backward, forward
+    else
+      return road_walk(nodes), nil
+    end
   end
 end
 
@@ -179,16 +203,39 @@ class RoadReport
 end
 
 class Node
-  attr_accessor :row
+  attr_accessor :roles
   attr_accessor :neighs
 
-  def initialize(row)
-    self.row = row
+  def initialize
     self.neighs = []
+    self.roles = []
+  end
+
+  def add_neighs(neighs)
+    self.neighs += neighs
+  end
+
+  def add_role(role)
+    roles << role
+    #node.row['member_role'] = '' if row['member_role'] == '' or row['member_role'] == 'member'
+    #  node.row['member_role'] = '' if node.row['member_role'] == 'forward' and row['member_role'] == 'backward'
+    #  node.row['member_role'] = '' if node.row['member_role'] == 'backward' and row['member_role'] == 'forward'
+  end
+
+  def backward?
+    return (roles.include?('backward') or all?)
+  end
+
+  def forward?
+    return (roles.include?('backward') or all?)
+  end
+
+  def all?
+    return (roles.include?('') or roles.include?('member'))
   end
 end
 
-def bfs(nodes, start_node = nil)
+def road_walk(nodes, role = nil)
   return 0 if nodes.empty?
   visited = {}
   i = 0
@@ -198,23 +245,19 @@ def bfs(nodes, start_node = nil)
   while (visited.size < nodes.size)
     i += 1
 
-    if i == 1 and start_node
-      next_root = start_node
-    else
-      candidates = (nodes.keys - visited.keys)
-      next_root = candidates[0]
-      c = 0
+    candidates = (nodes.keys - visited.keys)
+    next_root = candidates[0]
+    c = 0
 
-      while ! nodes.include?(next_root)
-        c += 1
-        next_root = [c]
-      end
+    while ! nodes.include?(next_root)
+      c += 1
+      next_root = [c]
     end
 
     visited[next_root] = i
     queue = [next_root]
 
-    puts "------------------ INCREASING i to #{i}, next_root = #{next_root} (way_id = #{nodes[next_root].row['way_id']})"
+    #puts "------------------ INCREASING i to #{i}, next_root = #{next_root} (way_id = #{nodes[next_root].row['way_id']})"
 
     count = 0
 
