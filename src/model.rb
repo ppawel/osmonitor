@@ -187,3 +187,60 @@ class Node
     self.neighs = []
   end
 end
+
+def bfs(nodes, start_node = nil)
+  return 0 if nodes.empty?
+  visited = {}
+  i = 0
+
+  #puts nodes
+
+  while (visited.size < nodes.size)
+    i += 1
+
+    if i == 1 and start_node
+      next_root = start_node
+    else
+      candidates = (nodes.keys - visited.keys)
+      next_root = candidates[0]
+      c = 0
+
+      while ! nodes.include?(next_root)
+        c += 1
+        next_root = [c]
+      end
+    end
+
+    visited[next_root] = i
+    queue = [next_root]
+
+    puts "------------------ INCREASING i to #{i}, next_root = #{next_root} (way_id = #{nodes[next_root].row['way_id']})"
+
+    count = 0
+
+    while(!queue.empty?)
+      node = queue.pop()
+      #puts "visiting #{nodes[node].inspect}"
+      #puts nodes[node]
+      nodes[node].neighs.each do |neigh|
+        #puts "neigh #{neigh} visited - #{visited.has_key?(neigh)}"
+        if ! visited.has_key?(neigh) and nodes.include?(neigh) then
+           queue.push(neigh)
+           visited[neigh] = i
+           count += 1
+         end
+      end
+    end
+  end
+
+  components = {}
+
+  visited.each do |node, component|
+    components[component] = [] if !components.has_key?(component)
+    components[component] << node
+  end
+
+  components.each {|id, n| puts "#{id} = #{n.size} node(s)"}
+
+  return i
+end
