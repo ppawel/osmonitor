@@ -139,7 +139,7 @@ class RoadStatus
   end
 
   def connected
-    return (backward == 1 and (forward == 1 or forward.nil?))
+    return (backward.size == 1 and (forward.nil? or forward.size == 1))
   end
 
   def validate
