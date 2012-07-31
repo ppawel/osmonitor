@@ -90,22 +90,20 @@ class Road
     return relation_ways.select { |way| !way['tags'].has_key?('ref') or !get_refs(way).include?(eval($road_type_ref_tag[ref_prefix], binding())) }
   end
 
-  def add_node_role(node_id, member_role)
-    nodes[node_id] = Node.new if !nodes.include? node_id
-    nodes[node_id].add_role(member_role)
-  end
-
-  def add_node_neighs(node_id, neighs)
-    nodes[node_id].add_neighs(neighs)
+  def add_node(node_id, neighbors)
+    if !nodes.has_key?(node_id)
+      nodes[node_id] = Node.new(node_id, neighbors)
+    else
+      nodes[node_id].neighbors += neighbors
+    end
   end
 
   def connectivity
-    has_roles = nodes.select {|id, node| node.roles.include?('backward' )or node.roles.include?('forward')}.size > 0
+    has_roles = nodes.select {|id, node| node.has_neighbor_with_role('backward') or node.has_neighbor_with_role('forward')}.size > 0
 
     if has_roles
-      forward = road_walk(nodes, 'forward')
       backward = road_walk(nodes, 'backward')
-      #backward = road_walk(Hash[nodes.select {|id, node| node.row['member_role'] == '' or node.row['member_role'] == 'member' or node.row['member_role'] == 'backward' }])
+      forward = road_walk(nodes, 'forward')
       return backward, forward
     else
       return road_walk(nodes), nil
@@ -202,76 +200,95 @@ class RoadReport
   end
 end
 
+# Represents a neighbor relation between two nodes. A node can have multiple neighbors - multiple instance of this class.
+# Each neighbor relation points to the neighbor node and contains additional relation info (like way_id or member_role) that
+# can be used during graphtraversal. Node neighbor relation is basically an edge (with weights or other info on it) from graph theory.
+class NodeNeighbor
+  attr_accessor :id
+  attr_accessor :way_id
+  attr_accessor :way_role
+  
+  def initialize(id, way_id, way_role)
+    self.id = id
+    self.way_id = way_id
+    self.way_role = way_role
+  end
+end
+
+# Represents a node in OSM sense. Also holds information about neighboring nodes in OSM sense - nodes that are next to (using sequence_id)
+# this node in an OSM way.
 class Node
-  attr_accessor :roles
-  attr_accessor :neighs
+  attr_accessor :id
+  attr_accessor :neighbors
 
-  def initialize
-    self.neighs = []
-    self.roles = []
+  def initialize(id, neighbors)
+    self.id = id
+    self.neighbors = neighbors
   end
 
-  def add_neighs(neighs)
-    self.neighs += neighs
-  end
-
-  def add_role(role)
-    roles << role
-    #node.row['member_role'] = '' if row['member_role'] == '' or row['member_role'] == 'member'
-    #  node.row['member_role'] = '' if node.row['member_role'] == 'forward' and row['member_role'] == 'backward'
-    #  node.row['member_role'] = '' if node.row['member_role'] == 'backward' and row['member_role'] == 'forward'
+  def has_neighbor_with_role(role)
+    return neighbors.select {|n| n.way_role == role}.size > 0
   end
 
   def backward?
-    return (roles.include?('backward') or all?)
+    return (has_neighbor_with_role('backward') or all?)
   end
 
   def forward?
-    return (roles.include?('backward') or all?)
+    return (has_neighbor_with_role('forward') or all?)
   end
 
   def all?
-    return (roles.include?('') or roles.include?('member'))
+    return has_neighbor_with_role('')
+  end
+
+  def can_go_to(neighbor, walk_role)
+    return (walk_role.nil? or neighbor.way_role == '' or neighbor.way_role == walk_role)
   end
 end
 
 def road_walk(nodes, role = nil)
   return 0 if nodes.empty?
   visited = {}
+  skipped_nodes = 0
   i = 0
 
   #puts nodes
 
-  while (visited.size < nodes.size)
+  while (skipped_nodes + visited.size < nodes.size)
+    next_root = nil
+
+    (nodes.keys - visited.keys).each do |candidate_id|
+      if nodes[candidate_id].all? or nodes[candidate_id].has_neighbor_with_role(role)
+        next_root = candidate_id
+        break
+      end
+
+      skipped_nodes += 1
+    end
+
+    break if next_root.nil?
+
     i += 1
 
-    candidates = (nodes.keys - visited.keys)
-    next_root = candidates[0]
-    c = 0
-
-    while ! nodes.include?(next_root)
-      c += 1
-      next_root = [c]
-    end
+    #puts "ble = #{skipped_nodes + visited.size}"
 
     visited[next_root] = i
     queue = [next_root]
 
-    #puts "------------------ INCREASING i to #{i}, next_root = #{next_root} (way_id = #{nodes[next_root].row['way_id']})"
-
-    count = 0
+    puts "------------------ INCREASING i to #{i}, role = #{role}, next_root = #{next_root}"
 
     while(!queue.empty?)
-      node = queue.pop()
-      #puts "visiting #{nodes[node].inspect}"
+      node_id = queue.pop()
+      node = nodes[node_id]
+      #puts "visiting #{nodes[node_id].inspect}"
       #puts nodes[node]
-      nodes[node].neighs.each do |neigh|
-        #puts "neigh #{neigh} visited - #{visited.has_key?(neigh)}"
-        if ! visited.has_key?(neigh) and nodes.include?(neigh) then
-           queue.push(neigh)
-           visited[neigh] = i
-           count += 1
-         end
+      node.neighbors.each do |neighbor|
+        #puts "neighbor #{neighbor.id} - #{node.can_go_to(neighbor, role).to_s.inspect}"
+        if !visited.has_key?(neighbor.id) and nodes.include?(neighbor.id) and node.can_go_to(neighbor, role)
+           queue.push(neighbor.id)
+           visited[neighbor.id] = i
+        end
       end
     end
   end

@@ -198,33 +198,30 @@ def road_connected(road, conn)
   return nil, nil if !road.relation
 
   @conn.query("
-SELECT distinct wn.node_id AS id, rm.*, wn.way_id
-FROM relation_members rm
-INNER JOIN way_nodes wn ON (wn.way_id = rm.member_id AND rm.relation_id = #{road.relation['id']})
---INNER JOIN nodes n ON (n.id = wn.node_id)
-      ").each do |row|
-    row = process_tags(row)
-    road.add_node_role(row["id"].to_i, row['member_role'])
-  end
-
-  @conn.query("SELECT DISTINCT node_id, ARRAY(SELECT DISTINCT
-                wn_neigh.node_id
+SELECT
+  wn.node_id,
+  wn.way_id,
+  rm.member_role,
+  ARRAY(SELECT 
+          wn_neigh.node_id
         FROM  way_nodes wn_neigh
         WHERE wn_neigh.way_id = wn.way_id AND (wn_neigh.sequence_id = wn.sequence_id - 1 OR wn_neigh.sequence_id = wn.sequence_id + 1)
         ) AS neighs
 FROM way_nodes wn
 INNER JOIN relation_members rm ON (rm.member_id = way_id AND rm.relation_id = #{road.relation['id']})
     ").each do |row|
-      row['neighs'].gsub!('{','[')
-      row['neighs'].gsub!('}',']')
-      road.add_node_neighs(row["node_id"].to_i, eval(row['neighs']).collect {|x| x.to_i})
+    row = process_tags(row)
+    row['neighs'].gsub!('{','[')
+    row['neighs'].gsub!('}',']')
+    neighbor_ids = eval(row['neighs']).collect {|x| x.to_i}
+    road.add_node(row["node_id"].to_i, neighbor_ids.collect {|neighbor_id| NodeNeighbor.new(neighbor_id, row['way_id'].to_i, row['member_role'])})
   end
 
   return road.connectivity
 end
 
 def fill_relation_ways(road, conn)
-  return false if ! road.relation
+  return false if !road.relation
 
   @nodes = {}
   before = Time.now
