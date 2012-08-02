@@ -208,7 +208,7 @@ INNER JOIN relation_members rm ON (rm.member_id = way_id AND rm.relation_id = #{
     row['neighs'].gsub!('{','[')
     row['neighs'].gsub!('}',']')
     neighbor_ids = eval(row['neighs']).collect {|x| x.to_i}
-    road.add_node(row["node_id"].to_i, neighbor_ids.collect {|neighbor_id| NodeNeighbor.new(neighbor_id, row['way_id'].to_i, row['member_role'])})
+    road.add_node(row["node_id"].to_i, row["way_id"].to_i, neighbor_ids.collect {|neighbor_id| NodeNeighbor.new(neighbor_id, row['way_id'].to_i, row['member_role'])})
   end
 
   return road.connectivity

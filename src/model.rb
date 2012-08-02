@@ -14,7 +14,6 @@ class Road
   attr_accessor :relation_ways
   attr_accessor :ways
   attr_accessor :input_length
-  attr_accessor :osm_length
   attr_accessor :nodes
 
   def initialize(ref_prefix, ref_number, row)
@@ -25,7 +24,6 @@ class Road
     self.relation_ways = []
     self.ways = []
     self.input_length = nil
-    self.osm_length = nil
     self.nodes = {}
   end
 
@@ -90,9 +88,9 @@ class Road
     return relation_ways.select { |way| !way['tags'].has_key?('ref') or !get_refs(way).include?(eval($road_type_ref_tag[ref_prefix], binding())) }
   end
 
-  def add_node(node_id, neighbors)
+  def add_node(node_id, way_id, neighbors)
     if !nodes.has_key?(node_id)
-      nodes[node_id] = Node.new(node_id, neighbors)
+      nodes[node_id] = Node.new(node_id, way_id, neighbors)
     else
       nodes[node_id].neighbors += neighbors
     end
@@ -166,6 +164,10 @@ class RoadStatus
     add_info('percent_with_lanes', road.percent_with_lanes)
     add_info('percent_with_maxspeed', road.percent_with_maxspeed)
   end
+
+  def green?
+    return (get_issues(:ERROR).empty? and get_issues(:WARNING).empty?)
+  end
 end
 
 class RoadIssue
@@ -198,6 +200,15 @@ class RoadReport
     red = statuses.select {|status| status.get_issues(:ERROR).size > 0}.size
     return (green / statuses.size.to_f * 100).to_i, (yellow / statuses.size.to_f * 100).to_i, (red / statuses.size.to_f * 100).to_i
   end
+
+  # Returns length statistics (in km): total_input_length, green_length, green_length_percent.
+  def get_length_stats
+    total_input_length = statuses.reduce(0) {|total, status| status.road.input_length.nil? ? total : (total + status.road.input_length)}
+    green_length = statuses.inject(0) {|total, status| status.green? ? total + status.road.get_osm_length : total}
+    green_length_percent = 0
+    green_length_percent = green_length / total_input_length * 100 if total_input_length > 0
+    return total_input_length, green_length, green_length_percent
+  end
 end
 
 # Represents a neighbor relation between two nodes. A node can have multiple neighbors - multiple instance of this class.
@@ -219,10 +230,12 @@ end
 # this node in an OSM way.
 class Node
   attr_accessor :id
+  attr_accessor :way_id
   attr_accessor :neighbors
 
-  def initialize(id, neighbors)
+  def initialize(id, way_id, neighbors)
     self.id = id
+    self.way_id = way_id
     self.neighbors = neighbors
   end
 
