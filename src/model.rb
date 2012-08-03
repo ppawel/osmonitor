@@ -19,12 +19,12 @@ class Road
   def initialize(ref_prefix, ref_number, row)
     self.ref_prefix = ref_prefix
     self.ref_number = ref_number
+    self.ways = {}
+    self.nodes = {}
     self.row = row
     self.other_relations = []
     self.relation_ways = []
-    self.ways = []
     self.input_length = nil
-    self.nodes = {}
   end
 
   def get_osm_length
@@ -88,12 +88,20 @@ class Road
     return relation_ways.select { |way| !way['tags'].has_key?('ref') or !get_refs(way).include?(eval($road_type_ref_tag[ref_prefix], binding())) }
   end
 
-  def add_node(node_id, way_id, neighbors)
-    if !nodes.has_key?(node_id)
-      nodes[node_id] = Node.new(node_id, way_id, neighbors)
-    else
-      nodes[node_id].neighbors += neighbors
-    end
+  def get_node(node_id)
+    return nodes[node_id]
+  end
+
+  def add_node(node)
+    nodes[node.id] = node
+  end
+
+  def get_way(way_id)
+    return ways[way_id]
+  end
+
+  def add_way(way)
+    ways[way.id] = way
   end
 
   def connectivity
@@ -226,38 +234,44 @@ class NodeNeighbor
   end
 end
 
-# Represents a node in OSM sense. Also holds information about neighboring nodes in OSM sense - nodes that are next to (using sequence_id)
-# this node in an OSM way.
+# Represents a node in OSM sense.
 class Node
   attr_accessor :id
-  attr_accessor :way_id
-  attr_accessor :neighbors
+  attr_accessor :tags
 
-  def initialize(id, way_id, neighbors)
+  def initialize(id, tags)
     self.id = id
-    self.way_id = way_id
-    self.neighbors = neighbors
+    self.tags = tags
   end
 
-  def has_neighbor_with_role(role)
-    return neighbors.select {|n| n.way_role == role}.size > 0
+  def hash
+    return id
   end
 
-  def backward?
-    return (has_neighbor_with_role('backward') or all?)
+  def ==(o)
+    o.class == self.class and o.id == id
+  end
+  alias_method :eql?, :==
+end
+
+# Represents a way in OSM sense.
+class Way
+  attr_accessor :id
+  attr_accessor :tags
+
+  def initialize(id, tags)
+    self.id = id
+    self.tags = tags
   end
 
-  def forward?
-    return (has_neighbor_with_role('forward') or all?)
+  def hash
+    return id
   end
 
-  def all?
-    return has_neighbor_with_role('')
+  def ==(o)
+    o.class == self.class and o.id == id
   end
-
-  def can_go_to(neighbor, walk_role)
-    return (walk_role.nil? or neighbor.way_role == '' or neighbor.way_role == walk_role)
-  end
+  alias_method :eql?, :==
 end
 
 def road_walk(nodes, role = nil)

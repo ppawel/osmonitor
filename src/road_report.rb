@@ -9,6 +9,7 @@ require './config'
 require './model'
 require './elogger'
 require './wiki'
+require './road_graph'
 
 if ARGV.size == 0
   puts "Usage: road_report.rb <input page> <output page>"
@@ -78,7 +79,7 @@ WHERE
   r.tags -> 'route' = 'road' AND"
 
   query = sql_select + eval($sql_where_by_road_type[road.ref_prefix], binding()) + " ORDER BY covered DESC, r.id"
-  result = @conn.query(query).collect { |row| process_tags(row) }
+  result = @conn.query(query).collect {|row| process_tags(row)}
   road.relation = result[0] if result.size > 0 and result[0]['covered'] == 't'
   road.other_relations = result[1..-1].select {|r| r['covered'] == 't'} if result.size > 1
 end
@@ -148,6 +149,82 @@ def insert_data_timestamp(page)
     TIMESTAMP_BEGIN + get_data_timestamp + TIMESTAMP_END)
 end
 
+def load_road_graph(road)
+  road_graph = RoadGraph.new
+
+  result = @conn.query("
+SELECT
+  rm.member_role AS member_role,
+  w.id AS way_id,
+  w.tags AS way_tags,
+  n.id AS node_id,
+  n.tags AS node_tags,
+  wn.sequence_id AS node_sequence_id
+FROM way_nodes wn
+INNER JOIN relation_members rm ON (rm.member_id = way_id AND rm.relation_id = #{road.relation['id']})
+INNER JOIN ways w ON (w.id = wn.way_id)
+INNER JOIN nodes n ON (n.id = wn.node_id)
+ORDER BY rm.sequence_id, wn.way_id, wn.sequence_id
+    ").collect do |row|
+    # This simply translates "tags" columns to Ruby hashes.
+    process_tags(row, 'way_tags')
+    process_tags(row, 'node_tags')
+  end
+
+  before = Time.now
+
+  # OK, now we have a lot of data, need to process it and create a graph! Let's get to work...
+
+  # First, we create Node objects and add them to the graph as vertices.
+
+  result.each do |row|
+    node_id = row['node_id'].to_i
+    node = road.get_node(node_id)
+
+    next if node
+
+    node = Node.new(node_id, row['node_tags'])
+    road.add_node(node)
+    road_graph.graph.add_vertex!(node)
+  end
+
+  # Second, we create Way objects and create edges in the graph between nodes in a way. So a single way can have multiple edges.
+
+  i = 0
+
+  while i < result.size
+    row = result[i]
+    way_id = row['way_id'].to_i
+    way = Way.new(way_id, row['way_tags'])
+    road.add_way(way)
+
+    prev_row = row
+
+    while prev_row['way_id'].to_i == way.id and i + 1 < result.size
+      prev_row = result[i]
+      row = result[i + 1]
+
+      node1 = road.get_node(prev_row['node_id'].to_i)
+      node2 = road.get_node(row['node_id'].to_i)
+
+      if node1 and node2
+        road_graph.graph.add_edge!(node1, node2, way)
+      end
+
+      i += 1
+    end
+
+    i += 1
+  end
+
+  road_graph.graph.connected?
+
+  #puts road_graph.graph.cyclic?
+  @log.debug("Graph construction took #{Time.now - before}")
+
+  #puts road_graph.graph.neighborhood(road.get_node(801050695)).inspect
+end
+
 def run_report
   page = get_wiki_page(@input_page)
   current_page_text = page.page_text.dup
@@ -160,6 +237,7 @@ def run_report
   @log.debug "Got #{roads.size} road(s)"
 
   roads.each_with_index do |road, i|
+    before = Time.now
     @log.debug("Processing road #{road.ref_prefix + road.ref_number} (#{i + 1} of #{roads.size}) (input length = #{road.input_length})")
 
     status = RoadStatus.new(road)
@@ -171,14 +249,17 @@ def run_report
     #@log.debug("fill_ways took #{Time.now - before}")
 
     if road.relation
-      fill_relation_ways(road, @conn)
-      backward, forward = road_connected(road, @conn)
-      status.backward = backward
-      status.forward = forward
+      @log.debug("Found relation for road: #{road.relation['id']}")
+      load_road_graph(road)
+      #backward, forward = road_connected(road, @conn)
+      status.backward = []
+      status.forward = []
     end
 
     fill_road_status(status)
     report.add_status(status)
+
+    @log.debug("Road #{road.ref_prefix + road.ref_number} took #{Time.now - before}")
   end
 
   insert_stats(page, report)
@@ -192,45 +273,6 @@ def run_report
   insert_data_timestamp(page)
   wiki_login
   edit_wiki_page(@output_page, page.page_text)
-end
-
-def road_connected(road, conn)
-  return nil, nil if !road.relation
-
-  @conn.query("
-SELECT
-  wn.node_id,
-  wn.way_id,
-  rm.member_role,
-  ARRAY(SELECT 
-          wn_neigh.node_id
-        FROM  way_nodes wn_neigh
-        WHERE wn_neigh.way_id = wn.way_id AND (wn_neigh.sequence_id = wn.sequence_id - 1 OR wn_neigh.sequence_id = wn.sequence_id + 1)
-        ) AS neighs
-FROM way_nodes wn
-INNER JOIN relation_members rm ON (rm.member_id = way_id AND rm.relation_id = #{road.relation['id']})
-    ").each do |row|
-    row = process_tags(row)
-    row['neighs'].gsub!('{','[')
-    row['neighs'].gsub!('}',']')
-    neighbor_ids = eval(row['neighs']).collect {|x| x.to_i}
-    road.add_node(row["node_id"].to_i, row["way_id"].to_i, neighbor_ids.collect {|neighbor_id| NodeNeighbor.new(neighbor_id, row['way_id'].to_i, row['member_role'])})
-  end
-
-  return road.connectivity
-end
-
-def fill_relation_ways(road, conn)
-  return false if !road.relation
-
-  @nodes = {}
-  before = Time.now
-
-  road.relation_ways = conn.query("
-SELECT distinct w.*
-FROM relation_members rm
-INNER JOIN ways w ON (w.id = rm.member_id)
-WHERE rm.relation_id = #{road.relation['id']}").collect { |row| process_tags(row) }
 end
 
 def fill_ways(road, conn)
@@ -247,8 +289,8 @@ WHERE #{sql_where} AND
   road.ways = conn.query(sql).collect { |row| process_tags(row) }
 end
 
-def process_tags(row)
-  row['tags'] = eval("{#{row['tags']}}")
+def process_tags(row, field_name = 'tags')
+  row[field_name] = eval("{#{row[field_name]}}")
   return row
 end
 
