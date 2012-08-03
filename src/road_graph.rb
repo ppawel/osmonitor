@@ -1,5 +1,5 @@
 require './model'
-require './plexus'
+
 
 class RoadGraph
   attr_accessor :graph

@@ -15,6 +15,9 @@ class Road
   attr_accessor :ways
   attr_accessor :input_length
   attr_accessor :nodes
+  attr_accessor :all_graph
+  attr_accessor :backward_graph
+  attr_accessor :forward_graph
 
   def initialize(ref_prefix, ref_number, row)
     self.ref_prefix = ref_prefix
@@ -252,15 +255,21 @@ class Node
     o.class == self.class and o.id == id
   end
   alias_method :eql?, :==
+
+  def to_s
+    return "node_id = #{id}"
+  end
 end
 
 # Represents a way in OSM sense.
 class Way
   attr_accessor :id
+  attr_accessor :member_role
   attr_accessor :tags
 
-  def initialize(id, tags)
+  def initialize(id, member_role, tags)
     self.id = id
+    self.member_role = member_role
     self.tags = tags
   end
 

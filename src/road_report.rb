@@ -9,7 +9,14 @@ require './config'
 require './model'
 require './elogger'
 require './wiki'
-require './road_graph'
+
+# Because we are bundled in OSMonitor!
+$:.unshift File.dirname(__FILE__)
+
+require './rgl/adjacency'
+require './rgl/implicit'
+require './rgl/connected_components'
+require './rgl/dot'
 
 if ARGV.size == 0
   puts "Usage: road_report.rb <input page> <output page>"
@@ -150,7 +157,9 @@ def insert_data_timestamp(page)
 end
 
 def load_road_graph(road)
-  road_graph = RoadGraph.new
+  road.all_graph = RGL::AdjacencyGraph.new
+  road.backward_graph = RGL::AdjacencyGraph.new
+  road.forward_graph = RGL::AdjacencyGraph.new
 
   result = @conn.query("
 SELECT
@@ -176,7 +185,7 @@ ORDER BY rm.sequence_id, wn.way_id, wn.sequence_id
   # OK, now we have a lot of data, need to process it and create a graph! Let's get to work...
 
   # First, we create Node objects and add them to the graph as vertices.
-
+begin
   result.each do |row|
     node_id = row['node_id'].to_i
     node = road.get_node(node_id)
@@ -185,9 +194,8 @@ ORDER BY rm.sequence_id, wn.way_id, wn.sequence_id
 
     node = Node.new(node_id, row['node_tags'])
     road.add_node(node)
-    road_graph.graph.add_vertex!(node)
   end
-
+end
   # Second, we create Way objects and create edges in the graph between nodes in a way. So a single way can have multiple edges.
 
   i = 0
@@ -195,7 +203,7 @@ ORDER BY rm.sequence_id, wn.way_id, wn.sequence_id
   while i < result.size
     row = result[i]
     way_id = row['way_id'].to_i
-    way = Way.new(way_id, row['way_tags'])
+    way = Way.new(way_id, row['member_role'], row['way_tags'])
     road.add_way(way)
 
     prev_row = row
@@ -207,8 +215,28 @@ ORDER BY rm.sequence_id, wn.way_id, wn.sequence_id
       node1 = road.get_node(prev_row['node_id'].to_i)
       node2 = road.get_node(row['node_id'].to_i)
 
-      if node1 and node2
-        road_graph.graph.add_edge!(node1, node2, way)
+      if way.member_role == 'member' or way.member_role == ''
+        road.all_graph.add_vertex(node1)
+        road.all_graph.add_vertex(node2)
+        road.backward_graph.add_vertex(node1)
+        road.backward_graph.add_vertex(node2)
+        road.forward_graph.add_vertex(node1)
+        road.forward_graph.add_vertex(node2)
+        road.all_graph.add_edge(node1, node2)
+        road.backward_graph.add_edge(node1, node2)
+        road.forward_graph.add_edge(node1, node2)
+      end
+
+      if way.member_role == 'backward'
+        road.backward_graph.add_vertex(node1)
+        road.backward_graph.add_vertex(node2)
+        road.backward_graph.add_edge(node1, node2)
+      end
+
+      if way.member_role == 'forward'
+        road.forward_graph.add_vertex(node1)
+        road.forward_graph.add_vertex(node2)
+        road.forward_graph.add_edge(node1, node2)
       end
 
       i += 1
@@ -217,9 +245,17 @@ ORDER BY rm.sequence_id, wn.way_id, wn.sequence_id
     i += 1
   end
 
-  road_graph.graph.connected?
+  comp = []
 
-  #puts road_graph.graph.cyclic?
+  road.forward_graph.each_connected_component do |v|
+    comp << road.forward_graph.induced_subgraph(v)
+  end
+
+  #comp.map {|c| puts c.size}
+  puts comp.inspect
+  #puts road.backward_graph.each_connected_component {|c| puts c}
+  #road.forward_graph.write_to_graphic_file
+
   @log.debug("Graph construction took #{Time.now - before}")
 
   #puts road_graph.graph.neighborhood(road.get_node(801050695)).inspect
