@@ -150,11 +150,10 @@ end
 
 def run_report
   page = get_wiki_page(@input_page)
-  page_text = page.page_text.dup
+  current_page_text = page.page_text.dup
   report = RoadReport.new
 
   #prepare_page(page)
-  insert_data_timestamp(page)
 
   roads = tables_to_roads(page)
 
@@ -184,6 +183,13 @@ def run_report
 
   insert_stats(page, report)
 
+  # Check if anything has changed - no point in uploading the same page only with updated timestamp.
+  if current_page_text == page.page_text
+    puts 'No change in the report - not uploading new version to the wiki!'
+    exit
+  end
+
+  insert_data_timestamp(page)
   wiki_login
   edit_wiki_page(@output_page, page.page_text)
 end
