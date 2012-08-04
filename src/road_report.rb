@@ -171,14 +171,8 @@ ORDER BY rm.sequence_id, wn.way_id, wn.sequence_id
   end
 
   before = Time.now
-
   road.graph.load(result)
-
-  #puts road.backward_graph.each_connected_component {|c| puts c}
-
   @log.debug("Graph construction took #{Time.now - before}")
-
-  #puts road_graph.graph.neighborhood(road.get_node(801050695)).inspect
 end
 
 def run_report
@@ -211,14 +205,17 @@ def run_report
       status.backward = road.graph.backward_graph.connected_components_nonrecursive
       status.forward = road.graph.forward_graph.connected_components_nonrecursive
 
-      p road.graph.suggest_backward_fixes.inspect if status.backward.size > 1
-      p road.graph.suggest_forward_fixes.inspect if status.forward.size > 1
+      #p road.graph.suggest_backward_fixes.inspect if status.backward.size > 1
+      #p road.graph.suggest_forward_fixes.inspect if status.forward.size > 1
+    else
+      status.backward = []
+      status.forward = []
     end
 
     fill_road_status(status)
     report.add_status(status)
 
-    @log.debug("Road #{road.ref_prefix + road.ref_number} took #{Time.now - before}")
+    @log.debug("Road #{road.ref_prefix + road.ref_number} took #{Time.now - before} (backward = #{status.backward.size}, forward = #{status.forward.size})")
   end
 
   insert_stats(page, report)

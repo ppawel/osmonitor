@@ -83,9 +83,6 @@ class RoadGraph
         forward_graph.add_edge(node1, node2)
       end
     end
-    p road.graph.suggest_backward_fixes.inspect
-    p road.graph.suggest_forward_fixes.inspect
-    #puts end_nodes.collect {|v| backward_graph.each_adjacent(v) if backward_graph.has_vertex?(v)}.inspect
   end
 
   def end_nodes(graph)
@@ -107,7 +104,7 @@ class RoadGraph
 
     end_nodes(graph_to_fix).each_pair do |a, b|
       next if !graph_with_fixes.has_vertex?(a) or !graph_with_fixes.has_vertex?(b)
-      it = RGL::PathIterator.new(graph_with_fixes, a, b, 5)
+      it = RGL::PathIterator.new(graph_with_fixes, a, b, 3)
       it.set_to_end
       paths << it.path if it.found_path
     end

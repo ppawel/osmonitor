@@ -10,14 +10,16 @@ module RGL
 
   class ComponentIterator < BFSIterator
     attr_accessor :current_component
+    attr_accessor :graph_size
 
     def initialize(graph)
       self.current_component = AdjacencyGraph.new
+      self.graph_size = graph.num_vertices
       super(graph)
     end
 
     def at_end?
-      @color_map.size == graph.num_vertices
+      @color_map.size == @graph_size
     end
 
     protected
@@ -33,8 +35,6 @@ module RGL
     end
 
     def handle_finish_vertex(v)
-      #puts @waiting.inspect
-      #puts "finished #{v} ; waiting = #{@waiting.inspect} #{at_end?}"
       emit_handle_examine_component if at_end?
     end
 
@@ -80,7 +80,7 @@ module RGL
       it  = ComponentIterator.new(self)
       it.set_examine_component_event_handler { |c| comp << c }
       it.set_to_end
-      #puts comp.inspect
+
       return comp
     end
 
