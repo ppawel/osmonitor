@@ -8,6 +8,42 @@ require 'rgl/traversal'
 
 module RGL
 
+  class ComponentIterator < BFSIterator
+    attr_accessor :current_component
+
+    def initialize(graph)
+      self.current_component = AdjacencyGraph.new
+      super(graph)
+    end
+
+    def at_end?
+      @color_map.size == graph.num_vertices
+    end
+
+    protected
+
+    def next_vertex
+      return @waiting.shift if !@waiting.empty?
+      emit_handle_examine_component
+      return (graph.vertices - @color_map.keys)[0]
+    end
+
+    def handle_tree_edge(u, v)
+      self.current_component.add_edge(u, v)
+    end
+
+    def handle_finish_vertex(v)
+      #puts @waiting.inspect
+      #puts "finished #{v} ; waiting = #{@waiting.inspect} #{at_end?}"
+      emit_handle_examine_component if at_end?
+    end
+
+    def emit_handle_examine_component
+      handle_examine_component(current_component)
+      @current_component = AdjacencyGraph.new
+    end
+  end
+
   module Graph
 
     # Compute the connected components of an undirected graph, using a
@@ -26,13 +62,26 @@ module RGL
         "for undirected graphs." if directed?
       comp = []
       vis  = DFSVisitor.new(self)
-      vis.set_finish_vertex_event_handler { |v| comp << v }
+      vis.set_handle_exafinish_vertex_event_handler { |v| comp << v }
       vis.set_start_vertex_event_handler { |v|
         yield comp unless comp.empty?
         comp = []
       }
       depth_first_search(vis) { |v| }
       yield comp unless comp.empty?
+    end
+
+    def connected_components_nonrecursive
+      raise NotUndirectedError,
+        "each_connected_component only works " +
+        "for undirected graphs." if directed?
+      comp = []
+
+      it  = ComponentIterator.new(self)
+      it.set_examine_component_event_handler { |c| comp << c }
+      it.set_to_end
+      #puts comp.inspect
+      return comp
     end
 
     # This GraphVisitor is used by strongly_connected_components to compute

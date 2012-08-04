@@ -10,13 +10,7 @@ require './model'
 require './elogger'
 require './wiki'
 
-# Because we are bundled in OSMonitor!
-$:.unshift File.dirname(__FILE__)
 
-require './rgl/adjacency'
-require './rgl/implicit'
-require './rgl/connected_components'
-require './rgl/dot'
 
 if ARGV.size == 0
   puts "Usage: road_report.rb <input page> <output page>"
@@ -157,10 +151,6 @@ def insert_data_timestamp(page)
 end
 
 def load_road_graph(road)
-  road.all_graph = RGL::AdjacencyGraph.new
-  road.backward_graph = RGL::AdjacencyGraph.new
-  road.forward_graph = RGL::AdjacencyGraph.new
-
   result = @conn.query("
 SELECT
   rm.member_role AS member_role,
@@ -182,79 +172,9 @@ ORDER BY rm.sequence_id, wn.way_id, wn.sequence_id
 
   before = Time.now
 
-  # OK, now we have a lot of data, need to process it and create a graph! Let's get to work...
+  road.graph.load(result)
 
-  # First, we create Node objects and add them to the graph as vertices.
-begin
-  result.each do |row|
-    node_id = row['node_id'].to_i
-    node = road.get_node(node_id)
-
-    next if node
-
-    node = Node.new(node_id, row['node_tags'])
-    road.add_node(node)
-  end
-end
-  # Second, we create Way objects and create edges in the graph between nodes in a way. So a single way can have multiple edges.
-
-  i = 0
-
-  while i < result.size
-    row = result[i]
-    way_id = row['way_id'].to_i
-    way = Way.new(way_id, row['member_role'], row['way_tags'])
-    road.add_way(way)
-
-    prev_row = row
-
-    while prev_row['way_id'].to_i == way.id and i + 1 < result.size
-      prev_row = result[i]
-      row = result[i + 1]
-
-      node1 = road.get_node(prev_row['node_id'].to_i)
-      node2 = road.get_node(row['node_id'].to_i)
-
-      if way.member_role == 'member' or way.member_role == ''
-        road.all_graph.add_vertex(node1)
-        road.all_graph.add_vertex(node2)
-        road.backward_graph.add_vertex(node1)
-        road.backward_graph.add_vertex(node2)
-        road.forward_graph.add_vertex(node1)
-        road.forward_graph.add_vertex(node2)
-        road.all_graph.add_edge(node1, node2)
-        road.backward_graph.add_edge(node1, node2)
-        road.forward_graph.add_edge(node1, node2)
-      end
-
-      if way.member_role == 'backward'
-        road.backward_graph.add_vertex(node1)
-        road.backward_graph.add_vertex(node2)
-        road.backward_graph.add_edge(node1, node2)
-      end
-
-      if way.member_role == 'forward'
-        road.forward_graph.add_vertex(node1)
-        road.forward_graph.add_vertex(node2)
-        road.forward_graph.add_edge(node1, node2)
-      end
-
-      i += 1
-    end
-
-    i += 1
-  end
-
-  comp = []
-
-  road.forward_graph.each_connected_component do |v|
-    comp << road.forward_graph.induced_subgraph(v)
-  end
-
-  #comp.map {|c| puts c.size}
-  puts comp.inspect
   #puts road.backward_graph.each_connected_component {|c| puts c}
-  #road.forward_graph.write_to_graphic_file
 
   @log.debug("Graph construction took #{Time.now - before}")
 
@@ -288,8 +208,9 @@ def run_report
       @log.debug("Found relation for road: #{road.relation['id']}")
       load_road_graph(road)
       #backward, forward = road_connected(road, @conn)
-      status.backward = []
-      status.forward = []
+      status.backward = road.graph.backward_graph.connected_components_nonrecursive
+      status.forward = road.graph.forward_graph.connected_components_nonrecursive
+      puts status.backward.size
     end
 
     fill_road_status(status)

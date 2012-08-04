@@ -137,7 +137,7 @@ module RGL
     end
 
     %w[examine_vertex finish_vertex examine_edge tree_edge back_edge
-       forward_edge].each do |m|
+       forward_edge examine_component].each do |m|
       def_event_handler(m)
     end
 
@@ -220,7 +220,6 @@ module RGL
       @waiting.shift
     end
   end		# class BFSIterator
-
 
   module Graph
 

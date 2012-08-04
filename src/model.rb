@@ -1,5 +1,6 @@
-require "./config"
-require "./wiki"
+require './config'
+require './wiki'
+require './road_graph'
 
 def get_relation_network(prefix)
   return $road_type_network_tag[prefix]
@@ -15,9 +16,7 @@ class Road
   attr_accessor :ways
   attr_accessor :input_length
   attr_accessor :nodes
-  attr_accessor :all_graph
-  attr_accessor :backward_graph
-  attr_accessor :forward_graph
+  attr_accessor :graph
 
   def initialize(ref_prefix, ref_number, row)
     self.ref_prefix = ref_prefix
@@ -28,6 +27,7 @@ class Road
     self.other_relations = []
     self.relation_ways = []
     self.input_length = nil
+    self.graph = RoadGraph.new(self)
   end
 
   def get_osm_length
@@ -222,21 +222,6 @@ class RoadReport
   end
 end
 
-# Represents a neighbor relation between two nodes. A node can have multiple neighbors - multiple instance of this class.
-# Each neighbor relation points to the neighbor node and contains additional relation info (like way_id or member_role) that
-# can be used during graphtraversal. Node neighbor relation is basically an edge (with weights or other info on it) from graph theory.
-class NodeNeighbor
-  attr_accessor :id
-  attr_accessor :way_id
-  attr_accessor :way_role
-  
-  def initialize(id, way_id, way_role)
-    self.id = id
-    self.way_id = way_id
-    self.way_role = way_role
-  end
-end
-
 # Represents a node in OSM sense.
 class Node
   attr_accessor :id
@@ -257,7 +242,7 @@ class Node
   alias_method :eql?, :==
 
   def to_s
-    return "node_id = #{id}"
+    return "Node(#{id})"
   end
 end
 
@@ -281,68 +266,4 @@ class Way
     o.class == self.class and o.id == id
   end
   alias_method :eql?, :==
-end
-
-def road_walk(nodes, role = nil)
-  return nil if nodes.empty?
-
-  end_nodes = []
-  visited = {}
-  skipped_nodes = 0
-  i = 0
-
-  #puts nodes
-
-  while (skipped_nodes + visited.size < nodes.size)
-    next_root = nil
-
-    (nodes.keys - visited.keys).each do |candidate_id|
-      if nodes[candidate_id].all? or nodes[candidate_id].has_neighbor_with_role(role)
-        next_root = candidate_id
-        break
-      end
-
-      skipped_nodes += 1
-    end
-
-    break if next_root.nil?
-
-    i += 1
-
-    #puts "ble = #{skipped_nodes + visited.size}"
-
-    visited[next_root] = i
-    queue = [next_root]
-
-    puts "------------------ INCREASING i to #{i}, role = #{role}, next_root = #{next_root}"
-
-    current_node = nil
-
-    while(!queue.empty?)
-      node_id = queue.pop()
-      current_node = nodes[node_id]
-      #puts "visiting #{nodes[node_id].inspect}"
-      #puts nodes[node]
-      current_node.neighbors.each do |neighbor|
-        #puts "neighbor #{neighbor.id} - #{node.can_go_to(neighbor, role).to_s.inspect}"
-        if !visited.has_key?(neighbor.id) and nodes.include?(neighbor.id) and current_node.can_go_to(neighbor, role)
-           queue.push(neighbor.id)
-           visited[neighbor.id] = i
-        end
-      end
-    end
-
-    end_nodes << current_node
-  end
-
-  components = {}
-
-  visited.each do |node, component|
-    components[component] = [] if !components.has_key?(component)
-    components[component] << node
-  end
-
-  components.each {|id, n| puts "#{id} = #{n.size} node(s)"}
-
-  return end_nodes
 end
