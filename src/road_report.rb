@@ -210,7 +210,9 @@ def run_report
       #backward, forward = road_connected(road, @conn)
       status.backward = road.graph.backward_graph.connected_components_nonrecursive
       status.forward = road.graph.forward_graph.connected_components_nonrecursive
-      puts status.backward.size
+
+      p road.graph.suggest_backward_fixes.inspect if status.backward.size > 1
+      p road.graph.suggest_forward_fixes.inspect if status.forward.size > 1
     end
 
     fill_road_status(status)
