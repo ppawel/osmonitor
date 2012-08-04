@@ -170,9 +170,7 @@ ORDER BY rm.sequence_id, wn.way_id, wn.sequence_id
     process_tags(row, 'node_tags')
   end
 
-  before = Time.now
   road.graph.load(result)
-  @log.debug("Graph construction took #{Time.now - before}")
 end
 
 def run_report
@@ -188,7 +186,7 @@ def run_report
 
   roads.each_with_index do |road, i|
     before = Time.now
-    @log.debug("Processing road #{road.ref_prefix + road.ref_number} (#{i + 1} of #{roads.size}) (input length = #{road.input_length})")
+    @log.debug("BEGIN road #{road.ref_prefix + road.ref_number} (#{i + 1} of #{roads.size}) (input length = #{road.input_length})")
 
     status = RoadStatus.new(road)
     fill_road_relation(road)
@@ -199,19 +197,28 @@ def run_report
     #@log.debug("fill_ways took #{Time.now - before}")
 
     if road.relation
-      @log.debug("Found relation for road: #{road.relation['id']}")
+      @log.debug("  Found relation for road: #{road.relation['id']}")
+
+      before = Time.now
+
       load_road_graph(road)
-      #backward, forward = road_connected(road, @conn)
+
+      @log.debug("  Loaded road graph (#{Time.now - before})")
+
+      before = Time.now
+
       status.backward = road.graph.backward_graph.connected_components_nonrecursive
       status.forward = road.graph.forward_graph.connected_components_nonrecursive
-      status.backward_fixes = road.graph.suggest_backward_fixes if status.backward.size > 1
-      status.forward_fixes = road.graph.suggest_forward_fixes if status.forward.size > 1
+
+      @log.debug("  Calculated status (#{Time.now - before})")
+      #status.backward_fixes = road.graph.suggest_backward_fixes if status.backward.size > 1
+      #status.forward_fixes = road.graph.suggest_forward_fixes if status.forward.size > 1
     end
 
     fill_road_status(status)
     report.add_status(status)
 
-    @log.debug("Road #{road.ref_prefix + road.ref_number} took #{Time.now - before} (backward = #{status.backward.size}, forward = #{status.forward.size})")
+    @log.debug("END road #{road.ref_prefix + road.ref_number} took #{Time.now - before} (backward = #{status.backward.size}, forward = #{status.forward.size})")
   end
 
   insert_stats(page, report)
