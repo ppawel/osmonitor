@@ -59,6 +59,9 @@ class RoadGraph
       node1 = road.get_node(a['node_id'].to_i)
       node2 = road.get_node(b['node_id'].to_i)
 
+      node1.add_way(way)
+      node2.add_way(way)
+
       if way.member_role == 'member' or way.member_role == ''
         all_graph.add_vertex(node1)
         all_graph.add_vertex(node2)
@@ -104,9 +107,11 @@ class RoadGraph
 
     end_nodes(graph_to_fix).each_pair do |a, b|
       next if !graph_with_fixes.has_vertex?(a) or !graph_with_fixes.has_vertex?(b)
-      it = RGL::PathIterator.new(graph_with_fixes, a, b, 3)
+      it = RGL::PathIterator.new(graph_with_fixes, a, b, 10)
       it.set_to_end
-      paths << it.path if it.found_path
+      next if !it.found_path
+
+      paths += it.path.collect {|edge| edge[0].get_mutual_way(edge[1])}.uniq.select {|way| way.member_role != ''}
     end
 
     return paths

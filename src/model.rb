@@ -125,10 +125,16 @@ class RoadStatus
   attr_accessor :issues
   attr_accessor :backward
   attr_accessor :forward
+  attr_accessor :backward_fixes
+  attr_accessor :forward_fixes
 
   def initialize(road)
     self.road = road
     self.issues = []
+    self.backward = []
+    self.forward = []
+    self.backward_fixes = []
+    self.forward_fixes = []
   end
 
   def add_error(name, data = {})
@@ -226,10 +232,21 @@ end
 class Node
   attr_accessor :id
   attr_accessor :tags
+  attr_accessor :ways
 
   def initialize(id, tags)
     self.id = id
     self.tags = tags
+    self.ways = {}
+  end
+
+  def add_way(way)
+    @ways[way.id] = way
+  end
+
+  def get_mutual_way(node)
+    common_way_ids = node.ways.keys & @ways.keys
+    return @ways[common_way_ids[0]] if !common_way_ids.empty?
   end
 
   def hash

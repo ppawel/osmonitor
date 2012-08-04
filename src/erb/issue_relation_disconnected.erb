@@ -1,1 +1,7 @@
 * <small>relation disconnected <% if status.forward.nil? %>(<%= status.backward.size %>)<% else %>(backward = <%= status.backward.size %>, forward = <%= status.forward.size %>)<% end %></small>
+<% if !status.backward_fixes.empty? %>
+* <small>potential backward problems: <% status.backward_fixes.each {|way| %>{{way|<%= way.id %>}} <% } %>
+<% end %>
+<% if !status.forward_fixes.empty? %>
+* <small>potential forward problems: <% status.forward_fixes.each {|way| %>{{way|<%= way.id %>}} <% } %>
+<% end %>
