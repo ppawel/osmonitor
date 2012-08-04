@@ -154,15 +154,15 @@ def load_road_graph(road)
   result = @conn.query("
 SELECT
   rm.member_role AS member_role,
-  w.id AS way_id,
-  w.tags AS way_tags,
-  n.id AS node_id,
-  n.tags AS node_tags,
-  wn.sequence_id AS node_sequence_id
+  wn.way_id AS way_id,
+--  w.tags AS way_tags,
+  wn.node_id AS node_id
+--  n.tags AS node_tags,
+--  wn.sequence_id AS node_sequence_id
 FROM way_nodes wn
 INNER JOIN relation_members rm ON (rm.member_id = way_id AND rm.relation_id = #{road.relation['id']})
-INNER JOIN ways w ON (w.id = wn.way_id)
-INNER JOIN nodes n ON (n.id = wn.node_id)
+--INNER JOIN ways w ON (w.id = wn.way_id)
+--INNER JOIN nodes n ON (n.id = wn.node_id)
 ORDER BY rm.sequence_id, wn.way_id, wn.sequence_id
     ").collect do |row|
     # This simply translates "tags" columns to Ruby hashes.
@@ -185,7 +185,7 @@ def run_report
   @log.debug "Got #{roads.size} road(s)"
 
   roads.each_with_index do |road, i|
-    before = Time.now
+    road_before = Time.now
     @log.debug("BEGIN road #{road.ref_prefix + road.ref_number} (#{i + 1} of #{roads.size}) (input length = #{road.input_length})")
 
     status = RoadStatus.new(road)
@@ -211,14 +211,14 @@ def run_report
       status.forward = road.graph.forward_graph.connected_components_nonrecursive
 
       @log.debug("  Calculated status (#{Time.now - before})")
-      #status.backward_fixes = road.graph.suggest_backward_fixes if status.backward.size > 1
-      #status.forward_fixes = road.graph.suggest_forward_fixes if status.forward.size > 1
+      status.backward_fixes = road.graph.suggest_backward_fixes if status.backward.size > 1
+      status.forward_fixes = road.graph.suggest_forward_fixes if status.forward.size > 1
     end
 
     fill_road_status(status)
     report.add_status(status)
 
-    @log.debug("END road #{road.ref_prefix + road.ref_number} took #{Time.now - before} (backward = #{status.backward.size}, forward = #{status.forward.size})")
+    @log.debug("END road #{road.ref_prefix + road.ref_number} took #{Time.now - road_before} (backward = #{status.backward.size}, forward = #{status.forward.size})")
   end
 
   insert_stats(page, report)
