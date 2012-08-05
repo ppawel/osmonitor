@@ -6,6 +6,12 @@ def get_relation_network(prefix)
   return $road_type_network_tag[prefix]
 end
 
+def create_overpass_url(ways)
+  s = ''
+  ways.each {|w| s += "way(#{w.id});"}
+  "http://www.overpass-api.de/api/convert?data=(#{s});(._;node(w));out;&target=openlayers"
+end
+
 class Road
   attr_accessor :ref_prefix
   attr_accessor :ref_number
@@ -107,16 +113,12 @@ class Road
     ways[way.id] = way
   end
 
-  def connectivity
-    has_roles = nodes.select {|id, node| node.has_neighbor_with_role('backward') or node.has_neighbor_with_role('forward')}.size > 0
+  def backward_ways
+    ways.values.select {|w| w.backward?}
+  end
 
-    if has_roles
-      backward = road_walk(nodes, 'backward')
-      forward = road_walk(nodes, 'forward')
-      return backward, forward
-    else
-      return road_walk(nodes), nil
-    end
+  def forward_ways
+    ways.values.select {|w| w.forward?}
   end
 end
 
@@ -127,6 +129,8 @@ class RoadStatus
   attr_accessor :forward
   attr_accessor :backward_fixes
   attr_accessor :forward_fixes
+  attr_accessor :backward_url
+  attr_accessor :forward_url
 
   def initialize(road)
     self.road = road
@@ -273,6 +277,18 @@ class Way
     self.id = id
     self.member_role = member_role
     self.tags = tags
+  end
+
+  def all?
+    ['', 'member', 'route'].include?(@member_role)
+  end
+
+  def backward?
+    all? or ['backward'].include?(@member_role)
+  end
+
+  def forward?
+    all? or ['forward'].include?(@member_role)
   end
 
   def hash

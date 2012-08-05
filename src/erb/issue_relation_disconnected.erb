@@ -5,3 +5,4 @@
 <% if !status.forward_fixes.empty? %>
 * <small>potential forward problems: <% status.forward_fixes.each {|way| %>{{way|<%= way.id %>}} <% } %>
 <% end %>
+* <small>Overpass: [<%= status.backward_url %> backward], [<%= status.forward_url %> forward]

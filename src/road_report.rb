@@ -213,18 +213,12 @@ def run_report
 
       status.backward = road.graph.backward_graph.connected_components_nonrecursive
       status.forward = road.graph.forward_graph.connected_components_nonrecursive
-      #(way(29269750);way(173211161));(._;node(w));out;&target=openlayers
-      s = ""
-      
-      status.backward.collect {|c| graph_to_ways(c) }[0].each do |w|
-        next if !w
-        s += "way(#{w.id});" if w.member_role == 'forward' or w.member_role == ''
-      end
-      puts "http://overpass.osm.rambler.ru/cgi/convert?data=(#{s});(._;node(w));out;&target=openlayers"
+      status.backward_url = create_overpass_url(road.backward_ways)
+      status.forward_url = create_overpass_url(road.forward_ways)
 
       @log.debug("  Calculated status (#{Time.now - before})")
-      status.backward_fixes = road.graph.suggest_backward_fixes if status.backward.size > 1
-      status.forward_fixes = road.graph.suggest_forward_fixes if status.forward.size > 1
+      #status.backward_fixes = road.graph.suggest_backward_fixes if status.backward.size > 1
+      #status.forward_fixes = road.graph.suggest_forward_fixes if status.forward.size > 1
     end
 
     fill_road_status(status)
