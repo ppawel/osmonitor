@@ -1,4 +1,6 @@
-<% ways_wkt = @road.all_ways.reduce('') {|s, w| s + w.geom + ','}[0..-2] %>
+<% all_ways_wkt = @road.all_ways.reduce('') {|s, w| s + w.geom + ','}[0..-2] %>
+<% backward_ways_wkt = @road.backward_ways.reduce('') {|s, w| s + w.geom + ','}[0..-2] %>
+<% forward_ways_wkt = @road.forward_ways.reduce('') {|s, w| s + w.geom + ','}[0..-2] %>
 <script type="text/javascript">
   var map, vectors, formats;
 
@@ -6,15 +8,19 @@
       map = new OpenLayers.Map('map');
       wms = new OpenLayers.Layer.OSM();
       markers = new OpenLayers.Layer.Markers( "Markers" );
-      vectors = new OpenLayers.Layer.Vector("Vector Layer", {styleMap: new OpenLayers.StyleMap({'strokeWidth': 5})});
+      vectors = new OpenLayers.Layer.Vector("Vector Layer", {styleMap: new OpenLayers.StyleMap({'strokeWidth': 3})});
 
       map.addLayers([wms, vectors, markers]);
       map.addControl(new OpenLayers.Control.MousePosition());
 
-      showWays('GEOMETRYCOLLECTION(<%= ways_wkt %>)');
-      
-      <% @mark_points.each do |p| %>
-      showNode(<%= p[0] %>, <%= p[1] %>);
+      <% if @road.has_roles %>
+        showWays('GEOMETRYCOLLECTION(<%= backward_ways_wkt %>)');
+        showWays('GEOMETRYCOLLECTION(<%= forward_ways_wkt %>)');
+        <% @mark_points_backward.each do |p| %>showNode(<%= p[0] %>, <%= p[1] %>);<% end %>
+        <% @mark_points_forward.each do |p| %>showNode(<%= p[0] %>, <%= p[1] %>);<% end %>
+      <% else %>
+        showWays('GEOMETRYCOLLECTION(<%= all_ways_wkt %>)');
+        <% @mark_points_all.each do |p| %>showNode(<%= p[0] %>, <%= p[1] %>);<% end %>
       <% end %>
   }
 
