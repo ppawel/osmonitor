@@ -1,16 +1,18 @@
 #!/usr/bin/ruby
 
+# Because RGL is bundled in OSMonitor!
+$:.unshift File.dirname(__FILE__)
+
 require 'net/http'
 require 'erb'
 require 'media_wiki'
 require 'pg'
 
-require './config'
-require './model'
-require './elogger'
-require './wiki'
-
-
+require 'config'
+require 'model'
+require 'elogger'
+require 'wiki'
+require 'road'
 
 if ARGV.size == 0
   puts "Usage: road_report.rb <input page> <output page>"
@@ -59,7 +61,8 @@ def tables_to_roads(page)
       m = row.row_text.scan(/PL\-(\w+)\|(\d+)/)
 
       if $1 and $2
-        road = Road.new($1, $2, row)
+        road = Road.new($1, $2)
+        road.row = row
 
         # Now let's try to parse input length for the road.
         length_text = row.cells[2].cell_text.strip.gsub('km', '').gsub(',', '.')
@@ -70,19 +73,6 @@ def tables_to_roads(page)
   end
 
   return roads
-end
-
-def fill_road_relation(road)
-  sql_select = "SELECT *, OSM_GetRelationLength(r.id) AS length, OSM_IsMostlyCoveredBy(936128, r.id) AS covered
-FROM relations r
-WHERE
-  r.tags -> 'type' = 'route' AND
-  r.tags -> 'route' = 'road' AND"
-
-  query = sql_select + eval($sql_where_by_road_type[road.ref_prefix], binding()) + " ORDER BY covered DESC, r.id"
-  result = @conn.query(query).collect {|row| process_tags(row)}
-  road.relation = result[0] if result.size > 0 and result[0]['covered'] == 't'
-  road.other_relations = result[1..-1].select {|r| r['covered'] == 't'} if result.size > 1
 end
 
 def prepare_page(page)
@@ -150,29 +140,6 @@ def insert_data_timestamp(page)
     TIMESTAMP_BEGIN + get_data_timestamp + TIMESTAMP_END)
 end
 
-def load_road_graph(road)
-  result = @conn.query("
-SELECT
-  rm.member_role AS member_role,
-  wn.way_id AS way_id,
---  w.tags AS way_tags,
-  wn.node_id AS node_id
---  n.tags AS node_tags,
---  wn.sequence_id AS node_sequence_id
-FROM way_nodes wn
-INNER JOIN relation_members rm ON (rm.member_id = way_id AND rm.relation_id = #{road.relation['id']})
---INNER JOIN ways w ON (w.id = wn.way_id)
---INNER JOIN nodes n ON (n.id = wn.node_id)
-ORDER BY rm.sequence_id, wn.way_id, wn.sequence_id
-    ").collect do |row|
-    # This simply translates "tags" columns to Ruby hashes.
-    process_tags(row, 'way_tags')
-    process_tags(row, 'node_tags')
-  end
-
-  road.graph.load(result)
-end
-
 def graph_to_ways(graph)
   graph.edges.collect {|e| e.source.get_mutual_way(e.target) if e.source}.uniq
 end
@@ -193,14 +160,14 @@ def run_report
     @log.debug("BEGIN road #{road.ref_prefix + road.ref_number} (#{i + 1} of #{roads.size}) (input length = #{road.input_length})")
 
     status = RoadStatus.new(road)
-    fill_road_relation(road)
+    fill_road_relation(road, @conn)
 
     if road.relation
       @log.debug("  Found relation for road: #{road.relation['id']}")
 
       before = Time.now
 
-      load_road_graph(road)
+      load_road_graph(road, @conn)
 
       @log.debug("  Loaded road graph (#{Time.now - before})")
 
@@ -253,11 +220,6 @@ WHERE #{sql_where} AND
   sql += " AND NOT EXISTS (SELECT * FROM relation_members WHERE member_id = r.id AND relation_id = #{road.relation['id']}) " if road.relation
 
   road.ways = conn.query(sql).collect { |row| process_tags(row) }
-end
-
-def process_tags(row, field_name = 'tags')
-  row[field_name] = eval("{#{row[field_name]}}")
-  return row
 end
 
 def get_wiki_page(name)

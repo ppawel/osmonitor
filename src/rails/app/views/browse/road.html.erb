@@ -1,0 +1,61 @@
+<% ways_wkt = @road.all_ways.reduce('') {|s, w| s + w.geom + ','}[0..-2] %>
+<script type="text/javascript">
+  var map, vectors, formats;
+
+  function init(){
+      map = new OpenLayers.Map('map');
+      wms = new OpenLayers.Layer.OSM();
+      markers = new OpenLayers.Layer.Markers( "Markers" );
+      vectors = new OpenLayers.Layer.Vector("Vector Layer", {styleMap: new OpenLayers.StyleMap({'strokeWidth': 5})});
+
+      map.addLayers([wms, vectors, markers]);
+      map.addControl(new OpenLayers.Control.MousePosition());
+
+      showWays('GEOMETRYCOLLECTION(<%= ways_wkt %>)');
+      
+      <% @mark_points.each do |p| %>
+      showNode(<%= p[0] %>, <%= p[1] %>);
+      <% end %>
+  }
+
+  function showNode(x, y) {
+    var size = new OpenLayers.Size(21,25);
+    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+    var icon = new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker.png',size,offset);
+    markers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(x, y).transform(
+            new OpenLayers.Projection("EPSG:4326"),
+            map.baseLayer.projection
+          ),icon));
+  }
+
+  function showWays(s) {
+      var element = document.getElementById('text');
+      var wkt = new OpenLayers.Format.WKT({
+          'internalProjection': map.baseLayer.projection,
+          'externalProjection': new OpenLayers.Projection('EPSG:4326')
+      });
+      var features = wkt.read(s);
+      var bounds;
+      if(features) {
+          if(features.constructor != Array) {
+              features = [features];
+          }
+          for(var i=0; i<features.length; ++i) {
+              if (!bounds) {
+                  bounds = features[i].geometry.getBounds();
+              } else {
+                  bounds.extend(features[i].geometry.getBounds());
+              }
+
+          }
+          vectors.addFeatures(features);
+          map.zoomToExtent(bounds);
+          //var plural = (features.length > 1) ? 's' : '';
+          //element.value = features.length + ' feature' + plural + ' added';
+      } else {
+          //element.value = 'Bad input ' + type;
+      }
+  }
+</script>
+
+<div id="map" class="smallmap"></div>

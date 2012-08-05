@@ -1,15 +1,11 @@
-require './model'
-
-# Because RGL is bundled in OSMonitor!
-$:.unshift File.dirname(__FILE__)
-
-require './rgl/adjacency'
-require './rgl/implicit'
-require './rgl/connected_components'
-require './rgl/dot'
-require './rgl/topsort'
-require './rgl/base'
-require './rgl/bidirectional'
+require 'model'
+require 'rgl/adjacency'
+require 'rgl/implicit'
+require 'rgl/connected_components'
+require 'rgl/dot'
+require 'rgl/topsort'
+require 'rgl/base'
+require 'rgl/bidirectional'
 
 class RoadGraph
   attr_accessor :all_graph
@@ -53,6 +49,7 @@ class RoadGraph
 
       if !way
         way = Way.new(a_way_id, a['member_role'], a['way_tags'])
+        way.geom = a['way_geom']
         road.add_way(way)
       end
 
@@ -95,7 +92,7 @@ class RoadGraph
 
   def end_nodes(graph)
     nodes = []
-    graph.vertices.each {|v| nodes << v if graph.out_degree(v) <= 1}
+    @graphs[graph].vertices.each {|v| nodes << v if @graphs[graph].out_degree(v) <= 1}
     return nodes
   end
 

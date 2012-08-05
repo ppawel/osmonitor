@@ -1,6 +1,6 @@
-require './config'
-require './wiki'
-require './road_graph'
+require 'config'
+require 'wiki'
+require 'road_graph'
 
 def get_relation_network(prefix)
   return $road_type_network_tag[prefix]
@@ -17,20 +17,19 @@ class Road
   attr_accessor :ref_number
   attr_accessor :relation
   attr_accessor :other_relations
-  attr_accessor :row
   attr_accessor :relation_ways
   attr_accessor :ways
   attr_accessor :input_length
   attr_accessor :nodes
   attr_accessor :graph
   attr_accessor :has_roles
+  attr_accessor :row
 
-  def initialize(ref_prefix, ref_number, row)
+  def initialize(ref_prefix, ref_number)
     self.ref_prefix = ref_prefix
     self.ref_number = ref_number
     self.ways = {}
     self.nodes = {}
-    self.row = row
     self.other_relations = []
     self.relation_ways = []
     self.input_length = nil
@@ -297,6 +296,7 @@ class Way
   attr_accessor :id
   attr_accessor :member_role
   attr_accessor :tags
+  attr_accessor :geom
 
   def initialize(id, member_role, tags)
     self.id = id
