@@ -23,6 +23,7 @@ class Road
   attr_accessor :input_length
   attr_accessor :nodes
   attr_accessor :graph
+  attr_accessor :has_roles
 
   def initialize(ref_prefix, ref_number, row)
     self.ref_prefix = ref_prefix
@@ -34,6 +35,7 @@ class Road
     self.relation_ways = []
     self.input_length = nil
     self.graph = RoadGraph.new(self)
+    self.has_roles = false
   end
 
   def get_osm_length
@@ -110,7 +112,11 @@ class Road
   end
 
   def add_way(way)
-    ways[way.id] = way
+    @ways[way.id] = way
+  end
+
+  def all_ways
+    ways.values.select {|w| w.all?}
   end
 
   def backward_ways
@@ -125,18 +131,21 @@ end
 class RoadStatus
   attr_accessor :road
   attr_accessor :issues
-  attr_accessor :backward
-  attr_accessor :forward
+  attr_accessor :all_components
+  attr_accessor :backward_components
+  attr_accessor :forward_components
   attr_accessor :backward_fixes
   attr_accessor :forward_fixes
+  attr_accessor :all_url
   attr_accessor :backward_url
   attr_accessor :forward_url
 
   def initialize(road)
     self.road = road
     self.issues = []
-    self.backward = []
-    self.forward = []
+    self.all_components = []
+    self.backward_components = []
+    self.forward_components = []
     self.backward_fixes = []
     self.forward_fixes = []
   end
@@ -157,8 +166,12 @@ class RoadStatus
     return issues.select {|issue| issue.type == type}
   end
 
-  def connected
-    return (backward.size == 1 and (forward.nil? or forward.size == 1))
+  def connected?
+    if !@road.has_roles
+      @all_components.size == 1
+    else
+      @backward_components.size == 1 and @forward_components.size == 1
+    end
   end
 
   def validate
@@ -178,7 +191,7 @@ class RoadStatus
 
     #add_warning('ways_not_in_relation', {:ways => road.ways}) if road.ways.size > 0
 
-    add_warning('relation_disconnected') if !connected
+    add_warning('relation_disconnected') if !connected?
     add_warning('wrong_network') if !road.has_proper_network
     add_warning('wrong_length') if !road.has_proper_length.nil? and !road.has_proper_length
     add_info('osm_length', road.get_osm_length)
@@ -267,6 +280,18 @@ class Node
   end
 end
 
+def member_role_all?(role)
+  ['', 'member', 'route'].include?(role)
+end
+
+def member_role_backward?(role)
+  member_role_all?(role) or ['backward'].include?(role)
+end
+
+def member_role_forward?(role)
+  member_role_all?(role) or ['forward'].include?(role)
+end
+
 # Represents a way in OSM sense.
 class Way
   attr_accessor :id
@@ -280,15 +305,15 @@ class Way
   end
 
   def all?
-    ['', 'member', 'route'].include?(@member_role)
+    member_role_all?(@member_role)
   end
 
   def backward?
-    all? or ['backward'].include?(@member_role)
+    member_role_backward?(@member_role)
   end
 
   def forward?
-    all? or ['forward'].include?(@member_role)
+    member_role_forward?(@member_role)
   end
 
   def hash

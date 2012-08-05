@@ -35,6 +35,8 @@ class RoadGraph
       node_id = row['node_id'].to_i
       node = road.get_node(node_id)
 
+      road.has_roles = (road.has_roles or !member_role_all?(row['member_role']))
+
       next if node
 
       node = Node.new(node_id, row['node_tags'])
@@ -48,7 +50,7 @@ class RoadGraph
       b_way_id = b ? b['way_id'].to_i : nil
 
       way = road.get_way(a_way_id)
-      
+
       if !way
         way = Way.new(a_way_id, a['member_role'], a['way_tags'])
         road.add_way(way)
@@ -62,25 +64,28 @@ class RoadGraph
       node1.add_way(way)
       node2.add_way(way)
 
-      if way.member_role == 'member' or way.member_role == ''
-        all_graph.add_vertex(node1)
-        all_graph.add_vertex(node2)
-        backward_graph.add_vertex(node1)
-        backward_graph.add_vertex(node2)
-        forward_graph.add_vertex(node1)
-        forward_graph.add_vertex(node2)
-        all_graph.add_edge(node1, node2)
-        backward_graph.add_edge(node1, node2)
-        forward_graph.add_edge(node1, node2)
+      if way.all?
+        if road.has_roles
+          backward_graph.add_vertex(node1)
+          backward_graph.add_vertex(node2)
+          forward_graph.add_vertex(node1)
+          forward_graph.add_vertex(node2)
+          backward_graph.add_edge(node1, node2)
+          forward_graph.add_edge(node1, node2)
+        else
+          all_graph.add_vertex(node1)
+          all_graph.add_vertex(node2)
+          all_graph.add_edge(node1, node2)
+        end
       end
 
-      if way.member_role == 'backward'
+      if road.has_roles and way.backward?
         backward_graph.add_vertex(node1)
         backward_graph.add_vertex(node2)
         backward_graph.add_edge(node1, node2)
       end
 
-      if way.member_role == 'forward'
+      if road.has_roles and way.forward?
         forward_graph.add_vertex(node1)
         forward_graph.add_vertex(node2)
         forward_graph.add_edge(node1, node2)

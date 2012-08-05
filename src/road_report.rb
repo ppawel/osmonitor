@@ -195,11 +195,6 @@ def run_report
     status = RoadStatus.new(road)
     fill_road_relation(road)
 
-    # Not used for now, commented out for performance reasons.
-    #before = Time.now
-    #fill_ways(road, @conn)
-    #@log.debug("fill_ways took #{Time.now - before}")
-
     if road.relation
       @log.debug("  Found relation for road: #{road.relation['id']}")
 
@@ -211,10 +206,15 @@ def run_report
 
       before = Time.now
 
-      status.backward = road.graph.backward_graph.connected_components_nonrecursive
-      status.forward = road.graph.forward_graph.connected_components_nonrecursive
-      status.backward_url = create_overpass_url(road.backward_ways)
-      status.forward_url = create_overpass_url(road.forward_ways)
+      if !road.has_roles
+        status.all_components = road.graph.all_graph.connected_components_nonrecursive
+        status.all_url = create_overpass_url(road.all_ways)
+      else
+        status.backward_components = road.graph.backward_graph.connected_components_nonrecursive
+        status.forward_components = road.graph.forward_graph.connected_components_nonrecursive
+        status.backward_url = create_overpass_url(road.backward_ways)
+        status.forward_url = create_overpass_url(road.forward_ways)
+      end
 
       @log.debug("  Calculated status (#{Time.now - before})")
       #status.backward_fixes = road.graph.suggest_backward_fixes if status.backward.size > 1
@@ -224,7 +224,8 @@ def run_report
     fill_road_status(status)
     report.add_status(status)
 
-    @log.debug("END road #{road.ref_prefix + road.ref_number} took #{Time.now - road_before} (backward = #{status.backward.size}, forward = #{status.forward.size})")
+    @log.debug("END road #{road.ref_prefix + road.ref_number} took #{Time.now - road_before} " +
+      "(all = #{status.all_components.size}, backward = #{status.backward_components.size}, forward = #{status.forward_components.size})")
   end
 
   insert_stats(page, report)

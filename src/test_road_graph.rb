@@ -15,14 +15,15 @@ class RoadGraphTest < Test::Unit::TestCase
     road.graph.load(data)
 
     assert_equal(5, road.graph.all_graph.num_vertices)
-    assert_equal(5, road.graph.backward_graph.num_vertices)
-    assert_equal(5, road.graph.forward_graph.num_vertices)
-    
+    assert_equal(0, road.graph.backward_graph.num_vertices)
+    assert_equal(0, road.graph.forward_graph.num_vertices)
+
     assert_equal(4, road.graph.all_graph.num_edges)
-    assert_equal(4, road.graph.backward_graph.num_edges)
-    assert_equal(4, road.graph.forward_graph.num_edges)
+    assert_equal(0, road.graph.backward_graph.num_edges)
+    assert_equal(0, road.graph.forward_graph.num_edges)
 
     assert_equal(1, comps(road.graph.all_graph).size)
+    assert_equal(false, road.has_roles)
   end
 
   def test_simple_road_graph_same_node
@@ -38,8 +39,8 @@ class RoadGraphTest < Test::Unit::TestCase
     road.graph.load(data)
 
     assert_equal(2, road.graph.all_graph.num_vertices)
-    assert_equal(2, road.graph.backward_graph.num_vertices)
-    assert_equal(2, road.graph.forward_graph.num_vertices)
+    assert_equal(0, road.graph.backward_graph.num_vertices)
+    assert_equal(0, road.graph.forward_graph.num_vertices)
 
     assert_equal(1, comps(road.graph.all_graph).size)
     # TODO (is 3?)
@@ -66,12 +67,12 @@ class RoadGraphTest < Test::Unit::TestCase
     road.graph.load(data)
 
     assert_equal(8, road.graph.all_graph.num_vertices)
-    assert_equal(8, road.graph.backward_graph.num_vertices)
-    assert_equal(8, road.graph.forward_graph.num_vertices)
+    assert_equal(0, road.graph.backward_graph.num_vertices)
+    assert_equal(0, road.graph.forward_graph.num_vertices)
 
     assert_equal(7, road.graph.all_graph.num_edges)
-    assert_equal(7, road.graph.backward_graph.num_edges)
-    assert_equal(7, road.graph.forward_graph.num_edges)
+    assert_equal(0, road.graph.backward_graph.num_edges)
+    assert_equal(0, road.graph.forward_graph.num_edges)
 
     assert_equal(1, comps(road.graph.all_graph).size)
   end
@@ -92,12 +93,12 @@ class RoadGraphTest < Test::Unit::TestCase
     road.graph.load(data)
 
     assert_equal(6, road.graph.all_graph.num_vertices)
-    assert_equal(6, road.graph.backward_graph.num_vertices)
-    assert_equal(6, road.graph.forward_graph.num_vertices)
+    assert_equal(0, road.graph.backward_graph.num_vertices)
+    assert_equal(0, road.graph.forward_graph.num_vertices)
 
     assert_equal(5, road.graph.all_graph.num_edges)
-    assert_equal(5, road.graph.backward_graph.num_edges)
-    assert_equal(5, road.graph.forward_graph.num_edges)
+    assert_equal(0, road.graph.backward_graph.num_edges)
+    assert_equal(0, road.graph.forward_graph.num_edges)
 
     assert_equal(1, comps(road.graph.all_graph).size)
   end
@@ -119,12 +120,12 @@ class RoadGraphTest < Test::Unit::TestCase
     road.graph.load(data)
 
     assert_equal(8, road.graph.all_graph.num_vertices)
-    assert_equal(8, road.graph.backward_graph.num_vertices)
-    assert_equal(8, road.graph.forward_graph.num_vertices)
+    assert_equal(0, road.graph.backward_graph.num_vertices)
+    assert_equal(0, road.graph.forward_graph.num_vertices)
 
     assert_equal(6, road.graph.all_graph.num_edges)
-    assert_equal(6, road.graph.backward_graph.num_edges)
-    assert_equal(6, road.graph.forward_graph.num_edges)
+    assert_equal(0, road.graph.backward_graph.num_edges)
+    assert_equal(0, road.graph.forward_graph.num_edges)
 
     assert_equal(2, comps(road.graph.all_graph).size)
   end
@@ -145,12 +146,12 @@ class RoadGraphTest < Test::Unit::TestCase
     road.graph.load(data)
 
     assert_equal(7, road.graph.all_graph.num_vertices)
-    assert_equal(7, road.graph.backward_graph.num_vertices)
-    assert_equal(7, road.graph.forward_graph.num_vertices)
+    assert_equal(0, road.graph.backward_graph.num_vertices)
+    assert_equal(0, road.graph.forward_graph.num_vertices)
 
     assert_equal(7, road.graph.all_graph.num_edges)
-    assert_equal(7, road.graph.backward_graph.num_edges)
-    assert_equal(7, road.graph.forward_graph.num_edges)
+    assert_equal(0, road.graph.backward_graph.num_edges)
+    assert_equal(0, road.graph.forward_graph.num_edges)
 
     assert_equal(1, comps(road.graph.all_graph).size)
   end
@@ -174,15 +175,15 @@ class RoadGraphTest < Test::Unit::TestCase
     road = Road.new('A', '7', {})
     road.graph.load(data)
 
-    assert_equal(4, road.graph.all_graph.num_vertices)
+    assert_equal(0, road.graph.all_graph.num_vertices)
     assert_equal(6, road.graph.backward_graph.num_vertices)
     assert_equal(6, road.graph.forward_graph.num_vertices)
 
-    assert_equal(2, road.graph.all_graph.num_edges)
+    assert_equal(0, road.graph.all_graph.num_edges)
     assert_equal(5, road.graph.backward_graph.num_edges)
     assert_equal(5, road.graph.forward_graph.num_edges)
 
-    assert_equal(2, comps(road.graph.all_graph).size)
+    assert_equal(1, comps(road.graph.backward_graph).size)
   end
 
   def test_roles_mislabeled_backward
@@ -206,16 +207,16 @@ class RoadGraphTest < Test::Unit::TestCase
     road = Road.new('A', '7', {})
     road.graph.load(data)
 
-    assert_equal(4, road.graph.all_graph.num_vertices)
+    assert_equal(0, road.graph.all_graph.num_vertices)
     assert_equal(6, road.graph.backward_graph.num_vertices)
     assert_equal(8, road.graph.forward_graph.num_vertices)
 
-    assert_equal(2, road.graph.all_graph.num_edges)
+    assert_equal(0, road.graph.all_graph.num_edges)
     assert_equal(4, road.graph.backward_graph.num_edges)
     assert_equal(6, road.graph.forward_graph.num_edges)
 
     assert_equal(2, comps(road.graph.backward_graph).size)
-    puts road.graph.suggest_backward_fixes.inspect
+    assert_equal(true, road.has_roles)
   end
 =begin  
   def test_long_way
