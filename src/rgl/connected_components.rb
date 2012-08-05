@@ -31,7 +31,7 @@ module RGL
     end
 
     def handle_tree_edge(u, v)
-      self.current_component.add_edge(u, v)
+      self.current_component.add_edge(u, v) if u and v
     end
 
     def handle_finish_vertex(v)
@@ -76,6 +76,8 @@ module RGL
         "each_connected_component only works " +
         "for undirected graphs." if directed?
       comp = []
+
+      return comp if self.size == 0
 
       it  = ComponentIterator.new(self)
       it.set_examine_component_event_handler { |c| comp << c }
