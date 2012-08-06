@@ -8,18 +8,18 @@
       map = new OpenLayers.Map('map');
       wms = new OpenLayers.Layer.OSM();
       markers = new OpenLayers.Layer.Markers( "Markers" );
-      vectors = new OpenLayers.Layer.Vector("Vector Layer", {styleMap: new OpenLayers.StyleMap({'strokeWidth': 3})});
+      vectors = new OpenLayers.Layer.Vector("Vector Layer", {styleMap: new OpenLayers.StyleMap({'strokeWidth': 3, 'strokeColor': "${waycolor}"})});
 
       map.addLayers([wms, vectors, markers]);
       map.addControl(new OpenLayers.Control.MousePosition());
 
       <% if @road.has_roles %>
-        showWays('GEOMETRYCOLLECTION(<%= backward_ways_wkt %>)');
-        showWays('GEOMETRYCOLLECTION(<%= forward_ways_wkt %>)');
+        showWays('GEOMETRYCOLLECTION(<%= backward_ways_wkt %>)', 'red');
+        showWays('GEOMETRYCOLLECTION(<%= forward_ways_wkt %>)', 'green');
         <% @mark_points_backward.each do |p| %>showNode(<%= p[0] %>, <%= p[1] %>);<% end %>
         <% @mark_points_forward.each do |p| %>showNode(<%= p[0] %>, <%= p[1] %>);<% end %>
       <% else %>
-        showWays('GEOMETRYCOLLECTION(<%= all_ways_wkt %>)');
+        showWays('GEOMETRYCOLLECTION(<%= all_ways_wkt %>)', 'blue');
         <% @mark_points_all.each do |p| %>showNode(<%= p[0] %>, <%= p[1] %>);<% end %>
       <% end %>
   }
@@ -34,7 +34,7 @@
           ),icon));
   }
 
-  function showWays(s) {
+  function showWays(s, waycolor) {
       var element = document.getElementById('text');
       var wkt = new OpenLayers.Format.WKT({
           'internalProjection': map.baseLayer.projection,
@@ -47,6 +47,7 @@
               features = [features];
           }
           for(var i=0; i<features.length; ++i) {
+              features[i].attributes.waycolor = waycolor;
               if (!bounds) {
                   bounds = features[i].geometry.getBounds();
               } else {

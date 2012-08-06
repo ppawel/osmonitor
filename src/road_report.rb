@@ -175,12 +175,9 @@ def run_report
 
       if !road.has_roles
         status.all_components = road.graph.all_graph.connected_components_nonrecursive
-        status.all_url = create_overpass_url(road.all_ways)
       else
         status.backward_components = road.graph.backward_graph.connected_components_nonrecursive
         status.forward_components = road.graph.forward_graph.connected_components_nonrecursive
-        status.backward_url = create_overpass_url(road.backward_ways)
-        status.forward_url = create_overpass_url(road.forward_ways)
       end
 
       @log.debug("  Calculated status (#{Time.now - before})")

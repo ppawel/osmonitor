@@ -12,6 +12,10 @@ def create_overpass_url(ways)
   "http://www.overpass-api.de/api/convert?data=(#{s});(._;node(w));out;&target=openlayers"
 end
 
+def create_osmonitor_url(road)
+  "http://geowebhost.pl:3333/browse/road/#{road.ref_prefix + road.ref_number.to_s}"
+end
+
 class Road
   attr_accessor :ref_prefix
   attr_accessor :ref_number
