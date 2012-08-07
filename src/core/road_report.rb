@@ -62,55 +62,71 @@ class RoadStatus
   end
 
   def connected?
-    true
+    road.relation_num_comps == 1
+  end
+
+  def too_many_end_nodes
+    road.relation_comp_end_nodes.select {|end_nodes| end_nodes.size > 4}
+  end
+
+  def too_few_end_nodes
+    road.relation_comp_end_nodes.select {|end_nodes| end_nodes.size < 2}
+  end
+
+  def graph_to_ways(graph)
+    graph.edges.collect {|e| e.source.get_mutual_way(e.target) if e.source}.uniq
   end
 
   def validate
-=begin
-    add_error('no_relation') if !road.relation
-
-    return if !road.relation
-
-    add_error('has_many_covered_relations') if has_many_covered_relations
-
+    add_warning('no_relation') if !road.relation
+    add_error('has_many_covered_relations') if road.relation and has_many_covered_relations
+puts road.relation_comp_lengths
     if !ways_without_highway_tag.empty?
-      add_error('has_ways_without_highway_tag', {:ways => road.ways_without_highway_tag})
+      add_error('has_ways_without_highway_tag', {:ways => ways_without_highway_tag})
     end
 
+    add_warning('relation_disconnected') if !connected?
+
+    if !too_many_end_nodes.empty? or !too_few_end_nodes.empty?
+      add_warning('end_nodes', {:too_many => too_many_end_nodes, :too_few => too_few_end_nodes})
+    end
+
+    if road.relation
+      add_info('osm_length')
+      add_info('percent_with_lanes', percent_with_lanes)
+      add_info('percent_with_maxspeed', percent_with_maxspeed)
+      add_warning('wrong_length') if !has_proper_length.nil? and !has_proper_length
+    end
+=begin
     #if !road.ways_with_wrong_ref.empty?
     #  add_error('ways_with_wrong_ref', {:ways => road.ways_with_wrong_ref})
     #end
 
     #add_warning('ways_not_in_relation', {:ways => road.ways}) if road.ways.size > 0
 
-    add_warning('relation_disconnected') if !connected?
+    
     add_warning('wrong_network') if !has_proper_network
     add_warning('wrong_length') if !has_proper_length.nil? and !road.has_proper_length
-    add_info('osm_length', get_osm_length)
-    add_info('percent_with_lanes', percent_with_lanes)
-    add_info('percent_with_maxspeed', percent_with_maxspeed)
+
+    
 =end
   end
 
   def green?
     return (get_issues(:ERROR).empty? and get_issues(:WARNING).empty?)
   end
-  
-    def get_osm_length
-    relation['length'].to_i / 1000 if relation
-  end
 
   def length_diff
-    return (get_osm_length - input_length).abs.to_i
+    return (road.length - input.length).abs.to_i
   end
 
   def has_proper_length
-    return nil if !relation or !input_length
+    return nil if !road.relation or !road.length or !input.length
     return length_diff < 2
   end
 
   def get_network
-    return (relation and relation["tags"]["network"])
+    return (road.relation and relation["tags"]["network"])
   end
 
   def get_proper_network
@@ -122,31 +138,29 @@ class RoadStatus
   end
 
   def has_many_relations
-    return !other_relations.empty?
+    return !road.other_relations.empty?
   end
 
   def has_many_covered_relations
-    return other_relations.select {|x| x['covered'] == 't'}.size > 0
+    return  road.other_relations.select {|x| x['covered'] == 't'}.size > 0
   end
 
   def percent_with_lanes
-    return if not relation_ways or relation_ways.empty?
-    return ((relation_ways.select { |way| way.tags.has_key?('lanes') }.size / relation_ways.size.to_f) * 100).to_i
+    return ((road.ways.values.select { |way| way.tags.has_key?('lanes') }.size / road.ways.size.to_f) * 100).to_i
   end
 
   def percent_with_maxspeed
-    return if not relation_ways or relation_ways.empty?
-    return ((relation_ways.select { |way| way.tags.has_key?('maxspeed') }.size / relation_ways.size.to_f) * 100).to_i
+    return ((road.ways.values.select { |way| way.tags.has_key?('maxspeed') }.size / road.ways.size.to_f) * 100).to_i
   end
 
   # Finds ways without "highway" tag (exception is ferry ways, see http://www.openstreetmap.org/browse/way/23541424).
   def ways_without_highway_tag
-    return ways.select { |way| !way.tags.has_key?('highway') and (!way.tags.has_key?('route') or way.tags['route'] != 'ferry') }
+    return road.ways.values.select { |way| !way.tags.has_key?('highway') and (!way.tags.has_key?('route') or way.tags['route'] != 'ferry') }
   end
 
   # Finds ways without "ref" tag or with wrong tag value.
   def ways_with_wrong_ref
-    return ways.select { |way| !way.tags.has_key?('ref') or !get_refs(way).include?(eval($road_type_ref_tag[ref_prefix], binding())) }
+    return road.ways.values.select {|way| !way.tags.has_key?('ref') or !road.get_refs(way).include?(eval($road_type_ref_tag[road.ref_prefix], binding()))}
   end
 end
 

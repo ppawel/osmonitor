@@ -127,10 +127,6 @@ def insert_data_timestamp(page)
     TIMESTAMP_BEGIN + get_data_timestamp + TIMESTAMP_END)
 end
 
-def graph_to_ways(graph)
-  graph.edges.collect {|e| e.source.get_mutual_way(e.target) if e.source}.uniq
-end
-
 def run_report
   page = get_wiki_page(@input_page)
   road_manager = RoadManager.new(@conn)
@@ -144,14 +140,14 @@ def run_report
     road_before = Time.now
     @log.debug("BEGIN road #{input.ref_prefix + input.ref_number} (#{i + 1} of #{inputs.size}) (input length = #{input.length})")
 
-    road = road_manager.load_road(input)
+    road = road_manager.load_road(input.ref_prefix, input.ref_number)
     status = RoadStatus.new(input, road)
 
     fill_road_status(status)
     report.add_status(status)
 
     @log.debug("END road #{road.ref_prefix + road.ref_number} took #{Time.now - road_before} " +
-      "(all = #{status.all_components.size}, ref = #{status.ref_components.size}, backward = #{status.backward_components.size}, forward = #{status.forward_components.size})")
+      "(comps = #{status.road.relation_num_comps})")
   end
 
   insert_stats(page, report)

@@ -7,18 +7,18 @@ class RoadManager
     self.conn = conn
   end
 
-  def load_road(road_input)
-    road = Road.new(road_input.ref_prefix, road_input.ref_number)
+  def load_road(ref_prefix, ref_number)
+    road = Road.new(ref_prefix, ref_number)
 
     fill_road_relation(road)
     
     if road.relation
-      #data = load_relation_ways(road)
-      #road.create_relation_graph(data)
+      data = load_relation_ways(road)
+      road.create_relation_graph(data)
     end
 
-    data = load_ref_ways(road)
-    road.create_ref_graph(data)
+    #data = load_ref_ways(road)
+    #road.create_ref_graph(data)
 
     return road
   end
@@ -77,7 +77,18 @@ class RoadManager
     before = Time.now
     sql_where = eval($sql_where_by_road_type[road.ref_prefix], binding())
 
-    sql = "
+    if !road.relation
+      sql = "
+  SELECT
+    NULL AS relation_id,
+    NULL AS member_role,
+    wn.way_id AS way_id,
+    r.tags AS way_tags,
+    ST_AsText(r.linestring) AS way_geom,
+    wn.node_id AS node_id
+  FROM way_nodes wn "
+    else
+      sql = "
   SELECT
     rm.relation_id AS relation_id,
     rm.member_role AS member_role,
@@ -85,12 +96,10 @@ class RoadManager
     r.tags AS way_tags,
     ST_AsText(r.linestring) AS way_geom,
     wn.node_id AS node_id
-  FROM way_nodes wn "
-
-    if road.relation
-      sql += "LEFT JOIN relation_members rm ON (rm.member_id = way_id AND rm.relation_id = #{road.relation['id']}) "
+  FROM way_nodes wn 
+  LEFT JOIN relation_members rm ON (rm.member_id = way_id AND rm.relation_id = #{road.relation['id']}) "
     end
-
+puts sql_where
     sql += "
   INNER JOIN ways r ON (r.id = wn.way_id)
   WHERE #{sql_where} AND

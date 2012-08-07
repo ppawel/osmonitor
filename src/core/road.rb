@@ -21,6 +21,11 @@ class Road
   attr_accessor :nodes
   attr_accessor :relation_graph
   attr_accessor :ref_graph
+  attr_accessor :relation_comps
+  attr_accessor :ref_comps
+  attr_accessor :relation_comp_end_nodes
+  attr_accessor :relation_comp_paths
+  attr_accessor :relation_comp_lengths
 
   def initialize(ref_prefix, ref_number)
     self.ref_prefix = ref_prefix
@@ -28,6 +33,11 @@ class Road
     self.nodes = {}
     self.ways = {}
     self.other_relations = []
+    self.relation_comps = []
+    self.ref_comps = []
+    self.relation_comp_end_nodes = []
+    self.relation_comp_paths = []
+    self.relation_comp_lengths = []
   end
 
   # Returns a list of strings representing the "ref" tag. This is a list because sometimes this tag contains many values, e.g. "34; S1".
@@ -52,24 +62,21 @@ class Road
     @ways[way.id] = way
   end
 
-  def all_ways
-    ways.values.select {|w| w.all?}
+  def relation_num_comps
+    @relation_comps.size
   end
 
-  def backward_ways
-    ways.values.select {|w| w.backward?}
-  end
-
-  def forward_ways
-    ways.values.select {|w| w.forward?}
-  end
-  
   def create_relation_graph(data)
-    @relation_graph = create_graph(data)
+    @relation_graph, @relation_comps = create_graph(data)
+    calculate_comp_lengths
   end
 
   def create_ref_graph(data)
-    @ref_graph = create_graph(data)
+    @ref_graph, @ref_comps = create_graph(data)
+  end
+
+  def length
+    relation_comp_lengths[0].max / 1000.0 if relation_comp_lengths[0] and relation_comp_lengths[0].max
   end
 
   protected
@@ -120,93 +127,38 @@ class Road
       graph.add_edge(node2, node1) if way.tags['oneway'] != 'yes'
     end
 
-    return graph
-  end
-
-  def get_graph_comps(graph)
-    return relation_graph.to_undirected.connected_components_nonrecursive
+    return graph, graph.to_undirected.connected_components_nonrecursive
   end
 
   def get_end_nodes(graph)
-    return comp.vertices.select {|v| comp.out_degree(v) <= 1}
+    graph.vertices.select {|v| graph.out_degree(v) <= 1}
   end
-  
-  def calculate_paths(graph, end_nodes)
-    paths = []
-    end_nodes.each_cons(2) do |a, b|
-      it = RGL::PathIterator.new(relation_graph, a, b, 100000)
-      it.set_to_end
-      paths << it.path.collect {|edge| edge[0].get_mutual_way(edge[1])}.uniq.reduce(0) {|s, w| s + w.length}
 
-      next if !it.found_path
+  def calculate_comp_lengths
+    relation_comps.each do |comp|
+      end_nodes = get_end_nodes(comp)
+      relation_comp_end_nodes << end_nodes
+      paths = []
+      lengths = []
 
-      it = RGL::PathIterator.new(relation_graph, b, a, 100000)
-      it.set_to_end
-
-      next if !it.found_path
-
-      paths << it.path.collect {|edge| edge[0].get_mutual_way(edge[1])}.uniq.reduce(0) {|s, w| s + w.length}
-    end
-    
-    return paths
-  end
-  
-end
-
-
-
-=begin
-    paths = []
-
-    ud = dir_graph.to_undirected
-    puts ud.vertices.select {|v| ud.out_degree(v) <= 1}.size
-    ud.vertices.select {|v| ud.out_degree(v) <= 1}.each_pair do |a, b|
-      puts "#{a} -> #{b}"
-      it = RGL::PathIterator.new(dir_graph, a, b, 100000)
-      it.set_to_end
-      if !it.found_path
-        it = RGL::PathIterator.new(dir_graph, b, a, 100000)
+      end_nodes.each_pair do |a, b|
+        it = RGL::PathIterator.new(relation_graph, a, b, 100000)
         it.set_to_end
+
+        path1 = it.path.collect {|edge| edge[0].get_mutual_way(edge[1])}.uniq
+
+        #next if !it.found_path
+
+        paths << path1.uniq
+        lengths << path1.reduce(0) {|s, w| s + w.length}
       end
-      next if !it.found_path
-      puts "#{a} -> #{b} YEAH"
-      paths << it.path.collect {|edge| edge[0].get_mutual_way(edge[1])}.uniq.reduce(0) {|s, w| s + w.length}
+
+      relation_comp_paths << paths
+      relation_comp_lengths << lengths
     end
-    
-    puts paths.inspect
-
-  end
-
-  def end_nodes(graph)
-    nodes = []
-    @graphs[graph].vertices.each {|v| nodes << v if @graphs[graph].out_degree(v) <= 1}
-    return nodes
-  end
-
-  def suggest_forward_fixes
-    suggest_fix_paths(@forward_graph, @backward_graph)
-  end
-
-  def suggest_backward_fixes
-    suggest_fix_paths(@backward_graph, @forward_graph)
-  end
-
-  def suggest_fix_paths(graph_to_fix, graph_with_fixes)
-    paths = []
-
-    end_nodes(graph_to_fix).each_pair do |a, b|
-      next if !graph_with_fixes.has_vertex?(a) or !graph_with_fixes.has_vertex?(b)
-      it = RGL::PathIterator.new(graph_with_fixes, a, b, 10)
-      it.set_to_end
-      next if !it.found_path
-
-      paths += it.path.collect {|edge| edge[0].get_mutual_way(edge[1])}.uniq.select {|way| way.member_role != ''}
-    end
-
-    return paths
   end
 end
-=end
+
 class Array
     # define an iterator over each pair of indexes in an array
     def each_pair_index
@@ -221,6 +173,7 @@ class Array
     def each_pair
         self.each_pair_index do |i, j|
             yield self[i], self[j]
+            yield self[j], self[i]
         end
     end
 end
@@ -246,9 +199,8 @@ module RGL
 
     protected
 
-    def handle_tree_edge(u, v)
+    def handle_examine_edge(u, v)
       return if !u or !v
-      #puts "adding #{u}-#{v}"
       @path << [u, v]
     end
 

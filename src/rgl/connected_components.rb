@@ -11,30 +11,36 @@ module RGL
   class ComponentIterator < BFSIterator
     attr_accessor :current_component
     attr_accessor :graph_size
+    attr_accessor :visited_count
 
     def initialize(graph)
       self.current_component = AdjacencyGraph.new
       self.graph_size = graph.num_vertices
+      self.visited_count = 0
       super(graph)
     end
 
     def at_end?
-      @color_map.size == @graph_size
+      #puts "#{@visited_count} -- #{@graph_size}"
+      @visited_count == @graph_size
     end
 
     protected
 
     def next_vertex
+      #puts "-----------> #{(graph.vertices - @color_map.keys).size}"
       return @waiting.shift if !@waiting.empty?
       emit_handle_examine_component
+      #puts "-----------> #{graph.vertices - @color_map.keys}"
       return (graph.vertices - @color_map.keys)[0]
     end
 
-    def handle_tree_edge(u, v)
+    def handle_examine_edge(u, v)
       self.current_component.add_edge(u, v) if u and v
     end
 
     def handle_finish_vertex(v)
+      @visited_count += 1
       emit_handle_examine_component if at_end?
     end
 
