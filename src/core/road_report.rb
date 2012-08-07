@@ -66,11 +66,11 @@ class RoadStatus
   end
 
   def too_many_end_nodes
-    road.relation_comp_end_nodes.select {|end_nodes| end_nodes.size > 4}
+    road.relation_comps.collect {|comp| comp.end_nodes if comp.end_nodes.size > 4}.select {|x| x}
   end
 
   def too_few_end_nodes
-    road.relation_comp_end_nodes.select {|end_nodes| end_nodes.size < 2}
+    road.relation_comps.collect {|comp| comp.end_nodes if comp.end_nodes.size < 2}.select {|x| x}
   end
 
   def graph_to_ways(graph)
@@ -80,12 +80,10 @@ class RoadStatus
   def validate
     add_warning('no_relation') if !road.relation
     add_error('has_many_covered_relations') if road.relation and has_many_covered_relations
-puts road.relation_comp_lengths
+
     if !ways_without_highway_tag.empty?
       add_error('has_ways_without_highway_tag', {:ways => ways_without_highway_tag})
     end
-
-    add_warning('relation_disconnected') if !connected?
 
     if !too_many_end_nodes.empty? or !too_few_end_nodes.empty?
       add_warning('end_nodes', {:too_many => too_many_end_nodes, :too_few => too_few_end_nodes})
@@ -96,6 +94,9 @@ puts road.relation_comp_lengths
       add_info('percent_with_lanes', percent_with_lanes)
       add_info('percent_with_maxspeed', percent_with_maxspeed)
       add_warning('wrong_length') if !has_proper_length.nil? and !has_proper_length
+      add_warning('relation_disconnected') if !connected?
+      add_warning('wrong_network') if !has_proper_network
+      add_error('not_navigable') if !road.relation_comps[0].has_complete_paths?
     end
 =begin
     #if !road.ways_with_wrong_ref.empty?
@@ -103,12 +104,6 @@ puts road.relation_comp_lengths
     #end
 
     #add_warning('ways_not_in_relation', {:ways => road.ways}) if road.ways.size > 0
-
-    
-    add_warning('wrong_network') if !has_proper_network
-    add_warning('wrong_length') if !has_proper_length.nil? and !road.has_proper_length
-
-    
 =end
   end
 
@@ -126,11 +121,11 @@ puts road.relation_comp_lengths
   end
 
   def get_network
-    return (road.relation and relation["tags"]["network"])
+    road.relation["tags"]["network"] if road.relation["tags"]["network"]
   end
 
   def get_proper_network
-    return get_relation_network(ref_prefix)
+    return get_relation_network(road.ref_prefix)
   end
 
   def has_proper_network

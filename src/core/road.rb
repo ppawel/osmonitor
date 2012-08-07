@@ -23,9 +23,6 @@ class Road
   attr_accessor :ref_graph
   attr_accessor :relation_comps
   attr_accessor :ref_comps
-  attr_accessor :relation_comp_end_nodes
-  attr_accessor :relation_comp_paths
-  attr_accessor :relation_comp_lengths
 
   def initialize(ref_prefix, ref_number)
     self.ref_prefix = ref_prefix
@@ -35,9 +32,6 @@ class Road
     self.other_relations = []
     self.relation_comps = []
     self.ref_comps = []
-    self.relation_comp_end_nodes = []
-    self.relation_comp_paths = []
-    self.relation_comp_lengths = []
   end
 
   # Returns a list of strings representing the "ref" tag. This is a list because sometimes this tag contains many values, e.g. "34; S1".
@@ -68,7 +62,7 @@ class Road
 
   def create_relation_graph(data)
     @relation_graph, @relation_comps = create_graph(data)
-    calculate_comp_lengths
+    @relation_comps.each {|c| c.calculate_paths}
   end
 
   def create_ref_graph(data)
@@ -76,7 +70,8 @@ class Road
   end
 
   def length
-    relation_comp_lengths[0].max / 1000.0 if relation_comp_lengths[0] and relation_comp_lengths[0].max
+    return if !relation_comps[0] or !relation_comps[0].longest_path
+    relation_comps[0].longest_path.length / 1000.0
   end
 
   protected
@@ -127,35 +122,54 @@ class Road
       graph.add_edge(node2, node1) if way.tags['oneway'] != 'yes'
     end
 
-    return graph, graph.to_undirected.connected_components_nonrecursive
+    return graph, graph.to_undirected.connected_components_nonrecursive.collect {|c| RoadComponent.new(self, c)}
+  end
+end
+
+class RoadComponent
+  attr_accessor :road
+  attr_accessor :graph
+  attr_accessor :end_nodes
+  attr_accessor :paths
+
+  def initialize(road, graph)
+    self.road = road
+    self.graph = graph
+    self.end_nodes = graph.vertices.select {|v| graph.out_degree(v) <= 1}
+    self.paths = []
   end
 
-  def get_end_nodes(graph)
-    graph.vertices.select {|v| graph.out_degree(v) <= 1}
-  end
-
-  def calculate_comp_lengths
-    relation_comps.each do |comp|
-      end_nodes = get_end_nodes(comp)
-      relation_comp_end_nodes << end_nodes
-      paths = []
-      lengths = []
-
-      end_nodes.each_pair do |a, b|
-        it = RGL::PathIterator.new(relation_graph, a, b, 100000)
-        it.set_to_end
-
-        path1 = it.path.collect {|edge| edge[0].get_mutual_way(edge[1])}.uniq
-
-        #next if !it.found_path
-
-        paths << path1.uniq
-        lengths << path1.reduce(0) {|s, w| s + w.length}
-      end
-
-      relation_comp_paths << paths
-      relation_comp_lengths << lengths
+  def calculate_paths
+    @end_nodes.each_pair do |a, b|
+      it = RGL::PathIterator.new(road.relation_graph, a, b, 100000)
+      it.set_to_end
+      path = it.path.collect {|edge| edge[0].get_mutual_way(edge[1])}.uniq
+      paths << RoadComponentPath.new(it.found_path, path)
     end
+  end
+
+  def longest_path
+    @paths.max {|p1, p2| p1.length <=> p2.length}
+  end
+
+  def has_complete_paths?
+    complete_paths.size > 0
+  end
+
+  def complete_paths
+    paths.select {|p| p.complete}
+  end
+end
+
+class RoadComponentPath
+  attr_accessor :complete
+  attr_accessor :length
+  attr_accessor :ways
+
+  def initialize(complete, ways)
+    self.complete = complete
+    self.ways = ways
+    self.length = ways.reduce(0) {|s, w| s + w.length}
   end
 end
 
