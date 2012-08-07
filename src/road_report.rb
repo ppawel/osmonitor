@@ -1,6 +1,5 @@
 #!/usr/bin/ruby
 
-# Because RGL is bundled in OSMonitor!
 $:.unshift File.dirname(__FILE__)
 
 require 'net/http'
@@ -9,10 +8,10 @@ require 'media_wiki'
 require 'pg'
 
 require 'config'
-require 'model'
+require 'core'
+require 'road_manager'
 require 'elogger'
 require 'wiki'
-require 'road'
 
 if ARGV.size == 0
   puts "Usage: road_report.rb <input page> <output page>"
@@ -48,31 +47,19 @@ def render_issue_template(file, issue, status)
   return ERB.new(File.read("#{file}")).result(binding())
 end
 
-def tables_to_roads(page)
-  roads = []
+def read_road_input(page)
+  input = []
 
   page.tables.each do |table|
-    if ! table.table_text.include?("{{PL")
+    if !table.table_text.include?("{{PL")
       @log.debug "Table with no roads - next"
       next
     end
 
-    table.rows.each do |row|
-      m = row.row_text.scan(/PL\-(\w+)\|(\d+)/)
-
-      if $1 and $2
-        road = Road.new($1, $2)
-        road.row = row
-
-        # Now let's try to parse input length for the road.
-        length_text = row.cells[2].cell_text.strip.gsub('km', '').gsub(',', '.')
-        road.input_length = length_text.to_f if !length_text.empty?
-        roads << road
-      end
-    end
+    input += table.rows.collect {|row| RoadInput.new(row)}
   end
 
-  return roads
+  return input
 end
 
 def prepare_page(page)
@@ -93,14 +80,14 @@ end
 def insert_relation_id(status)
   return if ! status.road.relation
 
-  new_row = status.road.row.row_text.dup
+  new_row = status.input.row.row_text.dup
   new_row.gsub!(/\{\{relation\|\d*\}\}/im, "{{relation\|#{status.road.relation['id']}}}")
-  status.road.row.update_text(new_row)
+  status.input.row.update_text(new_row)
 end
 
 def remove_relation_id(status)
-  new_row = status.road.row.row_text.dup.gsub(/\{\{relation\|\d*[\}]+/im, "{{relation|}}")
-  status.road.row.update_text(new_row)
+  new_row = status.input.row.row_text.dup.gsub(/\{\{relation\|\d*[\}]+/im, "{{relation|}}")
+  status.input.row.update_text(new_row)
 end
 
 def insert_stats(page, report)
@@ -110,7 +97,7 @@ def insert_stats(page, report)
 end
 
 def fill_road_status(status)
-  return if !status.road.row.row_text.include?(TABLE_CELL_MARKER)
+  return if !status.input.row.row_text.include?(TABLE_CELL_MARKER)
 
   status.validate
 
@@ -118,7 +105,7 @@ def fill_road_status(status)
   color = WARNING_COLOR if status.get_issues(:WARNING).size > 0
   color = ERROR_COLOR if status.get_issues(:ERROR).size > 0
 
-  status.road.row.set_background_color(color)
+  status.input.row.set_background_color(color)
 
   if status.road.relation
     insert_relation_id(status)
@@ -126,9 +113,9 @@ def fill_road_status(status)
     remove_relation_id(status)
   end
 
-  new_row = status.road.row.row_text.dup
+  new_row = status.input.row.row_text.dup
   new_row.gsub!(/#{Regexp.escape(TABLE_CELL_MARKER)}.*/im, TABLE_CELL_MARKER + generate_status_text(status) + "\n")
-  status.road.row.update_text(new_row)
+  status.input.row.update_text(new_row)
 end
 
 def get_data_timestamp
@@ -146,50 +133,25 @@ end
 
 def run_report
   page = get_wiki_page(@input_page)
+  road_manager = RoadManager.new(@conn)
   current_page_text = page.page_text.dup
   report = RoadReport.new
+  inputs = read_road_input(page)
 
-  #prepare_page(page)
+  @log.debug "Got #{inputs.size} road(s) to process"
 
-  roads = tables_to_roads(page)
-
-  @log.debug "Got #{roads.size} road(s)"
-
-  roads.each_with_index do |road, i|
+  inputs.each_with_index do |input, i|
     road_before = Time.now
-    @log.debug("BEGIN road #{road.ref_prefix + road.ref_number} (#{i + 1} of #{roads.size}) (input length = #{road.input_length})")
+    @log.debug("BEGIN road #{input.ref_prefix + input.ref_number} (#{i + 1} of #{inputs.size}) (input length = #{input.length})")
 
-    status = RoadStatus.new(road)
-    fill_road_relation(road, @conn)
-
-    if road.relation
-      @log.debug("  Found relation for road: #{road.relation['id']}")
-
-      before = Time.now
-
-      load_road_graph(road, @conn)
-
-      @log.debug("  Loaded road graph (#{Time.now - before})")
-
-      before = Time.now
-
-      if !road.has_roles
-        status.all_components = road.graph.all_graph.connected_components_nonrecursive
-      else
-        status.backward_components = road.graph.backward_graph.connected_components_nonrecursive
-        status.forward_components = road.graph.forward_graph.connected_components_nonrecursive
-      end
-
-      @log.debug("  Calculated status (#{Time.now - before})")
-      #status.backward_fixes = road.graph.suggest_backward_fixes if status.backward.size > 1
-      #status.forward_fixes = road.graph.suggest_forward_fixes if status.forward.size > 1
-    end
+    road = road_manager.load_road(input)
+    status = RoadStatus.new(input, road)
 
     fill_road_status(status)
     report.add_status(status)
 
     @log.debug("END road #{road.ref_prefix + road.ref_number} took #{Time.now - road_before} " +
-      "(all = #{status.all_components.size}, backward = #{status.backward_components.size}, forward = #{status.forward_components.size})")
+      "(all = #{status.all_components.size}, ref = #{status.ref_components.size}, backward = #{status.backward_components.size}, forward = #{status.forward_components.size})")
   end
 
   insert_stats(page, report)
@@ -203,20 +165,6 @@ def run_report
   insert_data_timestamp(page)
   wiki_login
   edit_wiki_page(@output_page, page.page_text)
-end
-
-def fill_ways(road, conn)
-  sql_where = eval($sql_where_by_road_type[road.ref_prefix], binding())
-  
-  sql = "
-SELECT distinct r.*
-FROM ways r
-WHERE #{sql_where} AND
-(SELECT ST_Contains((SELECT hull FROM relation_boundaries WHERE relation_id = 936128), linestring)) = True"
-
-  sql += " AND NOT EXISTS (SELECT * FROM relation_members WHERE member_id = r.id AND relation_id = #{road.relation['id']}) " if road.relation
-
-  road.ways = conn.query(sql).collect { |row| process_tags(row) }
 end
 
 def get_wiki_page(name)

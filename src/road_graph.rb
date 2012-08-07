@@ -1,4 +1,5 @@
 require 'model'
+require 'rgeo'
 require 'rgl/adjacency'
 require 'rgl/implicit'
 require 'rgl/connected_components'
@@ -7,87 +8,81 @@ require 'rgl/topsort'
 require 'rgl/base'
 require 'rgl/bidirectional'
 
-class RoadGraph
-  attr_accessor :all_graph
-  attr_accessor :backward_graph
-  attr_accessor :forward_graph
-  attr_accessor :graphs
-  attr_accessor :road
+@rgeo_factory = ::RGeo::Geographic.spherical_factory()
+#:projection_proj4 =>
+ #  '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
 
-  def initialize(road)
-    self.all_graph = RGL::AdjacencyGraph.new
-    self.backward_graph = RGL::AdjacencyGraph.new
-    self.forward_graph = RGL::AdjacencyGraph.new
-    self.graphs = {:ALL => @all_graph, :BACKWARD => @backward_graph, :FORWARD => @forward_graph}
-    self.road = road
+def create_graph(road, data)
+  graph = RGL::DirectedAdjacencyGraph.new
+
+  # First, we create Node objects and add them to the graph as vertices.
+
+  data.each do |row|
+    node_id = row['node_id'].to_i
+    node = road.get_node(node_id)
+
+    road.has_roles = (road.has_roles or !member_role_all?(row['member_role']))
+
+    next if node
+
+    node = Node.new(node_id, row['node_tags'])
+    road.add_node(node)
   end
 
-  def load(data)
-    # OK, now we have a lot of data, need to process it and create a graph! Let's get to work...
+  # Second, we create Way objects and create edges in the graph between nodes in a way. So a single way can have multiple edges.
 
-    # First, we create Node objects and add them to the graph as vertices.
+  data.each_cons(2) do |a, b|
+    a_way_id = a ? a['way_id'].to_i : nil
+    b_way_id = b ? b['way_id'].to_i : nil
 
-    data.each do |row|
-      node_id = row['node_id'].to_i
-      node = road.get_node(node_id)
+    way = road.get_way(a_way_id)
 
-      road.has_roles = (road.has_roles or !member_role_all?(row['member_role']))
-
-      next if node
-
-      node = Node.new(node_id, row['node_tags'])
-      road.add_node(node)
+    if !way
+      way = Way.new(a_way_id, a['member_role'], a['way_tags'])
+      way.geom = a['way_geom']
+      #puts a['way_geom']
+      way.length = @rgeo_factory.parse_wkt(a['way_geom']).length
+      way.relation = road.relation if a['relation_id']
+      road.add_way(way)
     end
 
-    # Second, we create Way objects and create edges in the graph between nodes in a way. So a single way can have multiple edges.
+    next if a_way_id != b_way_id
 
-    data.each_cons(2) do |a, b|
-      a_way_id = a ? a['way_id'].to_i : nil
-      b_way_id = b ? b['way_id'].to_i : nil
+    node1 = road.get_node(a['node_id'].to_i)
+    node2 = road.get_node(b['node_id'].to_i)
 
-      way = road.get_way(a_way_id)
+    node1.add_way(way)
+    node2.add_way(way)
 
-      if !way
-        way = Way.new(a_way_id, a['member_role'], a['way_tags'])
-        way.geom = a['way_geom']
-        road.add_way(way)
+    graph.add_vertex(node1)
+    graph.add_vertex(node2)
+    graph.add_edge(node1, node2)
+    graph.add_edge(node2, node1) if way.tags['oneway'] != 'yes'
+  end
+
+  return graph
+end
+
+=begin
+    paths = []
+
+    ud = dir_graph.to_undirected
+    puts ud.vertices.select {|v| ud.out_degree(v) <= 1}.size
+    ud.vertices.select {|v| ud.out_degree(v) <= 1}.each_pair do |a, b|
+      puts "#{a} -> #{b}"
+      it = RGL::PathIterator.new(dir_graph, a, b, 100000)
+      it.set_to_end
+      if !it.found_path
+        it = RGL::PathIterator.new(dir_graph, b, a, 100000)
+        it.set_to_end
       end
-
-      next if a_way_id != b_way_id
-
-      node1 = road.get_node(a['node_id'].to_i)
-      node2 = road.get_node(b['node_id'].to_i)
-
-      node1.add_way(way)
-      node2.add_way(way)
-
-      if way.all?
-        if road.has_roles
-          backward_graph.add_vertex(node1)
-          backward_graph.add_vertex(node2)
-          forward_graph.add_vertex(node1)
-          forward_graph.add_vertex(node2)
-          backward_graph.add_edge(node1, node2)
-          forward_graph.add_edge(node1, node2)
-        else
-          all_graph.add_vertex(node1)
-          all_graph.add_vertex(node2)
-          all_graph.add_edge(node1, node2)
-        end
-      end
-
-      if road.has_roles and way.backward?
-        backward_graph.add_vertex(node1)
-        backward_graph.add_vertex(node2)
-        backward_graph.add_edge(node1, node2)
-      end
-
-      if road.has_roles and way.forward?
-        forward_graph.add_vertex(node1)
-        forward_graph.add_vertex(node2)
-        forward_graph.add_edge(node1, node2)
-      end
+      next if !it.found_path
+      puts "#{a} -> #{b} YEAH"
+      paths << it.path.collect {|edge| edge[0].get_mutual_way(edge[1])}.uniq.reduce(0) {|s, w| s + w.length}
     end
+    
+    puts paths.inspect
+
   end
 
   def end_nodes(graph)
@@ -119,7 +114,7 @@ class RoadGraph
     return paths
   end
 end
-
+=end
 class Array
     # define an iterator over each pair of indexes in an array
     def each_pair_index
