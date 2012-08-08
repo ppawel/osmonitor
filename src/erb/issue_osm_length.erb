@@ -1,5 +1,5 @@
 <% if status.road.length %>
-* <small>OSM length: <%= '%.2f' % status.road.length %> km ([<%= create_osmonitor_url(status.road) %> show on map])</small>
+* <small>OSM length: <b><%= '%.2f' % status.road.length %></b> km</small>
 <% else %>
-* <small>OSM length: <b>unknown</b> ([<%= create_osmonitor_url(status.road) %> show on map])</small>
+* <small>OSM length: <b>unknown</b></small>
 <% end %>

@@ -1,5 +1,5 @@
 <% if status.road.relation %>
-{{relation|<%= status.road.relation['id'] %>}}
+{{relation|<%= status.road.relation['id'] %>}} ([<%= create_osmonitor_url(status.road) %> show in OSMonitor])
 <% else %>
 no relation
 <% end %>
