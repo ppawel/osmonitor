@@ -1,6 +1,10 @@
 require 'config'
 
+module OSMonitor
+
 class RoadManager
+  include OSMonitorLogger
+
   attr_accessor :conn
 
   def initialize(conn)
@@ -10,11 +14,20 @@ class RoadManager
   def load_road(ref_prefix, ref_number)
     road = Road.new(ref_prefix, ref_number)
 
-    fill_road_relation(road)
-    
+    log_time " fill_road_relation" do
+      fill_road_relation(road)
+    end
+
     if road.relation
-      data = load_relation_ways(road)
-      road.create_relation_graph(data)
+      data = []
+
+      log_time " load_relation_ways" do
+        data = load_relation_ways(road)
+      end
+
+      log_time " create_relation_graph" do
+        road.create_relation_graph(data)
+      end
     end
 
     road.relation_comps.each {|c| c.end_nodes.each {|node| node.x, node.y = get_node_xy(node.id)}}
@@ -123,4 +136,6 @@ puts sql_where
     result = @conn.query("SELECT ST_X(geom), ST_Y(geom) FROM nodes WHERE id = #{node_id}")
     return result.getvalue(0, 0), result.getvalue(0, 1)
   end
+end
+
 end
