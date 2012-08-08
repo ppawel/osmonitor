@@ -69,6 +69,10 @@ class Way
     self.tags = tags
   end
 
+  def oneway?
+    tags['oneway'] and ['yes', 'true', '1'].include?(tags['oneway'].downcase)
+  end
+
   def hash
     return id
   end

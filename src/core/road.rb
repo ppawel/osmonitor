@@ -68,6 +68,7 @@ class Road
 
   def create_ref_graph(data)
     @ref_graph, @ref_comps = create_graph(data)
+    @ref_comps.each {|c| c.calculate_paths}
   end
 
   def length
@@ -128,7 +129,7 @@ class Road
       graph.add_vertex(node1)
       graph.add_vertex(node2)
       graph.add_edge(node1, node2)
-      graph.add_edge(node2, node1) if way.tags['oneway'] != 'yes'
+      graph.add_edge(node2, node1) if !way.oneway?
     end
 
     return graph, graph.to_undirected.connected_components_nonrecursive.collect {|c| RoadComponent.new(self, c)}
