@@ -99,9 +99,9 @@ def self.get_data_timestamp(conn)
   return conn.query("SELECT OSM_GetDataTimestamp()").getvalue(0, 0)
 end
 
-def self.insert_data_timestamp(page)
+def self.insert_data_timestamp(page, conn)
   page.page_text.gsub!(/#{Regexp.escape(TIMESTAMP_BEGIN)}.*?#{Regexp.escape(TIMESTAMP_END)}/,
-    TIMESTAMP_BEGIN + get_data_timestamp + TIMESTAMP_END)
+    TIMESTAMP_BEGIN + get_data_timestamp(conn) + TIMESTAMP_END)
 end
 
 def self.run_report(input_page, output_page)
@@ -137,9 +137,11 @@ def self.run_report(input_page, output_page)
     exit
   end
 
-  insert_data_timestamp(page)
+  insert_data_timestamp(page, conn)
   mw.login($config['wiki_username'], $config['wiki_password'])
   mw.create(output_page, page.page_text, :overwrite => true, :summary => 'Automated')
+
+  puts "Done."
 end
 
 end
