@@ -1,3 +1,9 @@
+
+# Determines if given tags and/or relation member role way defines a highway link.
+def is_link?(member_role, tags)
+  member_role == 'link' or tags['highway'].include?('link')
+end
+
 # Represents a node in OSM sense.
 class Node
   attr_accessor :id
@@ -61,18 +67,6 @@ class Way
     self.id = id
     self.member_role = member_role
     self.tags = tags
-  end
-
-  def all?
-    member_role_all?(@member_role)
-  end
-
-  def backward?
-    member_role_backward?(@member_role)
-  end
-
-  def forward?
-    member_role_forward?(@member_role)
   end
 
   def hash

@@ -71,9 +71,10 @@ class RoadManager
   --  n.tags AS node_tags,
   --  wn.sequence_id AS node_sequence_id
   FROM way_nodes wn
-  INNER JOIN relation_members rm ON (rm.member_id = way_id AND rm.relation_id = #{road.relation['id']})
+  INNER JOIN relation_members rm ON (rm.member_id = way_id)
   INNER JOIN ways w ON (w.id = wn.way_id)
   --INNER JOIN nodes n ON (n.id = wn.node_id)
+  WHERE rm.relation_id = #{road.relation['id']}
   ORDER BY rm.sequence_id, wn.way_id, wn.sequence_id
   )"
 

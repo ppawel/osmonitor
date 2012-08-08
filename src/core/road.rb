@@ -1,4 +1,5 @@
 require 'config'
+require 'core/osm'
 require 'rgeo'
 require 'rgl/adjacency'
 require 'rgl/implicit'
@@ -86,6 +87,8 @@ class Road
     # First, we create Node objects and add them to the graph as vertices.
 
     data.each do |row|
+      next if is_link?(row['member_role'], row['way_tags'])
+
       node_id = row['node_id'].to_i
       node = get_node(node_id)
 
@@ -98,6 +101,8 @@ class Road
     # Second, we create Way objects and create edges in the graph between nodes in a way. So a single way can have multiple edges.
 
     data.each_cons(2) do |a, b|
+      next if is_link?(a['member_role'], a['way_tags'])
+
       a_way_id = a ? a['way_id'].to_i : nil
       b_way_id = b ? b['way_id'].to_i : nil
 
