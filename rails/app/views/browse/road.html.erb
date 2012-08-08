@@ -31,23 +31,23 @@
           '<span style="color: <%= color %>">Component <%= comp_index + 1 %> Path <%= path_index + 1 %> (<%= "%.2f" % (path.length / 1000.0) %> km)</span>',
           {visibility: false, styleMap: new OpenLayers.StyleMap({'strokeWidth': 3, 'strokeColor': "${waycolor}"})});
         showWays(component<%= comp_index %>path<%= path_index %>_layer, 'GEOMETRYCOLLECTION(<%= path.wkt %>)', '<%= color %>');
-        showNode(component<%= comp_index %>path<%= path_index %>_layer, <%= path.from.x %>, <%= path.from.y %>);
-        showNode(component<%= comp_index %>path<%= path_index %>_layer, <%= path.to.x %>, <%= path.to.y %>);
+        showNode(component<%= comp_index %>path<%= path_index %>_layer, <%= path.from.x %>, <%= path.from.y %>, '<%= asset_path "flag_green.png" %>');
+        showNode(component<%= comp_index %>path<%= path_index %>_layer, <%= path.to.x %>, <%= path.to.y %>, '<%= asset_path "flag_finish.png" %>');
         map.addLayer(component<%= comp_index %>path<%= path_index %>_layer);
         <% end %>
       <% end %>
 
-      <% @mark_points_all.each do |p| %>showNode(all_ways_layer, <%= p[0] %>, <%= p[1] %>);<% end %>
+      <% @mark_points_all.each do |p| %>showNode(all_ways_layer, <%= p[0] %>, <%= p[1] %>, '<%= asset_path "flag_blue.png" %>');<% end %>
   }
 
-  function showNode(vector_layer, x, y) {
+  function showNode(vector_layer, x, y, image_url) {
     vector_layer.addFeatures(new OpenLayers.Feature.Vector(
             new OpenLayers.Geometry.Point(x, y).transform(
             new OpenLayers.Projection("EPSG:4326"),
             map.baseLayer.projection
           ),
         {some:'data'},
-        {externalGraphic: 'http://www.openlayers.org/dev/img/marker.png', graphicHeight: 21, graphicWidth: 16}));
+        {externalGraphic: image_url, graphicHeight: 24, graphicWidth: 24}));
   }
 
   function showWays(layer, s, waycolor, zoom) {
@@ -85,3 +85,4 @@
 </script>
 
 <div id="map" class="smallmap"></div>
+icons from <a href="http://www.fatcow.com/free-icons">FatCow</a>
