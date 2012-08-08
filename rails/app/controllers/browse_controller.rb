@@ -1,4 +1,5 @@
 require 'config'
+require 'elogger'
 require 'core'
 require 'road_manager'
 
@@ -6,8 +7,8 @@ class BrowseController < ApplicationController
   def road
     @conn = PGconn.open( :host => $config['host'], :dbname => $config['dbname'], :user => $config['user'], :password => $config['password'] )
     @road = nil
-    road_manager = RoadManager.new(@conn)
-    
+    road_manager = OSMonitor::RoadManager.new(@conn)
+
     params[:ref].scan(/([^\d]+)(\d+)/i) do |m|
       @road = road_manager.load_road($1, $2)
     end

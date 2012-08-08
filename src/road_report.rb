@@ -2,15 +2,8 @@
 
 $:.unshift File.dirname(__FILE__)
 
-require 'core'
 require 'elogger'
-
-module OSMonitorLogger
-  #@log = EnhancedLogger.new("osmonitor.log")
-  @@log = EnhancedLogger.new(STDOUT)
-  @@log.level = Logger::DEBUG
-  self.log = @@log
-end
+require 'core'
 
 require 'net/http'
 require 'erb'

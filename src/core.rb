@@ -2,6 +2,10 @@ module OSMonitorLogger
   class <<self
     attr_accessor :log
   end
+
+  @@log = ::EnhancedLogger.new(STDOUT)
+  @@log.level = Logger::DEBUG
+  self.log = @@log
 end
 
 def log_time(name)
