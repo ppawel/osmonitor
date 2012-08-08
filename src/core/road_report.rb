@@ -98,7 +98,7 @@ class RoadStatus
       add_info('way_stats')
       add_warning('wrong_network') if !has_proper_network
       add_error('relation_disconnected') if !connected?
-      add_error('not_navigable') if !road.has_incomplete_paths?
+      add_error('not_navigable') if road.has_incomplete_paths?
     end
 =begin
     #if !road.ways_with_wrong_ref.empty?
