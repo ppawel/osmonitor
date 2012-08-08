@@ -1,6 +1,5 @@
 <% infos = status.get_issues(:INFO) %>
 <% if infos.size > 0 %>
-<b>Info:</b>
 <% infos.each do |issue| %>
 <%= render_issue_template("erb/issue_#{issue.name}.erb", issue, status) %>
 <% end %>
@@ -8,7 +7,6 @@
 
 <% warnings = status.get_issues(:WARNING) %>
 <% if warnings.size > 0 %>
-<b>Warnings:</b>
 <% warnings.each do |issue| %>
 <%= render_issue_template("erb/issue_#{issue.name}.erb", issue, status) %>
 <% end %>
@@ -16,7 +14,6 @@
 
 <% errors = status.get_issues(:ERROR) %>
 <% if errors.size > 0 %>
-<b>Errors:</b>
 <% errors.each do |issue| %>
 <%= render_issue_template("erb/issue_#{issue.name}.erb", issue, status) %>
 <% end %>

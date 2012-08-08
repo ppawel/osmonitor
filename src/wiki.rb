@@ -136,4 +136,10 @@ class WikiTableCell
     self.row = row
     self.cell_text = cell_text
   end
+
+  def update_text(new_cell)
+    new_row = row.row_text.gsub(cell_text, new_cell)
+    row.update_text(new_row)
+    self.cell_text = new_cell
+  end
 end

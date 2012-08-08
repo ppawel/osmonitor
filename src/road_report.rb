@@ -24,7 +24,6 @@ else
 end
 
 TABLE_HEADER_MARKER = "<!-- OSMonitor HEADER -->"
-TABLE_CELL_MARKER = "<!-- OSMonitor REPORT -->"
 TIMESTAMP_BEGIN = "<!-- OSMonitor TIMESTAMP -->"
 TIMESTAMP_END = "<!-- OSMonitor /TIMESTAMP -->"
 STATS_BEGIN = "<!-- OSMonitor STATS -->"
@@ -39,6 +38,7 @@ WARNING_COLOR = "PaleGoldenrod"
 @log = EnhancedLogger.new(STDOUT)
 @log.level = Logger::DEBUG
 
+@info_template = ERB.new File.read("erb/road_info.erb")
 @status_template = ERB.new File.read("erb/road_status.erb")
 
 @conn = PGconn.open( :host => $config['host'], :dbname => $config['dbname'], :user => $config['user'], :password => $config['password'] )
@@ -70,24 +70,13 @@ def prepare_page(page)
   end
 end
 
-def generate_status_text(status)
-  text = @status_template.result(binding)
+def generate_template_text(template, status)
+  text = template.result(binding)
   text.gsub!(/^\s*$/, '')
+  #text.gsub!(/\n$/, '')
   text.gsub!("\n\n", "\n")
+  #text.gsub!(/^\n/, "")
   return text
-end
-
-def insert_relation_id(status)
-  return if ! status.road.relation
-
-  new_row = status.input.row.row_text.dup
-  new_row.gsub!(/\{\{relation\|\d*\}\}/im, "{{relation\|#{status.road.relation['id']}}}")
-  status.input.row.update_text(new_row)
-end
-
-def remove_relation_id(status)
-  new_row = status.input.row.row_text.dup.gsub(/\{\{relation\|\d*[\}]+/im, "{{relation|}}")
-  status.input.row.update_text(new_row)
 end
 
 def insert_stats(page, report)
@@ -97,7 +86,7 @@ def insert_stats(page, report)
 end
 
 def fill_road_status(status)
-  return if !status.input.row.row_text.include?(TABLE_CELL_MARKER)
+  #return if !status.input.row.row_text.include?(TABLE_CELL_MARKER)
 
   status.validate
 
@@ -107,15 +96,9 @@ def fill_road_status(status)
 
   status.input.row.set_background_color(color)
 
-  if status.road.relation
-    insert_relation_id(status)
-  else
-    remove_relation_id(status)
-  end
-
-  new_row = status.input.row.row_text.dup
-  new_row.gsub!(/#{Regexp.escape(TABLE_CELL_MARKER)}.*/im, TABLE_CELL_MARKER + generate_status_text(status) + "\n")
-  status.input.row.update_text(new_row)
+  status.input.row.cells[1].update_text(generate_template_text(@info_template, status))
+  status.input.row.cells[4].update_text(generate_template_text(@status_template, status))
+  status.input.row.update_text(status.input.row.row_text.gsub("\n\n", "\n"))
 end
 
 def get_data_timestamp
