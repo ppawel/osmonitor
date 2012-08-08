@@ -78,7 +78,7 @@ class RoadStatus
   end
 
   def validate
-    add_warning('no_relation') if !road.relation
+    add_error('no_relation') if !road.relation
     add_error('has_many_covered_relations') if road.relation and has_many_covered_relations
 
     if !ways_without_highway_tag.empty?
