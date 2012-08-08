@@ -1,52 +1,75 @@
 <script type="text/javascript">
-  var map, vectors, formats;
+  var map, vectors, formats, wkt;
 
   function init(){
       map = new OpenLayers.Map('map');
       wms = new OpenLayers.Layer.OSM();
-      markers = new OpenLayers.Layer.Markers( "Markers" );
-      vectors = new OpenLayers.Layer.Vector("Vector Layer", {styleMap: new OpenLayers.StyleMap({'strokeWidth': 3, 'strokeColor': "${waycolor}"})});
 
-      map.addLayers([wms, vectors, markers]);
-      map.addControl(new OpenLayers.Control.MousePosition());
+      map.addLayers([wms]);
 
-      showWays('GEOMETRYCOLLECTION(<%= @all_ways_wkt %>)', 'blue');
-      <% @mark_points_all.each do |p| %>showNode(<%= p[0] %>, <%= p[1] %>);<% end %>
-  }
-
-  function showNode(x, y) {
-    var size = new OpenLayers.Size(21,25);
-    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-    var icon = new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker.png',size,offset);
-    markers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat(x, y).transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.baseLayer.projection
-          ),icon));
-  }
-
-  function showWays(s, waycolor) {
-      var element = document.getElementById('text');
-      var wkt = new OpenLayers.Format.WKT({
+      wkt = new OpenLayers.Format.WKT({
           'internalProjection': map.baseLayer.projection,
           'externalProjection': new OpenLayers.Projection('EPSG:4326')
       });
+
+      map.addControl(new OpenLayers.Control.MousePosition());
+      map.addControl(new OpenLayers.Control.LayerSwitcher());
+
+      all_ways_layer = new OpenLayers.Layer.Vector("Road (all ways + end nodes)",
+        {visibility: true, styleMap: new OpenLayers.StyleMap({'strokeWidth': 4, 'strokeColor': "black", strokeOpacity: 1})});
+      showWays(all_ways_layer, 'GEOMETRYCOLLECTION(<%= @all_ways_wkt %>)', 'green', true);
+      map.addLayer(all_ways_layer);
+
+      <% @road.relation_comps.each_with_index do |comp, comp_index| %>
+        <% comp.paths.each_with_index do |path, path_index| %>
+        component<%= comp_index %>path<%= path_index %>_layer = new OpenLayers.Layer.Vector("Component <%= comp_index + 1 %> Path <%= path_index + 1 %> (<%= "%.2f" % (path.length / 1000.0) %> km)",
+          {visibility: false, styleMap: new OpenLayers.StyleMap({'strokeWidth': 3, 'strokeColor': "${waycolor}"})});
+        showWays(component<%= comp_index %>path<%= path_index %>_layer, 'GEOMETRYCOLLECTION(<%= path.wkt %>)', <% if path.complete %>'green'<% else %>'red'<% end %>);
+        showNode(component<%= comp_index %>path<%= path_index %>_layer, <%= path.from.x %>, <%= path.from.y %>);
+        showNode(component<%= comp_index %>path<%= path_index %>_layer, <%= path.to.x %>, <%= path.to.y %>);
+        map.addLayer(component<%= comp_index %>path<%= path_index %>_layer);
+        <% end %>
+      <% end %>
+
+      <% @mark_points_all.each do |p| %>showNode(all_ways_layer, <%= p[0] %>, <%= p[1] %>);<% end %>
+  }
+
+  function showNode(vector_layer, x, y) {
+    vector_layer.addFeatures(new OpenLayers.Feature.Vector(
+            new OpenLayers.Geometry.Point(x, y).transform(
+            new OpenLayers.Projection("EPSG:4326"),
+            map.baseLayer.projection
+          ),
+        {some:'data'},
+        {externalGraphic: 'http://www.openlayers.org/dev/img/marker.png', graphicHeight: 21, graphicWidth: 16}));
+  }
+
+  function showWays(layer, s, waycolor, zoom) {
+      var element = document.getElementById('text');
       var features = wkt.read(s);
       var bounds;
       if(features) {
           if(features.constructor != Array) {
               features = [features];
           }
+          okfeatures = new Array();
           for(var i=0; i<features.length; ++i) {
+              if (features[i] == undefined) {
+                continue;
+              }
               features[i].attributes.waycolor = waycolor;
               if (!bounds) {
                   bounds = features[i].geometry.getBounds();
               } else {
                   bounds.extend(features[i].geometry.getBounds());
               }
+              okfeatures.push(features[i]);
 
           }
-          vectors.addFeatures(features);
-          map.zoomToExtent(bounds);
+          layer.addFeatures(okfeatures);
+          if (zoom) {
+            map.zoomToExtent(bounds);
+          }
           //var plural = (features.length > 1) ? 's' : '';
           //element.value = features.length + ' feature' + plural + ' added';
       } else {

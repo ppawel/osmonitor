@@ -144,8 +144,11 @@ class RoadComponent
       it = RGL::PathIterator.new(road.relation_graph, a, b, 100000)
       it.set_to_end
       path = it.path.collect {|edge| edge[0].get_mutual_way(edge[1])}.uniq
-      paths << RoadComponentPath.new(it.found_path, path)
+      paths << RoadComponentPath.new(a, b, it.found_path, path)
     end
+
+    paths.sort! {|p1, p2| -(p1.length <=> p2.length)}
+    puts paths
   end
 
   def longest_path
@@ -162,14 +165,26 @@ class RoadComponent
 end
 
 class RoadComponentPath
+  attr_accessor :from
+  attr_accessor :to
   attr_accessor :complete
   attr_accessor :length
   attr_accessor :ways
 
-  def initialize(complete, ways)
+  def initialize(from, to, complete, ways)
+    self.from = from
+    self.to = to
     self.complete = complete
     self.ways = ways
     self.length = ways.reduce(0) {|s, w| s + w.length}
+  end
+
+  def wkt
+    ways.reduce('') {|s, w| s + w.geom + ','}[0..-2]
+  end
+
+  def to_s
+    "RoadComponentPath(#{from.id}->#{to.id}, #{length}, #{complete})"
   end
 end
 

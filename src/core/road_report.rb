@@ -90,7 +90,7 @@ class RoadStatus
     end
 
     if road.relation
-      add_info('osm_length')
+      add_info('osm_length') if road.length
       add_info('percent_with_lanes', percent_with_lanes)
       add_info('percent_with_maxspeed', percent_with_maxspeed)
       add_warning('wrong_length') if !has_proper_length.nil? and !has_proper_length
@@ -193,7 +193,7 @@ class RoadReport
   # Returns length statistics (in km): total_input_length, green_length, green_length_percent.
   def get_length_stats
     total_input_length = statuses.reduce(0) {|total, status| status.input.length.nil? ? total : (total + status.input.length)}
-    green_length = 0#statuses.inject(0) {|total, status| status.green? ? total + status.road.get_osm_length : total}
+    green_length = statuses.inject(0) {|total, status| status.green? ? total + status.road.length : total}
     green_length_percent = 0
     green_length_percent = green_length / total_input_length * 100 if total_input_length > 0
     return total_input_length, green_length, green_length_percent

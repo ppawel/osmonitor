@@ -3,6 +3,8 @@ class Node
   attr_accessor :id
   attr_accessor :tags
   attr_accessor :ways
+  attr_accessor :x
+  attr_accessor :y
 
   def initialize(id, tags)
     self.id = id

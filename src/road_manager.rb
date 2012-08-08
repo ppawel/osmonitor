@@ -17,6 +17,8 @@ class RoadManager
       road.create_relation_graph(data)
     end
 
+    road.relation_comps.each {|c| c.end_nodes.each {|node| node.x, node.y = get_node_xy(node.id)}}
+
     #data = load_ref_ways(road)
     #road.create_ref_graph(data)
 
@@ -117,8 +119,8 @@ puts sql_where
     return result
   end
 
-  def get_node_xy(node_id, conn)
-    result = conn.query("SELECT ST_X(geom), ST_Y(geom) FROM nodes WHERE id = #{node_id}")
+  def get_node_xy(node_id)
+    result = @conn.query("SELECT ST_X(geom), ST_Y(geom) FROM nodes WHERE id = #{node_id}")
     return result.getvalue(0, 0), result.getvalue(0, 1)
   end
 end
