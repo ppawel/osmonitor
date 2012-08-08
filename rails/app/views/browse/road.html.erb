@@ -2,7 +2,10 @@
   var map, vectors, formats, wkt;
 
   function init(){
-      map = new OpenLayers.Map('map');
+      map = new OpenLayers.Map('map', {
+          'projection': new OpenLayers.Projection("EPSG:900913"),
+          'displayProjection': new OpenLayers.Projection('EPSG:4326')});
+
       wms = new OpenLayers.Layer.OSM();
 
       map.addLayers([wms]);
@@ -14,6 +17,7 @@
 
       map.addControl(new OpenLayers.Control.MousePosition());
       map.addControl(new OpenLayers.Control.LayerSwitcher());
+      map.addControl(new OpenLayers.Control.Permalink(null, 'http://www.openstreetmap.org/', {}));
 
       all_ways_layer = new OpenLayers.Layer.Vector("Road (all ways + end nodes)",
         {visibility: true, styleMap: new OpenLayers.StyleMap({'strokeWidth': 4, 'strokeColor': "black", strokeOpacity: 1})});
