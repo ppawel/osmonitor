@@ -89,12 +89,13 @@ class RoadStatus
       add_warning('end_nodes', {:too_many => too_many_end_nodes, :too_few => too_few_end_nodes})
     end
 
+    add_info('osm_length')
+
     if road.relation
-      add_info('osm_length') if road.length
       add_info('percent_with_lanes', percent_with_lanes)
       add_info('percent_with_maxspeed', percent_with_maxspeed)
       add_warning('wrong_length') if !has_proper_length.nil? and !has_proper_length
-      add_warning('relation_disconnected') if !connected?
+      add_error('relation_disconnected') if !connected?
       add_warning('wrong_network') if !has_proper_network
       add_error('not_navigable') if !road.relation_comps[0].has_complete_paths?
     end

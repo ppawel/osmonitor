@@ -8,6 +8,6 @@
 <% total_input_length, green_length, green_length_percent = report.get_length_stats %>
 {| width="66%"
 |-
-| width="<%= green_length_percent.to_i %>%" bgcolor="<%= OK_COLOR %>" align="center" | <b><%= green_length %> km</b> (<%= green_length_percent.to_i %>%)
+| width="<%= green_length_percent.to_i %>%" bgcolor="<%= OK_COLOR %>" align="center" | <b><%= green_length.to_i %> km</b> (<%= green_length_percent.to_i %>%)
 | width="<%= 100 - green_length_percent.to_i %>%" bgcolor="#eeeeee" align="center" | total length = <b><%= total_input_length.to_i %> km</b>
 |}
