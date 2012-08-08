@@ -147,8 +147,11 @@ class RoadComponent
       paths << RoadComponentPath.new(a, b, it.found_path, path)
     end
 
+    # Remove empty paths - don't need them!
+    paths.select! {|p| p.length and p.length > 0}
+
+    # Sort by length, it's more useful during display.
     paths.sort! {|p1, p2| -(p1.length <=> p2.length)}
-    puts paths
   end
 
   def longest_path
