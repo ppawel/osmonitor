@@ -26,9 +26,11 @@
 
       <% @road.relation_comps.each_with_index do |comp, comp_index| %>
         <% comp.paths.each_with_index do |path, path_index| %>
-        component<%= comp_index %>path<%= path_index %>_layer = new OpenLayers.Layer.Vector("Component <%= comp_index + 1 %> Path <%= path_index + 1 %> (<%= "%.2f" % (path.length / 1000.0) %> km)",
+        <% color = path.complete ? 'green' : 'red' %>
+        component<%= comp_index %>path<%= path_index %>_layer = new OpenLayers.Layer.Vector(
+          '<span style="color: <%= color %>">Component <%= comp_index + 1 %> Path <%= path_index + 1 %> (<%= "%.2f" % (path.length / 1000.0) %> km)</span>',
           {visibility: false, styleMap: new OpenLayers.StyleMap({'strokeWidth': 3, 'strokeColor': "${waycolor}"})});
-        showWays(component<%= comp_index %>path<%= path_index %>_layer, 'GEOMETRYCOLLECTION(<%= path.wkt %>)', <% if path.complete %>'green'<% else %>'red'<% end %>);
+        showWays(component<%= comp_index %>path<%= path_index %>_layer, 'GEOMETRYCOLLECTION(<%= path.wkt %>)', '<%= color %>');
         showNode(component<%= comp_index %>path<%= path_index %>_layer, <%= path.from.x %>, <%= path.from.y %>);
         showNode(component<%= comp_index %>path<%= path_index %>_layer, <%= path.to.x %>, <%= path.to.y %>);
         map.addLayer(component<%= comp_index %>path<%= path_index %>_layer);

@@ -74,6 +74,10 @@ class Road
     relation_comps[0].longest_path.length / 1000.0
   end
 
+  def has_incomplete_paths?
+    !relation_comps.detect {|c| c.has_incomplete_paths?}.nil?
+  end
+
   protected
   
   def create_graph(data)
@@ -160,6 +164,10 @@ class RoadComponent
 
   def has_complete_paths?
     complete_paths.size > 0
+  end
+
+  def has_incomplete_paths?
+    paths.select {|p| !p.complete}.size > 0
   end
 
   def complete_paths
