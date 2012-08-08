@@ -1,7 +1,7 @@
 
 # Determines if given tags and/or relation member role way defines a highway link.
 def is_link?(member_role, tags)
-  member_role == 'link' or (tagstags['highway'] and tags['highway'].include?('link'))
+  member_role == 'link' or (tags['highway'] and tags['highway'].include?('link'))
 end
 
 # Represents a node in OSM sense.
