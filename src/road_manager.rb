@@ -21,13 +21,9 @@ class RoadManager
     if road.relation
       data = []
 
-      log_time " load_relation_ways" do
-        data = load_relation_ways(road)
-      end
-
-      log_time " create_relation_graph" do
-        road.create_relation_graph(data)
-      end
+      log_time " load_relation_ways" do data = load_relation_ways(road) end
+      log_time " create_relation_graph" do road.create_relation_graph(data) end
+      log_time " calculate_paths" do road.relation_comps.each {|c| c.calculate_paths} if road.relation_num_comps == 1 end
     end
 
     road.relation_comps.each {|c| c.end_nodes.each {|node| node.x, node.y = get_node_xy(node.id)}}

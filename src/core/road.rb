@@ -66,7 +66,6 @@ class Road
 
   def create_relation_graph(data)
     @relation_graph, @relation_comps = create_graph(data)
-    @relation_comps.each {|c| c.calculate_paths}
   end
 
   def create_ref_graph(data)
