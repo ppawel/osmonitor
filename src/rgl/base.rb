@@ -24,16 +24,16 @@ module RGL
     # explicitly DirecteEdge or UnDirectedEdge instances are returned
     # (i.e. Graph#edges).
     class DirectedEdge
-      attr_accessor :source, :target
+      attr_accessor :source, :target, :label
 
       # Can be used to create an edge from a two element array.
       def self.[](*a)
         new(a[0],a[1])
       end
 
-      # Create a new DirectedEdge with source _a_ and target _b_.
-      def initialize (a,b)
-        @source, @target = a,b
+      # Create a new DirectedEdge with source _a_ and target _b_ with label _label_.
+      def initialize (a,b,label=nil)
+        @source, @target, @label = a,b,label
       end
       
       # Two directed edges (u,v) and (x,y) are equal iff u == x and v == y. eql?

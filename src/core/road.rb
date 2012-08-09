@@ -47,6 +47,7 @@ class Road
 
   def add_node(node)
     nodes[node.id] = node
+    node
   end
 
   def get_way(way_id)
@@ -55,6 +56,7 @@ class Road
 
   def add_way(way)
     @ways[way.id] = way
+    way
   end
 
   def relation_num_comps
@@ -85,6 +87,70 @@ class Road
   def create_graph(data)
     graph = RGL::DirectedAdjacencyGraph.new
 
+    prev_way_id = nil
+    i = 0
+
+    while data[i] do
+      way_id = data[i]['way_id'].to_i
+      way_rows = []
+
+      while data[i] and data[i]['way_id'].to_i == way_id do
+        way_rows << data[i]
+        i += 1
+      end
+      
+      add_way_to_graph(graph, way_rows)
+    end
+
+    return graph, graph.to_undirected.connected_components_nonrecursive.collect {|c| RoadComponent.new(self, c)}
+  end
+
+  def add_way_to_graph(graph, way_rows)
+    way, lengths = create_way(way_rows[0]), create_way_lengths(way_rows[0])
+    way.lengths = lengths
+
+    i = 0
+
+    way_rows.each_cons(2) do |a, b|
+      next if is_link?(a['member_role'], a['way_tags'])
+
+      a_node_id = a['node_id'].to_i
+      b_node_id = b['node_id'].to_i
+
+      node1 = get_node(a_node_id)
+      node2 = get_node(b_node_id)
+
+      node1 = add_node(Node.new(a_node_id, a['node_tags'])) if !node1
+      node2 = add_node(Node.new(b_node_id, b['node_tags'])) if !node2
+
+      graph.add_vertex(node1)
+      graph.add_vertex(node2)
+      graph.add_edge(node1, node2, [way, lengths[i]])
+      graph.add_edge(node2, node1, [way, lengths[i]]) if !way.oneway?
+
+      i += 1
+    end
+
+    add_way(way)
+  end
+  
+  def create_way(row)
+    way = Way.new(row['way_id'].to_i, row['member_role'], row['way_tags'])
+    way.geom = row['way_geom']
+    way.length = row['way_length'].to_f if row['way_length'] # Used in integration tests.
+    way.in_relation = !row['relation_id'].nil?
+    way
+  end
+
+  def create_way_lengths(row)
+    return [] if !row['way_geom']
+    lengths = []
+    points = RGeo::Geographic.spherical_factory().parse_wkt(row['way_geom']).points
+    points.each_cons(2) {|p1, p2| lengths << p1.distance(p2)}
+    lengths
+  end
+
+  def ble
     # First, we create Node objects and add them to the graph as vertices.
 
     data.each do |row|
@@ -97,39 +163,6 @@ class Road
 
       node = Node.new(node_id, row['node_tags'])
       add_node(node)
-    end
-
-    # Second, we create Way objects and create edges in the graph between nodes in a way. So a single way can have multiple edges.
-
-    data.each_cons(2) do |a, b|
-      next if is_link?(a['member_role'], a['way_tags'])
-
-      a_way_id = a ? a['way_id'].to_i : nil
-      b_way_id = b ? b['way_id'].to_i : nil
-
-      way = get_way(a_way_id)
-
-      if !way
-        way = Way.new(a_way_id, a['member_role'], a['way_tags'])
-        way.geom = a['way_geom']
-        way.length = RGeo::Geographic.spherical_factory().parse_wkt(a['way_geom']).length if a['way_geom']
-        way.length = a['way_tags']['way_length'].to_f if a['way_tags']['way_length'] # Used in integration tests.
-        way.in_relation = !a['relation_id'].nil?
-        add_way(way)
-      end
-
-      next if a_way_id != b_way_id
-
-      node1 = get_node(a['node_id'].to_i)
-      node2 = get_node(b['node_id'].to_i)
-
-      node1.add_way(way)
-      node2.add_way(way)
-
-      graph.add_vertex(node1)
-      graph.add_vertex(node2)
-      graph.add_edge(node1, node2)
-      graph.add_edge(node2, node1) if !way.oneway?
     end
 
     return graph, graph.to_undirected.connected_components_nonrecursive.collect {|c| RoadComponent.new(self, c)}
@@ -153,15 +186,16 @@ class RoadComponent
     @end_nodes.each_pair do |a, b|
       it = RGL::PathIterator.new(road.relation_graph, a, b, 100000)
       it.set_to_end
-      path = it.path.collect {|edge| edge[0].get_mutual_way(edge[1])}.uniq
-      paths << RoadComponentPath.new(a, b, it.found_path, path)
+      puts it.path.inspect
+      path = it.path.collect {|edge| road.relation_graph.get_label(edge[0], edge[1])[0]}.uniq
+      @paths << RoadComponentPath.new(a, b, it.found_path, path)
     end
 
     # Remove empty paths - don't need them!
-    paths.select! {|p| p.length and p.length > 0}
+    @paths.select! {|p| p.length and p.length > 0}
 
     # Sort by length, it's more useful during display.
-    paths.sort! {|p1, p2| -(p1.length <=> p2.length)}
+    @paths.sort! {|p1, p2| -(p1.length <=> p2.length)}
   end
 
   def longest_path
@@ -225,6 +259,7 @@ class Array
 end
 
 module RGL
+  # Finds *any* path from u to v.
   class PathIterator < BFSIterator
     attr_accessor :path
     attr_accessor :found_path
@@ -236,6 +271,36 @@ module RGL
       self.found_path = false
       self.stop_after = stop_after
       self.target = v
+      super(graph, u)
+    end
+
+    def at_end?
+      found_path or @waiting.empty? or @path.size == stop_after
+    end
+
+    protected
+
+    def handle_examine_edge(u, v)
+      return if !u or !v
+      @path << [u, v]
+    end
+
+    def handle_finish_vertex(v)
+      @found_path = true if v == @target
+    end
+  end
+
+  # Finds shortest paths from u to all other vertices using the Dijkstra algorithm.
+  class DijkstraIterator < BFSIterator
+    attr_accessor :dist
+    attr_accessor :prev
+    attr_accessor :paths
+    attr_accessor :found_path
+
+    def initialize(graph, u)
+      self.dist = {u => 0.0}
+      self.path = []
+      self.found_path = false
       super(graph, u)
     end
 

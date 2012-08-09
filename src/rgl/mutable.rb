@@ -25,7 +25,7 @@ module RGL
     # will appear in the out-edges of v.  Put another way, v will be adjacent
     # to u and u will be adjacent to v. 
 
-    def add_edge (u, v)
+    def add_edge (u, v, label = nil)
       raise NotImplementedError
     end
 

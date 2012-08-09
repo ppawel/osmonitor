@@ -8,23 +8,12 @@ end
 class Node
   attr_accessor :id
   attr_accessor :tags
-  attr_accessor :ways
   attr_accessor :x
   attr_accessor :y
 
   def initialize(id, tags)
     self.id = id
     self.tags = tags
-    self.ways = {}
-  end
-
-  def add_way(way)
-    @ways[way.id] = way
-  end
-
-  def get_mutual_way(node)
-    common_way_ids = node.ways.keys & @ways.keys
-    return @ways[common_way_ids[0]] if !common_way_ids.empty?
   end
 
   def hash
@@ -41,18 +30,6 @@ class Node
   end
 end
 
-def member_role_all?(role)
-  ['', 'member', 'route'].include?(role)
-end
-
-def member_role_backward?(role)
-  member_role_all?(role) or ['backward'].include?(role)
-end
-
-def member_role_forward?(role)
-  member_role_all?(role) or ['forward'].include?(role)
-end
-
 # Represents a way in OSM sense.
 class Way
   attr_accessor :id
@@ -61,6 +38,7 @@ class Way
   attr_accessor :geom
   attr_accessor :relation
   attr_accessor :length
+  attr_accessor :lengths
   attr_accessor :in_relation
 
   def initialize(id, member_role, tags)
@@ -71,6 +49,11 @@ class Way
 
   def oneway?
     tags['oneway'] and ['yes', 'true', '1'].include?(tags['oneway'].downcase)
+  end
+
+  def length
+    return @length if @length
+    lengths.reduce(0) {|total, l| total + l}
   end
 
   def to_s

@@ -46,6 +46,7 @@ module RGL
     def initialize (edgelist_class = Set, *other_graphs)
       @edgelist_class = edgelist_class
       @vertice_dict   = Hash.new
+      @labels = Hash.new
       other_graphs.each do |g|
         g.each_vertex {|v| add_vertex v}
         g.each_edge {|v,w| add_edge v,w}
@@ -106,10 +107,10 @@ module RGL
 
     # See MutableGraph#add_edge.
 
-    def add_edge (u, v)
+    def add_edge (u, v, label = nil)
       add_vertex(u)                         # ensure key
       add_vertex(v)                         # ensure key
-      basic_add_edge(u, v)
+      basic_add_edge(u, v, label)
     end
 
     # See MutableGraph#remove_vertex.
@@ -137,12 +138,16 @@ module RGL
       end
     end
 
-    protected
-
-    def basic_add_edge (u, v)
-      @vertice_dict[u].add(v)
+    def get_label (u, v)
+      @labels[[u, v]]
     end
 
+    protected
+
+    def basic_add_edge (u, v, label = nil)
+      @vertice_dict[u].add(v)
+      @labels[[u, v]] = label
+    end
   end		# class DirectedAdjacencyGraph
 
   # AdjacencyGraph is an undirected Graph.  The methods add_edge and
@@ -176,7 +181,7 @@ module RGL
 
     protected
 
-    def basic_add_edge (u,v)
+    def basic_add_edge (u,v,label = nil)
       super
       @vertice_dict[v].add(u)			# Insert backwards edge
     end
