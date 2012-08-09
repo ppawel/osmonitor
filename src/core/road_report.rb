@@ -90,15 +90,20 @@ class RoadStatus
     end
 
     if road.relation
-      if road.length
-        add_info('osm_length')
-        add_warning('wrong_length') if input.length and !has_proper_length
+      # First of all, if the road relation does not have a proper number of components - skip reporting other stuff.
+      if !connected?
+        add_error('relation_disconnected')
+      else
+        if road.length
+          add_info('osm_length')
+          add_warning('wrong_length') if input.length and !has_proper_length
+        end
+
+        add_error('not_navigable') if road.has_incomplete_paths?
       end
 
-      add_info('way_stats')
       add_warning('wrong_network') if !has_proper_network
-      add_error('relation_disconnected') if !connected?
-      add_error('not_navigable') if road.has_incomplete_paths?
+      add_info('way_stats')
     end
 =begin
     #if !road.ways_with_wrong_ref.empty?
