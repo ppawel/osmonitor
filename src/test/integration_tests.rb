@@ -31,11 +31,11 @@ class IntegrationTests < Test::Unit::TestCase
     road_manager = RoadManager.new(nil)
 
     def road_manager.load_relation_ways(road)
-      [{'member_role' => '', 'way_id' => 100, 'node_id' => 1, 'way_tags' => {'highway' => 'primary'}},
-      {'member_role' => '', 'way_id' => 100, 'node_id' => 2, 'way_tags' => {}},
-      {'member_role' => '', 'way_id' => 100, 'node_id' => 3, 'way_tags' => {}},
-      {'member_role' => '', 'way_id' => 100, 'node_id' => 4, 'way_tags' => {}},
-      {'member_role' => '', 'way_id' => 100, 'node_id' => 5, 'way_tags' => {}}]
+      [{'member_role' => '', 'way_id' => 100, 'node_id' => 1, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55},
+      {'member_role' => '', 'way_id' => 100, 'node_id' => 2, 'way_tags' => {}, 'way_length' => 55},
+      {'member_role' => '', 'way_id' => 100, 'node_id' => 3, 'way_tags' => {}, 'way_length' => 55},
+      {'member_role' => '', 'way_id' => 100, 'node_id' => 4, 'way_tags' => {}, 'way_length' => 55},
+      {'member_role' => '', 'way_id' => 100, 'node_id' => 5, 'way_tags' => {}, 'way_length' => 55}]
     end
 
     input = RoadInput.new
@@ -50,15 +50,15 @@ class IntegrationTests < Test::Unit::TestCase
     road_manager = RoadManager.new(nil)
 
     def road_manager.load_relation_ways(road)
-      [{'member_role' => '', 'way_id' => 100, 'node_id' => 1, 'way_tags' => {'highway' => 'primary'}},
-      {'member_role' => '', 'way_id' => 100, 'node_id' => 2, 'way_tags' => {'highway' => 'primary'}},
-      {'member_role' => '', 'way_id' => 101, 'node_id' => 2, 'way_tags' => {'highway' => 'primary'}},
-      {'member_role' => '', 'way_id' => 101, 'node_id' => 3, 'way_tags' => {'highway' => 'primary'}},
-      {'member_role' => '', 'way_id' => 101, 'node_id' => 4, 'way_tags' => {'highway' => 'primary'}},
-      {'member_role' => '', 'way_id' => 102, 'node_id' => 6, 'way_tags' => {'highway' => 'primary'}},
-      {'member_role' => '', 'way_id' => 102, 'node_id' => 7, 'way_tags' => {'highway' => 'primary'}},
-      {'member_role' => '', 'way_id' => 102, 'node_id' => 8, 'way_tags' => {'highway' => 'primary'}},
-      {'member_role' => '', 'way_id' => 102, 'node_id' => 9, 'way_tags' => {'highway' => 'primary'}}]
+      [{'member_role' => '', 'way_id' => 100, 'node_id' => 1, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55},
+      {'member_role' => '', 'way_id' => 100, 'node_id' => 2, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55},
+      {'member_role' => '', 'way_id' => 101, 'node_id' => 2, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55},
+      {'member_role' => '', 'way_id' => 101, 'node_id' => 3, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55},
+      {'member_role' => '', 'way_id' => 101, 'node_id' => 4, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55},
+      {'member_role' => '', 'way_id' => 102, 'node_id' => 6, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55},
+      {'member_role' => '', 'way_id' => 102, 'node_id' => 7, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55},
+      {'member_role' => '', 'way_id' => 102, 'node_id' => 8, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55},
+      {'member_role' => '', 'way_id' => 102, 'node_id' => 9, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55}]
     end
 
     input = RoadInput.new
@@ -96,8 +96,9 @@ class IntegrationTests < Test::Unit::TestCase
     assert(!status.issues.detect {|i| i.name == 'relation_disconnected'})
     assert_equal(1, status.road.relation_comps.size)
     assert_equal(2, status.road.relation_comps[0].paths.size)
-    assert_equal(321.0, status.road.relation_comps[0].paths[0].length)
-    assert_equal(254.0, status.road.relation_comps[0].paths[1].length)
+    #puts status.road.relation_comps[0].paths[0].segmentse.inspect
+    assert_equal(521.0, status.road.relation_comps[0].paths[0].length)
+    assert_equal(320.0, status.road.relation_comps[0].paths[1].length)
   end
 end
 

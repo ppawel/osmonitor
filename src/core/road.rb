@@ -1,3 +1,4 @@
+require 'priority_queue/ruby_priority_queue'
 require 'config'
 require 'core/osm'
 require 'rgeo'
@@ -106,8 +107,7 @@ class Road
   end
 
   def add_way_to_graph(graph, way_rows)
-    way, lengths = create_way(way_rows[0]), create_way_lengths(way_rows[0])
-    way.lengths = lengths
+    way = create_way(way_rows[0])
 
     i = 0
 
@@ -123,49 +123,25 @@ class Road
       node1 = add_node(Node.new(a_node_id, a['node_tags'])) if !node1
       node2 = add_node(Node.new(b_node_id, b['node_tags'])) if !node2
 
+      segment = way.add_segment(node1, node2)
+
       graph.add_vertex(node1)
       graph.add_vertex(node2)
-      graph.add_edge(node1, node2, [way, lengths[i]])
-      graph.add_edge(node2, node1, [way, lengths[i]]) if !way.oneway?
+      graph.add_edge(node1, node2, segment)
+      graph.add_edge(node2, node1, segment) if !way.oneway?
 
       i += 1
     end
 
     add_way(way)
   end
-  
+
   def create_way(row)
     way = Way.new(row['way_id'].to_i, row['member_role'], row['way_tags'])
-    way.geom = row['way_geom']
-    way.length = row['way_length'].to_f if row['way_length'] # Used in integration tests.
+    way.geom = row['way_geom'] if row['way_geom']
+    way.set_mock_segment_lengths(row['way_length']) if row['way_length'] # Used in integration tests.
     way.in_relation = !row['relation_id'].nil?
     way
-  end
-
-  def create_way_lengths(row)
-    return [] if !row['way_geom']
-    lengths = []
-    points = RGeo::Geographic.spherical_factory().parse_wkt(row['way_geom']).points
-    points.each_cons(2) {|p1, p2| lengths << p1.distance(p2)}
-    lengths
-  end
-
-  def ble
-    # First, we create Node objects and add them to the graph as vertices.
-
-    data.each do |row|
-      next if is_link?(row['member_role'], row['way_tags'])
-
-      node_id = row['node_id'].to_i
-      node = get_node(node_id)
-
-      next if node
-
-      node = Node.new(node_id, row['node_tags'])
-      add_node(node)
-    end
-
-    return graph, graph.to_undirected.connected_components_nonrecursive.collect {|c| RoadComponent.new(self, c)}
   end
 end
 
@@ -183,12 +159,13 @@ class RoadComponent
   end
 
   def calculate_paths
-    @end_nodes.each_pair do |a, b|
-      it = RGL::PathIterator.new(road.relation_graph, a, b, 100000)
-      it.set_to_end
-      puts it.path.inspect
-      path = it.path.collect {|edge| road.relation_graph.get_label(edge[0], edge[1])[0]}.uniq
-      @paths << RoadComponentPath.new(a, b, it.found_path, path)
+    @end_nodes.each_pair do |source, target|
+      it = RGL::DijkstraIterator.new(road.relation_graph, source, target)
+      it.go
+      segments = []
+      path = it.to(target)
+      path.each_cons(2) {|node1, node2| segments << road.relation_graph.get_label(node1, node2)}
+      @paths << RoadComponentPath.new(source, target, true, segments)
     end
 
     # Remove empty paths - don't need them!
@@ -220,18 +197,18 @@ class RoadComponentPath
   attr_accessor :to
   attr_accessor :complete
   attr_accessor :length
-  attr_accessor :ways
+  attr_accessor :segments
 
-  def initialize(from, to, complete, ways)
+  def initialize(from, to, complete, segments)
     self.from = from
     self.to = to
     self.complete = complete
-    self.ways = ways
-    self.length = ways.reduce(0) {|s, w| w.length ? s + w.length : s}
+    self.segments = segments
+    self.length = segments.reduce(0) {|total, segment| segment.length ? total + segment.length : total}
   end
 
   def wkt
-    ways.reduce('') {|s, w| s + w.geom + ','}[0..-2]
+    nodes.reduce('') {|s, w| s + w.geom + ','}[0..-2]
   end
 
   def to_s
@@ -291,33 +268,48 @@ module RGL
   end
 
   # Finds shortest paths from u to all other vertices using the Dijkstra algorithm.
-  class DijkstraIterator < BFSIterator
-    attr_accessor :dist
+  class DijkstraIterator
     attr_accessor :prev
-    attr_accessor :paths
-    attr_accessor :found_path
+    attr_accessor :graph
+    attr_accessor :source_node
+    attr_accessor :target_node
 
-    def initialize(graph, u)
-      self.dist = {u => 0.0}
-      self.path = []
-      self.found_path = false
-      super(graph, u)
+    def initialize(graph, u, v)
+      self.graph = graph
+      self.prev = {}
+      self.source_node = u
+      self.target_node = v
     end
 
-    def at_end?
-      found_path or @waiting.empty? or @path.size == stop_after
+    def go
+      q = RubyPriorityQueue.new
+      @graph.vertices.each {|v| q.push(v, 2 << 64) if v != @source_node}
+      q.push(@source_node, 0.0)
+
+      while !q.empty? do
+        u, dist = q.delete_min
+        break if u == @target_node
+
+        @graph.each_adjacent(u) do |v|
+          next if !q.has_key?(v)
+          new_dist = dist + @graph.get_label(u, v).length
+          if q[v].nil? or new_dist < q[v]
+            @prev[v] = u
+            q.change_priority(v, new_dist)
+          end
+        end
+      end
     end
 
-    protected
-
-    def handle_examine_edge(u, v)
-      return if !u or !v
-      @path << [u, v]
-    end
-
-    def handle_finish_vertex(v)
-      #puts "finished #{v} #{@target}"
-      @found_path = true if v == @target
+    def to(v)
+      path = []
+      u = v
+      while prev[u] do
+        path.unshift(u)
+        u = prev[u]
+      end
+      path.unshift(@source_node)
+      path
     end
   end
 end

@@ -37,14 +37,31 @@ class Way
   attr_accessor :tags
   attr_accessor :geom
   attr_accessor :relation
-  attr_accessor :length
-  attr_accessor :lengths
+  attr_accessor :segments
+  attr_accessor :segment_lengths
   attr_accessor :in_relation
 
   def initialize(id, member_role, tags)
     self.id = id
     self.member_role = member_role
     self.tags = tags
+    self.segments = []
+    self.segment_lengths = []
+  end
+
+  def geom=(geom)
+    points = RGeo::Geographic.spherical_factory().parse_wkt(geom).points
+    points.each_cons(2) {|p1, p2| @segment_lengths << p1.distance(p2)}
+  end
+
+  def set_mock_segment_lengths(length)
+    (1..100).each {|i| @segment_lengths << length.to_f}
+  end
+
+  def add_segment(node1, node2)
+    segment = WaySegment.new(self, node1, node2, @segment_lengths.shift)
+    @segments << segment
+    segment
   end
 
   def oneway?
@@ -52,8 +69,7 @@ class Way
   end
 
   def length
-    return @length if @length
-    lengths.reduce(0) {|total, l| total + l}
+    @segments.reduce(0) {|total, segment| total + segment.length}
   end
 
   def to_s
@@ -68,4 +84,23 @@ class Way
     o.class == self.class and o.id == id
   end
   alias_method :eql?, :==
+end
+
+# Represents a segment of an OSM way - part between two nodes belonging to the same way. A way can have multiple segments.
+class WaySegment
+  attr_accessor :from_node
+  attr_accessor :to_node
+  attr_accessor :way
+  attr_accessor :length
+
+  def initialize(way, from_node, to_node, length)
+    self.way = way
+    self.from_node = from_node
+    self.to_node = to_node
+    self.length = length
+  end
+  
+  def to_s
+    "WaySegment(#{from_node}->#{to_node}, #{length}"
+  end
 end
