@@ -52,7 +52,7 @@ class Way
   def geom=(geom)
     points = RGeo::Geographic.spherical_factory().parse_wkt(geom).points
     points.each_cons(2) {|p1, p2| @segment_lengths << p1.distance(p2)}
-  end
+      end
 
   def set_mock_segment_lengths(length)
     (1..100).each {|i| @segment_lengths << length.to_f}
@@ -101,6 +101,6 @@ class WaySegment
   end
   
   def to_s
-    "WaySegment(#{from_node}->#{to_node}, #{length}"
+    "WaySegment(#{from_node}->#{to_node}, #{length})"
   end
 end

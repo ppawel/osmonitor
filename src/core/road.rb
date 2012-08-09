@@ -92,10 +92,11 @@ class Road
     i = 0
 
     while data[i] do
+      relation_sequence_id = data[i]['relation_sequence_id']
       way_id = data[i]['way_id'].to_i
       way_rows = []
 
-      while data[i] and data[i]['way_id'].to_i == way_id do
+      while data[i] and data[i]['way_id'].to_i == way_id and data[i]['relation_sequence_id'] == relation_sequence_id do
         way_rows << data[i]
         i += 1
       end
@@ -107,6 +108,17 @@ class Road
   end
 
   def add_way_to_graph(graph, way_rows)
+    return if way_rows.empty?
+
+    way_id = way_rows[0]['way_id'].to_i
+
+    if get_way(way_id)
+      # Probably this way is added multiple times to the relation... Skip it for now.
+      # See https://github.com/ppawel/osmonitor/issues/13
+      puts "WARNING: Way #{way_id} added multiple times to relation?"
+      return
+    end
+
     way = create_way(way_rows[0])
 
     i = 0
@@ -162,10 +174,20 @@ class RoadComponent
     @end_nodes.each_pair do |source, target|
       it = RGL::DijkstraIterator.new(road.relation_graph, source, target)
       it.go
-      segments = []
       path = it.to(target)
-      path.each_cons(2) {|node1, node2| segments << road.relation_graph.get_label(node1, node2)}
-      @paths << RoadComponentPath.new(source, target, true, segments)
+
+      if path.size == 1
+        # Target cannot be reached from source - so we do a BFS search to find the partial path (useful for displaying on the map).
+        it = RGL::PathIterator.new(road.relation_graph, source, target)
+        it.set_to_end
+        segments = []
+        it.path.each_slice(2) {|node1, node2| segments << road.relation_graph.get_label(node1, node2)}
+        @paths << RoadComponentPath.new(source, target, false, segments)
+      else
+        segments = []
+        path.each_cons(2) {|node1, node2| segments << road.relation_graph.get_label(node1, node2)}
+        @paths << RoadComponentPath.new(source, target, true, segments)
+      end
     end
 
     # Remove empty paths - don't need them!
@@ -243,7 +265,7 @@ module RGL
     attr_accessor :target
     attr_accessor :stop_after
 
-    def initialize(graph, u, v, stop_after)
+    def initialize(graph, u, v, stop_after = 2 << 64)
       self.path = []
       self.found_path = false
       self.stop_after = stop_after
@@ -259,7 +281,8 @@ module RGL
 
     def handle_examine_edge(u, v)
       return if !u or !v
-      @path << [u, v]
+      @path << u
+      @path << v
     end
 
     def handle_finish_vertex(v)
@@ -292,6 +315,7 @@ module RGL
 
         @graph.each_adjacent(u) do |v|
           next if !q.has_key?(v)
+
           new_dist = dist + @graph.get_label(u, v).length
           if q[v].nil? or new_dist < q[v]
             @prev[v] = u

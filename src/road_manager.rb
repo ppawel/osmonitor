@@ -44,7 +44,7 @@ class RoadManager
   end
 
   def fill_road_relation(road)
-    sql_select = "SELECT *, OSM_GetRelationLength(r.id) AS length, OSM_IsMostlyCoveredBy(936128, r.id) AS covered
+    sql_select = "SELECT *, OSM_IsMostlyCoveredBy(936128, r.id) AS covered
   FROM relations r
   WHERE
     r.tags -> 'type' = 'route' AND
@@ -63,6 +63,7 @@ class RoadManager
   SELECT
     rm.relation_id AS relation_id,
     rm.member_role AS member_role,
+    rm.sequence_id AS relation_sequence_id,
     wn.way_id AS way_id,
     w.tags AS way_tags,
     ST_AsText(w.linestring) AS way_geom,

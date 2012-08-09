@@ -100,6 +100,32 @@ class IntegrationTests < Test::Unit::TestCase
     assert_equal(521.0, status.road.relation_comps[0].paths[0].length)
     assert_equal(320.0, status.road.relation_comps[0].paths[1].length)
   end
+
+  def test_y_shaped_road
+    road_manager = RoadManager.new(nil)
+
+    def road_manager.load_relation_ways(road)
+      [{'member_role' => '', 'way_id' => 100, 'node_id' => 2, 'way_tags' => {'highway' => 'primary', 'oneway' => 'yes'}, 'way_length' => 100},
+      {'member_role' => '', 'way_id' => 100, 'node_id' => 1, 'way_tags' => {'highway' => 'primary', 'oneway' => 'yes'}, 'way_length' => 100},
+      {'member_role' => '', 'way_id' => 101, 'node_id' => 3, 'way_tags' => {'highway' => 'primary', 'oneway' => 'yes'}, 'way_length' => 100},
+      {'member_role' => '', 'way_id' => 101, 'node_id' => 2, 'way_tags' => {'highway' => 'primary', 'oneway' => 'yes'}, 'way_length' => 100},
+      {'member_role' => '', 'way_id' => 102, 'node_id' => 2, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55},
+      {'member_role' => '', 'way_id' => 102, 'node_id' => 4, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55},
+      {'member_role' => '', 'way_id' => 102, 'node_id' => 5, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 66}]
+    end
+
+    input = RoadInput.new
+    road = road_manager.load_road('A', '1')
+    status = RoadStatus.new(input, road)
+    status.validate
+
+    assert(!status.issues.detect {|i| i.name == 'relation_disconnected'})
+    assert_equal(1, status.road.relation_comps.size)
+    #assert_equal(2, status.road.relation_comps[0].paths.size)
+    puts status.road.relation_comps[0].paths
+    assert_equal(521.0, status.road.relation_comps[0].paths[0].length)
+    assert_equal(320.0, status.road.relation_comps[0].paths[1].length)
+  end
 end
 
 end
