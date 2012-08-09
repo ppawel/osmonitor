@@ -230,7 +230,13 @@ class RoadComponentPath
   end
 
   def wkt
-    nodes.reduce('') {|s, w| s + w.geom + ','}[0..-2]
+    segments.reduce('') {|wkt, segment| wkt + segment.line.to_s + ','}[0..-2]
+    #points = []
+    #segments.each do |s|
+    #  points << s.line.point_n(0)
+    #  points << s.line.point_n(1)
+    #end
+    #RGeo::Geographic.spherical_factory().line_string(points).to_s
   end
 
   def to_s

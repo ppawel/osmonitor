@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    PriorityQueue (0.1.2)
     actionmailer (3.2.6)
       actionpack (= 3.2.6)
       mail (~> 2.4.4)
@@ -113,6 +114,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  PriorityQueue
   coffee-rails (~> 3.2.1)
   jquery-rails
   mediawiki-gateway

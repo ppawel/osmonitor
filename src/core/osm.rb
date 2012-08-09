@@ -1,3 +1,4 @@
+require 'rgeo'
 
 # Determines if given tags and/or relation member role way defines a highway link.
 def is_link?(member_role, tags)
@@ -39,6 +40,7 @@ class Way
   attr_accessor :relation
   attr_accessor :segments
   attr_accessor :segment_lengths
+  attr_accessor :segment_lines
   attr_accessor :in_relation
 
   def initialize(id, member_role, tags)
@@ -47,19 +49,24 @@ class Way
     self.tags = tags
     self.segments = []
     self.segment_lengths = []
+    self.segment_lines = []
   end
 
   def geom=(geom)
     points = RGeo::Geographic.spherical_factory().parse_wkt(geom).points
-    points.each_cons(2) {|p1, p2| @segment_lengths << p1.distance(p2)}
-      end
+    points.each_cons(2) do |p1, p2|
+      @segment_lengths << p1.distance(p2)
+      @segment_lines << RGeo::Geographic.spherical_factory().line(p1, p2)
+    end
+    @geom = geom
+  end
 
   def set_mock_segment_lengths(length)
     (1..100).each {|i| @segment_lengths << length.to_f}
   end
 
   def add_segment(node1, node2)
-    segment = WaySegment.new(self, node1, node2, @segment_lengths.shift)
+    segment = WaySegment.new(self, node1, node2, @segment_lengths.shift, @segment_lines.shift)
     @segments << segment
     segment
   end
@@ -92,12 +99,14 @@ class WaySegment
   attr_accessor :to_node
   attr_accessor :way
   attr_accessor :length
+  attr_accessor :line
 
-  def initialize(way, from_node, to_node, length)
+  def initialize(way, from_node, to_node, length, line)
     self.way = way
     self.from_node = from_node
     self.to_node = to_node
     self.length = length
+    self.line = line
   end
   
   def to_s
