@@ -112,8 +112,8 @@ class Road
       if !way
         way = Way.new(a_way_id, a['member_role'], a['way_tags'])
         way.geom = a['way_geom']
-        #puts a['way_geom']
-        way.length = RGeo::Geographic.spherical_factory().parse_wkt(a['way_geom']).length
+        way.length = RGeo::Geographic.spherical_factory().parse_wkt(a['way_geom']).length if a['way_geom']
+        way.length = a['way_tags']['way_length'].to_f if a['way_tags']['way_length'] # Used in integration tests.
         way.in_relation = !a['relation_id'].nil?
         add_way(way)
       end
@@ -193,7 +193,7 @@ class RoadComponentPath
     self.to = to
     self.complete = complete
     self.ways = ways
-    self.length = ways.reduce(0) {|s, w| s + w.length}
+    self.length = ways.reduce(0) {|s, w| w.length ? s + w.length : s}
   end
 
   def wkt

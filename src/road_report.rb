@@ -43,7 +43,11 @@ def self.read_road_input(page)
       next
     end
 
-    input += table.rows.collect {|row| RoadInput.new(row)}
+    input += table.rows.collect do |row|
+      input = RoadInput.new
+      input.from_wiki_table_row(row)
+      input
+    end
   end
 
   return input

@@ -4,7 +4,7 @@ class RoadInput
   attr_accessor :ref_prefix
   attr_accessor :ref_number
 
-  def initialize(wiki_table_row)
+  def from_wiki_table_row(wiki_table_row)
     @row = wiki_table_row
     m = row.row_text.scan(/PL\-(\w+)\|(\d+)/)
 
@@ -128,7 +128,7 @@ class RoadStatus
   end
 
   def get_network
-    road.relation["tags"]["network"] if road.relation["tags"]["network"]
+    road.relation['tags']['network'] if road.relation['tags']['network']
   end
 
   def get_proper_network
@@ -136,7 +136,7 @@ class RoadStatus
   end
 
   def has_proper_network
-    return get_network == get_proper_network 
+    return get_network == get_proper_network
   end
 
   def has_many_relations
@@ -175,6 +175,10 @@ class RoadIssue
     self.type = type
     self.name = name
     self.data = data
+  end
+
+  def to_s
+    "RoadIssue(#{type}, #{name})"
   end
 end
 
