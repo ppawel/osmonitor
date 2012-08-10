@@ -131,8 +131,8 @@ class Road
       node1 = get_node(a_node_id)
       node2 = get_node(b_node_id)
 
-      node1 = add_node(Node.new(a_node_id, a['node_tags'])) if !node1
-      node2 = add_node(Node.new(b_node_id, b['node_tags'])) if !node2
+      node1 = add_node(Node.new(a_node_id, a['node_tags'], a['node_geom'])) if !node1
+      node2 = add_node(Node.new(b_node_id, b['node_tags'], b['node_geom'])) if !node2
 
       segment = way.add_segment(node1, node2)
 
@@ -149,7 +149,7 @@ class Road
 
   def create_way(row)
     way = Way.new(row['way_id'].to_i, row['member_role'], row['way_tags'])
-    way.geom = row['way_geom'] if row['way_geom']
+    #way.geom = row['way_geom'] if row['way_geom']
     way.set_mock_segment_lengths(row['way_length']) if row['way_length'] # Used in integration tests.
     way.in_relation = !row['relation_id'].nil?
     way

@@ -63,7 +63,6 @@ module RGL
 
         @graph.each_adjacent(u) do |v|
           next if !q.has_key?(v)
-
           new_dist = dist + @graph.get_label(u, v).length
           if q[v].nil? or new_dist < q[v]
             @prev[v] = u

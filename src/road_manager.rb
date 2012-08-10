@@ -66,15 +66,16 @@ class RoadManager
     rm.sequence_id AS relation_sequence_id,
     wn.way_id AS way_id,
     w.tags AS way_tags,
-    ST_AsText(w.linestring) AS way_geom,
+    --ST_AsText(w.linestring) AS way_geom,
     --ST_Length(w.linestring::geography) AS way_length,
-    wn.node_id AS node_id
+    wn.node_id AS node_id,
+    ST_AsText(n.geom) AS node_geom
   --  n.tags AS node_tags,
   --  wn.sequence_id AS node_sequence_id
   FROM way_nodes wn
   INNER JOIN relation_members rm ON (rm.member_id = way_id)
   INNER JOIN ways w ON (w.id = wn.way_id)
-  --INNER JOIN nodes n ON (n.id = wn.node_id)
+  INNER JOIN nodes n ON (n.id = wn.node_id)
   WHERE rm.relation_id = #{road.relation['id']}
   ORDER BY rm.sequence_id, wn.way_id, wn.sequence_id
   )"
