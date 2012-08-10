@@ -97,8 +97,10 @@ def self.get_data_timestamp(conn)
 end
 
 def self.insert_data_timestamp(page, conn)
+  timestamp = get_data_timestamp(conn)
   page.page_text.gsub!(/#{Regexp.escape(TIMESTAMP_BEGIN)}.*?#{Regexp.escape(TIMESTAMP_END)}/,
-    TIMESTAMP_BEGIN + get_data_timestamp(conn) + TIMESTAMP_END)
+    TIMESTAMP_BEGIN + timestamp + TIMESTAMP_END)
+  timestamp
 end
 
 def self.run_report(input_page, output_page)
@@ -129,13 +131,18 @@ def self.run_report(input_page, output_page)
 
   insert_stats(page, report)
 
+  puts "Page size (current = #{current_page_text.size}, old = #{page.page_text.size})"
+
   # Check if anything has changed - no point in uploading the same page only with updated timestamp.
   if current_page_text == page.page_text
     puts 'No change in the report - not uploading new version to the wiki!'
     exit
   end
 
-  insert_data_timestamp(page, conn)
+  timestamp = insert_data_timestamp(page, conn)
+
+  puts "Uploading to the wiki... (data timestamp = #{timestamp})"
+
   mw.login($config['wiki_username'], $config['wiki_password'])
   mw.create(output_page, page.page_text, :overwrite => true, :summary => 'Automated')
 

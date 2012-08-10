@@ -177,8 +177,8 @@ class RoadComponent
       it.go
       @end_node_dijkstras[node] = it
     end
-    roundtrip
-    puts paths.inspect
+
+    calculate_roundtrips
   end
 
   def segments(end_node, some_node)
@@ -197,6 +197,7 @@ class RoadComponent
   # Returns a node that is the furthest away from given end node.
   def furthest(end_node)
     nodes = @end_nodes.max_by {|end_node2| @end_node_dijkstras[end_node].dist[end_node2] ? @end_node_dijkstras[end_node].dist[end_node2] : -1}
+=begin
     @end_nodes.each do |en|
       puts "dist(#{end_node}, #{en}) = #{dist(end_node, en)}"
 
@@ -209,6 +210,7 @@ class RoadComponent
         puts "  #{it.path.size}"
       end
     end
+=end
     nodes
   end
 
@@ -217,38 +219,38 @@ class RoadComponent
     @end_node_dijkstras.sort_by {|end_node, it| it.dist[node].nil? ? 2 << 64 : it.dist[node]}.collect {|end_node, it| end_node}
   end
 
-  def roundtrip
+  def calculate_roundtrips
     @end_nodes.each do |end_node|
       furthest = furthest(end_node)
       next if end_node == furthest
+
       dist = dist(end_node, furthest)
       closest_to_furthest = closest_end_nodes(furthest)
       closest_to_end_node = closest_end_nodes(end_node)
       found_roundtrip = false
-
       roundtrip_dist = nil
 
       closest_to_furthest.each do |node1|
         next if node1 == end_node
         closest_to_end_node.each do |node2|
-          puts "trying #{node1}->#{node2}: #{roundtrip_dist}"
+          #puts "trying #{node1}->#{node2}: #{roundtrip_dist}"
           roundtrip_dist = dist(node1, node2)
 
           if !roundtrip_dist.nil? and roundtrip_dist > 0 and ((dist - roundtrip_dist).abs < 2222)
             paths << RoadComponentPath.new(end_node, furthest, true, segments(end_node, furthest))
             paths << RoadComponentPath.new(node1, node2, true, segments(node1, node2))
             found_roundtrip = true
+          else
+            # Target cannot be reached from source - so we do a BFS search to find the partial path (useful for displaying on the map).
+            it = RGL::PathIterator.new(road.relation_graph, node1, node2)
+            it.set_to_end
+            segments = []
+            if !it.path.empty?
+              it.path.each_cons(2) {|n1, n2| segments << @graph.get_label(n1, n2)}
+              @paths << RoadComponentPath.new(node1, node2, false, segments.select {|s| s})
+            end
           end
         end
-      end
-
-      if !found_roundtrip
-        # Target cannot be reached from source - so we do a BFS search to find the partial path (useful for displaying on the map).
-        it = RGL::PathIterator.new(road.relation_graph, furthest, end_node)
-        it.set_to_end
-        segments = []
-        it.path.each_cons(2) {|node1, node2| segments << @graph.get_label(node1, node2)}
-        @paths << RoadComponentPath.new(furthest, end_node, false, segments.select {|s| s})
       end
 
       #puts "dist = #{dist}, roundtrip = #{roundtrip_dist}"
