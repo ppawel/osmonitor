@@ -102,6 +102,7 @@ def self.insert_data_timestamp(page, conn)
 end
 
 def self.run_report(input_page, output_page)
+  report_start = Time.now
   conn = PGconn.open( :host => $config['host'], :dbname => $config['dbname'], :user => $config['user'], :password => $config['password'] )
   mw = MediaWiki::Gateway.new('https://wiki.openstreetmap.org/w/api.php')
   page = WikiPage.new(mw.get input_page)
@@ -123,7 +124,7 @@ def self.run_report(input_page, output_page)
     report.add_status(status)
 
     @@log.debug("END road #{road.ref_prefix + road.ref_number} took #{Time.now - road_before} " +
-      "(comps = #{status.road.relation_num_comps})")
+      "(comps = #{status.road.relation_comps.map {|c| c.graph.num_vertices}.inspect})")
   end
 
   insert_stats(page, report)
@@ -138,7 +139,7 @@ def self.run_report(input_page, output_page)
   mw.login($config['wiki_username'], $config['wiki_password'])
   mw.create(output_page, page.page_text, :overwrite => true, :summary => 'Automated')
 
-  puts "Done."
+  puts "Done (took #{Time.now - report_start} ms)."
 end
 
 end
