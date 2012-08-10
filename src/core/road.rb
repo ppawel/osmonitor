@@ -123,7 +123,7 @@ class Road
     i = 0
 
     way_rows.each_cons(2) do |a, b|
-      next if is_link?(a['member_role'], a['way_tags'])
+      #next if is_link?(a['member_role'], a['way_tags'])
 
       a_node_id = a['node_id'].to_i
       b_node_id = b['node_id'].to_i
