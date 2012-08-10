@@ -149,7 +149,7 @@ class Road
 
   def create_way(row)
     way = Way.new(row['way_id'].to_i, row['member_role'], row['way_tags'])
-    #way.geom = row['way_geom'] if row['way_geom']
+    way.geom = row['way_geom'] if row['way_geom']
     way.set_mock_segment_lengths(row['way_length']) if row['way_length'] # Used in integration tests.
     way.in_relation = !row['relation_id'].nil?
     way
