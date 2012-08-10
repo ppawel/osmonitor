@@ -15,6 +15,7 @@ class EnhancedLogger < Logger
     self<<(msg)
     if (@stdout != nil)
       @stdout.puts(msg)
+      @stdout.flush
     end
   end
 end
