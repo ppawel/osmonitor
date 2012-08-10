@@ -196,6 +196,11 @@ class RoadComponent
     @paths.sort! {|p1, p2| -(p1.length <=> p2.length)}
   end
 
+  def wkt
+    segments = @graph.labels.values
+    segments.select {|s| s}.reduce('') {|wkt, segment| wkt + segment.line.to_s + ','}[0..-2]
+  end
+
   def longest_path
     @paths.max {|p1, p2| p1.length <=> p2.length}
   end

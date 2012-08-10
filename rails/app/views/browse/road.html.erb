@@ -25,6 +25,12 @@
       map.addLayer(all_ways_layer);
 
       <% @road.relation_comps.each_with_index do |comp, comp_index| %>
+        component<%= comp_index %>_layer = new OpenLayers.Layer.Vector(
+          'Component <%= comp_index + 1 %>',
+          {visibility: false, styleMap: new OpenLayers.StyleMap({'strokeWidth': 3, 'strokeColor': "blue"})});
+        showWays(component<%= comp_index %>_layer, 'GEOMETRYCOLLECTION(<%= comp.wkt %>)', 'blue');
+        map.addLayer(component<%= comp_index %>_layer);
+
         <% comp.paths.each_with_index do |path, path_index| %>
         <% color = path.complete ? 'green' : 'red' %>
         component<%= comp_index %>path<%= path_index %>_layer = new OpenLayers.Layer.Vector(

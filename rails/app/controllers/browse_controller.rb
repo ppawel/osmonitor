@@ -13,8 +13,12 @@ class BrowseController < ApplicationController
       @road = road_manager.load_road($1, $2)
     end
 
+    @components_wkt = []
+    @road.relation_comps.each {|comp| @components_wkt << comp.wkt}
+
     @all_paths_wkt = []
     @road.relation_comps.each {|comp| @all_paths_wkt += comp.paths.collect {|path| path.wkt}}
+
     @all_ways_wkt = @road.ways.values.reduce('') {|s, w| s + w.geom + ','}[0..-2]
     @mark_points_all = @road.relation_comps.collect {|c| c.end_nodes}.flatten.collect {|node| road_manager.get_node_xy(node.id)}
     #@mark_points_backward = @road.graph.end_nodes(:BACKWARD).collect {|node| get_node_xy(node.id, @conn)}
