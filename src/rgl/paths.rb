@@ -24,7 +24,7 @@ module RGL
 
     protected
 
-    def handle_examine_edge(u, v)
+    def handle_tree_edge(u, v)
       return if !u or !v
       @path << u
       @path << v
@@ -37,6 +37,7 @@ module RGL
 
   # Finds shortest paths from u to all other vertices using the Dijkstra algorithm.
   class DijkstraIterator
+    attr_accessor :dist
     attr_accessor :prev
     attr_accessor :graph
     attr_accessor :source_node
@@ -44,6 +45,7 @@ module RGL
 
     def initialize(graph, u, v)
       self.graph = graph
+      self.dist = {}
       self.prev = {}
       self.source_node = u
       self.target_node = v
@@ -56,7 +58,8 @@ module RGL
 
       while !q.empty? do
         u, dist = q.delete_min
-        break if u == @target_node
+        @dist[u] = dist
+        #break if u == @target_node
 
         @graph.each_adjacent(u) do |v|
           next if !q.has_key?(v)
@@ -68,6 +71,8 @@ module RGL
           end
         end
       end
+
+      @dist.each {|node, dist| @dist.delete(node) if dist == 2 << 64}
     end
 
     def to(v)

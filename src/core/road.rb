@@ -74,8 +74,8 @@ class Road
   end
 
   def length
-    return if !relation_comps[0] or !relation_comps[0].longest_path
-    relation_comps[0].longest_path.length / 1000.0
+    return if !relation_comps[0] or !relation_comps[0].longest_complete_path
+    relation_comps[0].longest_complete_path.length / 1000.0
   end
 
   def has_incomplete_paths?
@@ -160,16 +160,121 @@ class RoadComponent
   attr_accessor :road
   attr_accessor :graph
   attr_accessor :end_nodes
+  attr_accessor :end_node_dijkstras
   attr_accessor :paths
 
   def initialize(road, graph)
     self.road = road
     self.graph = graph
     self.end_nodes = graph.vertices.select {|v| graph.out_degree(v) <= 1}
+    self.end_node_dijkstras = {}
     self.paths = []
   end
 
   def calculate_paths
+    @end_nodes.each do |node|
+      it = RGL::DijkstraIterator.new(road.relation_graph, node, nil)
+      it.go
+      @end_node_dijkstras[node] = it
+    end
+    roundtrip
+    puts paths.inspect
+  end
+
+  def segments(end_node, some_node)
+    path = @end_node_dijkstras[end_node].to(some_node)
+    segments = []
+    #puts "path = #{path.inspect}"
+    #puts road.relation_graph
+    path.each_cons(2) {|node1, node2| segments << road.relation_graph.get_label(node1, node2)}
+    segments
+  end
+
+  def dist(end_node, some_node)
+    @end_node_dijkstras[end_node].dist[some_node]
+  end
+
+  # Returns a node that is the furthest away from given end node.
+  def furthest(end_node)
+    nodes = @end_nodes.max_by {|end_node2| @end_node_dijkstras[end_node].dist[end_node2] ? @end_node_dijkstras[end_node].dist[end_node2] : -1}
+    @end_nodes.each do |en|
+      puts "dist(#{end_node}, #{en}) = #{dist(end_node, en)}"
+
+      if dist(end_node, en).nil?
+        it = RGL::PathIterator.new(road.relation_graph, end_node, en)
+        it.set_to_end
+        segments = []
+        it.path.each_cons(2) {|node1, node2| segments << @graph.get_label(node1, node2)}
+        @paths << RoadComponentPath.new(end_node, en, false, segments.select {|s| s})
+        puts "  #{it.path.size}"
+      end
+    end
+    nodes
+  end
+
+  # Returns end nodes sorted by distance from an end node to given node.
+  def closest_end_nodes(node, max_dist = 2 << 64)
+    @end_node_dijkstras.sort_by {|end_node, it| it.dist[node].nil? ? 2 << 64 : it.dist[node]}.collect {|end_node, it| end_node}
+  end
+
+  def roundtrip
+    @end_nodes.each do |end_node|
+      furthest = furthest(end_node)
+      next if end_node == furthest
+      dist = dist(end_node, furthest)
+      closest_to_furthest = closest_end_nodes(furthest)
+      closest_to_end_node = closest_end_nodes(end_node)
+      found_roundtrip = false
+
+      roundtrip_dist = nil
+
+      closest_to_furthest.each do |node1|
+        next if node1 == end_node
+        closest_to_end_node.each do |node2|
+          puts "trying #{node1}->#{node2}: #{roundtrip_dist}"
+          roundtrip_dist = dist(node1, node2)
+
+          if !roundtrip_dist.nil? and roundtrip_dist > 0 and ((dist - roundtrip_dist).abs < 2222)
+            paths << RoadComponentPath.new(end_node, furthest, true, segments(end_node, furthest))
+            paths << RoadComponentPath.new(node1, node2, true, segments(node1, node2))
+            found_roundtrip = true
+          end
+        end
+      end
+
+      if !found_roundtrip
+        # Target cannot be reached from source - so we do a BFS search to find the partial path (useful for displaying on the map).
+        it = RGL::PathIterator.new(road.relation_graph, furthest, end_node)
+        it.set_to_end
+        segments = []
+        it.path.each_cons(2) {|node1, node2| segments << @graph.get_label(node1, node2)}
+        @paths << RoadComponentPath.new(furthest, end_node, false, segments.select {|s| s})
+      end
+
+      #puts "dist = #{dist}, roundtrip = #{roundtrip_dist}"
+=begin
+puts "furthest = #{furthest} closest(#{end_node}) = #{closest.inspect}"
+      roundtrip_dist = nil
+      roundtrip_node = nil
+      while (roundtrip_dist == 0.0 or roundtrip_dist.nil?) and !closest.empty?
+        roundtrip_node = closest.shift[0]
+        roundtrip_dist = dist(roundtrip_node, end_node)
+        closest2 = closest_end_nodes(end_node)
+        puts "tried #{roundtrip_node}->#{end_node}: #{roundtrip_dist}"
+      end
+puts "dist = #{dist}, roundtrip = #{roundtrip_dist}"
+      if dist and roundtrip_dist
+        #puts segments(end_node, furthest).inspect
+        paths << RoadComponentPath.new(end_node, furthest, true, segments(end_node, furthest))
+        paths << RoadComponentPath.new(roundtrip_node, end_node, true, segments(roundtrip_node, end_node))
+        #puts "dist = #{dist}, roundtrip = #{roundtrip_dist}"
+      end
+=end
+      
+      #puts dist(closest_end_nodes(furthest(end_node)), end_node).inspect
+    end
+  end
+=begin
     @end_nodes.each_pair do |source, target|
       it = RGL::DijkstraIterator.new(road.relation_graph, source, target)
       it.go
@@ -195,14 +300,14 @@ class RoadComponent
     # Sort by length, it's more useful during display.
     @paths.sort! {|p1, p2| -(p1.length <=> p2.length)}
   end
-
+=end
   def wkt
     segments = @graph.labels.values
     segments.select {|s| s}.reduce('') {|wkt, segment| wkt + segment.line.to_s + ','}[0..-2]
   end
 
-  def longest_path
-    @paths.max {|p1, p2| p1.length <=> p2.length}
+  def longest_complete_path
+    complete_paths.max {|p1, p2| p1.length <=> p2.length}
   end
 
   def has_complete_paths?

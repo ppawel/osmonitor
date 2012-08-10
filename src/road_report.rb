@@ -139,7 +139,7 @@ def self.run_report(input_page, output_page)
   mw.login($config['wiki_username'], $config['wiki_password'])
   mw.create(output_page, page.page_text, :overwrite => true, :summary => 'Automated')
 
-  puts "Done (took #{Time.now - report_start} ms)."
+  puts "Done (took #{Time.now - report_start} seconds)."
 end
 
 end

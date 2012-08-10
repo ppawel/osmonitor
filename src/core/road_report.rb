@@ -58,7 +58,11 @@ class RoadStatus
   end
 
   def get_issues(type)
-    return issues.select {|issue| issue.type == type}
+    issues.select {|issue| issue.type == type}
+  end
+
+  def has_issue_by_name?(name)
+    issues.select {|issue| issue.name == name}.size > 0
   end
 
   def connected?
@@ -99,7 +103,7 @@ class RoadStatus
           add_warning('wrong_length') if input.length and !has_proper_length
         end
 
-        add_error('not_navigable') if road.has_incomplete_paths?
+        add_error('not_navigable') if road.length.nil?#road.has_incomplete_paths?
       end
 
       add_warning('wrong_network') if !has_proper_network
