@@ -21,6 +21,8 @@ module RGL
 
     include MutableGraph
 
+    attr_accessor :labels
+
     # Shortcut for creating a DirectedAdjacencyGraph:
     #
     #  RGL::DirectedAdjacencyGraph[1,2, 2,3, 2,4, 4,5].edges.to_a.to_s =>
@@ -51,6 +53,7 @@ module RGL
         g.each_vertex {|v| add_vertex v}
         g.each_edge {|v,w| add_edge v,w}
       end
+      @labels = other_graphs[0].labels if other_graphs.size == 1
     end
 
     # Copy internal vertice_dict

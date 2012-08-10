@@ -40,7 +40,7 @@ module RGL
     end
 
     def handle_examine_edge(u, v)
-      @current_component.add_edge(u, v) if u and v
+      @current_component.add_edge(u, v, @graph.get_label(u, v)) if u and v
     end
 
     def handle_finish_vertex(v)
