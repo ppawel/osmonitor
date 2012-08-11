@@ -200,6 +200,24 @@ class IntegrationTests < Test::Unit::TestCase
     assert_equal(road.get_node(259982309), road.relation_comps[0].furthest(road.get_node(683182935)))
     assert(!road.length.nil?)
   end
+
+  def test_dw255
+    road_manager = RoadManager.new(nil)
+
+    def road_manager.load_relation_ways(road)
+      road_data_from_file('road_data_DW255.txt')
+    end
+
+    input = RoadInput.new
+    road = road_manager.load_road('DW', '255')
+    status = RoadStatus.new(input, road)
+    status.validate
+
+    assert(!status.has_issue_by_name?('relation_disconnected'))
+    puts road.relation_comps[0].end_nodes.inspect
+    #assert_equal(road.get_node(259982309), road.relation_comps[0].furthest(road.get_node(683182935)))
+    #assert(!road.length.nil?)
+  end
 end
 
 end

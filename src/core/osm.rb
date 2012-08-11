@@ -11,12 +11,13 @@ class Node
   attr_accessor :tags
   attr_accessor :x
   attr_accessor :y
-  attr_accessor :point
+  attr_accessor :point_wkt
 
-  def initialize(id, tags, geom)
+  def initialize(id, tags, wkt)
     self.id = id
     self.tags = tags
-    self.point = RGeo::Geographic.spherical_factory().parse_wkt(geom)
+    self.point_wkt = wkt
+    #self.point = RGeo::Geographic.spherical_factory().parse_wkt(geom)
   end
 
   def hash
@@ -57,8 +58,8 @@ class Way
     (1..100).each {|i| @segment_lengths << length.to_f}
   end
 
-  def add_segment(node1, node2)
-    segment = WaySegment.new(self, node1, node2)
+  def add_segment(node1, node2, dist)
+    segment = WaySegment.new(self, node1, node2, dist)
     @segments << segment
     segment
   end
@@ -90,18 +91,16 @@ class WaySegment
   attr_accessor :from_node
   attr_accessor :to_node
   attr_accessor :way
-  attr_accessor :line
+  attr_accessor :length
 
-  def initialize(way, from_node, to_node)
+  def initialize(way, from_node, to_node, dist)
     self.way = way
     self.from_node = from_node
     self.to_node = to_node
-    self.line = RGeo::Geographic.spherical_factory().line(from_node.point, to_node.point)
+    self.length = dist
+    #self.line = RGeo::Geographic.spherical_factory().line(from_node.point, to_node.point)
   end
 
-  def length
-    @line.length
-  end
 
   def to_s
     "WaySegment(#{from_node}->#{to_node})"

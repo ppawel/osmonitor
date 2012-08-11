@@ -35,7 +35,7 @@
         <% color = path.complete ? 'green' : 'red' %>
         component<%= comp_index %>path<%= path_index %>_layer = new OpenLayers.Layer.Vector(
           '<span style="color: <%= color %>">Component <%= comp_index + 1 %> Path <%= path_index + 1 %> (<%= "%.2f" % (path.length / 1000.0) %> km)</span>',
-          {visibility: false, styleMap: new OpenLayers.StyleMap({'strokeWidth': 3, 'strokeColor': "${waycolor}"})});
+          {visibility: false, styleMap: new OpenLayers.StyleMap({'pointRadius': 10, 'strokeWidth': 3, 'strokeColor': "${waycolor}"})});
         showWays(component<%= comp_index %>path<%= path_index %>_layer, 'GEOMETRYCOLLECTION(<%= path.wkt %>)', '<%= color %>');
         showNode(component<%= comp_index %>path<%= path_index %>_layer, <%= path.from.x %>, <%= path.from.y %>, '<%= asset_path "flag_green.png" %>');
         showNode(component<%= comp_index %>path<%= path_index %>_layer, <%= path.to.x %>, <%= path.to.y %>, '<%= asset_path "flag_finish.png" %>');

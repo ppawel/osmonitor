@@ -11,8 +11,6 @@ require 'rgl/paths'
 require 'rgl/bidirectional'
 
 @rgeo_factory = ::RGeo::Geographic.spherical_factory()
-#:projection_proj4 =>
- #  '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
 
 class Road
   attr_accessor :ref_prefix
@@ -99,7 +97,7 @@ class Road
         way_rows << data[i]
         i += 1
       end
-      
+
       add_way_to_graph(graph, way_rows)
     end
 
@@ -134,7 +132,7 @@ class Road
       node1 = add_node(Node.new(a_node_id, a['node_tags'], a['node_geom'])) if !node1
       node2 = add_node(Node.new(b_node_id, b['node_tags'], b['node_geom'])) if !node2
 
-      segment = way.add_segment(node1, node2)
+      segment = way.add_segment(node1, node2, a['node_dist_to_next'].to_f)
 
       graph.add_vertex(node1)
       graph.add_vertex(node2)
@@ -233,8 +231,9 @@ class RoadComponent
       closest_to_furthest.each do |node1|
         next if node1 == end_node
         closest_to_end_node.each do |node2|
-          #puts "trying #{node1}->#{node2}: #{roundtrip_dist}"
+          next if node1 == node2
           roundtrip_dist = dist(node1, node2)
+          puts "tried #{node1}->#{node2}: #{roundtrip_dist} (dist = #{dist})"
 
           if !roundtrip_dist.nil? and roundtrip_dist > 0 and ((dist - roundtrip_dist).abs < 2222)
             paths << RoadComponentPath.new(end_node, furthest, true, segments(end_node, furthest))
@@ -244,6 +243,7 @@ class RoadComponent
             # Target cannot be reached from source - so we do a BFS search to find the partial path (useful for displaying on the map).
             it = RGL::PathIterator.new(road.relation_graph, node1, node2)
             it.set_to_end
+            puts "failed #{node1}->#{node2}: bfs size = #{it.path.size}"
             segments = []
             if !it.path.empty?
               it.path.each_cons(2) {|n1, n2| segments << @graph.get_label(n1, n2)}
@@ -305,7 +305,7 @@ puts "dist = #{dist}, roundtrip = #{roundtrip_dist}"
 =end
   def wkt
     segments = @graph.labels.values
-    segments.select {|s| s}.reduce('') {|wkt, segment| wkt + segment.line.to_s + ','}[0..-2]
+    segments.select {|s| s}.reduce('') {|wkt, segment| wkt + segment.from_node.point_wkt + ','}[0..-2]
   end
 
   def longest_complete_path
@@ -341,7 +341,7 @@ class RoadComponentPath
   end
 
   def wkt
-    segments.reduce('') {|wkt, segment| wkt + segment.line.to_s + ','}[0..-2]
+    segments.reduce('') {|wkt, segment| wkt + segment.from_node.point_wkt + ',' }[0..-2]
     #points = []
     #segments.each do |s|
     #  points << s.line.point_n(0)

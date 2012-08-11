@@ -67,15 +67,12 @@ class RoadManager
     wn.way_id AS way_id,
     w.tags AS way_tags,
     ST_AsText(w.linestring) AS way_geom,
-    --ST_Length(w.linestring::geography) AS way_length,
+    ST_AsText(wn.geom) AS node_geom,
     wn.node_id AS node_id,
-    ST_AsText(n.geom) AS node_geom
-  --  n.tags AS node_tags,
-  --  wn.sequence_id AS node_sequence_id
+    wn.dist_to_next AS node_dist_to_next
   FROM way_nodes wn
   INNER JOIN relation_members rm ON (rm.member_id = way_id)
   INNER JOIN ways w ON (w.id = wn.way_id)
-  INNER JOIN nodes n ON (n.id = wn.node_id)
   WHERE rm.relation_id = #{road.relation['id']}
   ORDER BY rm.sequence_id, wn.way_id, wn.sequence_id
   )"
@@ -117,13 +114,13 @@ class RoadManager
   FROM way_nodes wn 
   LEFT JOIN relation_members rm ON (rm.member_id = way_id AND rm.relation_id = #{road.relation['id']}) "
     end
-puts sql_where
+
     sql += "
   INNER JOIN ways r ON (r.id = wn.way_id)
-  WHERE #{sql_where} AND
+  WHERE r.tags ? 'ref' AND #{sql_where} AND
   (SELECT ST_Contains((SELECT hull FROM relation_boundaries WHERE relation_id = 936128), r.linestring)) = True
   "
-
+#puts sql
     result = @conn.query(sql).collect do |row|
       # This simply translates "tags" columns to Ruby hashes.
       process_tags(row, 'way_tags')
