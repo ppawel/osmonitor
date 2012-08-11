@@ -304,8 +304,9 @@ puts "dist = #{dist}, roundtrip = #{roundtrip_dist}"
   end
 =end
   def wkt
-    segments = @graph.labels.values
-    segments.select {|s| s}.reduce('') {|wkt, segment| wkt + segment.from_node.point_wkt + ','}[0..-2]
+    res = ""
+    @graph.labels.values.each {|segment| res << segment.from_node.point_wkt << "," if segment}
+    res[0..-2]
   end
 
   def longest_complete_path
@@ -341,7 +342,9 @@ class RoadComponentPath
   end
 
   def wkt
-    segments.reduce('') {|wkt, segment| wkt + segment.from_node.point_wkt + ',' }[0..-2]
+    res = ""
+    segments.each {|segment| res << segment.from_node.point_wkt << ","}
+    res[0..-2]
     #points = []
     #segments.each do |s|
     #  points << s.line.point_n(0)
