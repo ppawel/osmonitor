@@ -1,5 +1,3 @@
-require 'rgeo'
-
 # Determines if given tags and/or relation member role way defines a highway link.
 def is_link?(member_role, tags)
   member_role == 'link' or (tags['highway'] and tags['highway'].include?('link'))
@@ -17,7 +15,6 @@ class Node
     self.id = id
     self.tags = tags
     self.point_wkt = wkt
-    #self.point = RGeo::Geographic.spherical_factory().parse_wkt(geom)
   end
 
   def hash
@@ -100,9 +97,7 @@ class WaySegment
     self.from_node = from_node
     self.to_node = to_node
     self.length = dist
-    #self.line = RGeo::Geographic.spherical_factory().line(from_node.point, to_node.point)
   end
-
 
   def to_s
     "WaySegment(#{from_node}->#{to_node})"

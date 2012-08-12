@@ -77,10 +77,6 @@ class RoadStatus
     road.comps.collect {|comp| comp.end_nodes if comp.end_nodes.size < 2}.select {|x| x}
   end
 
-  def graph_to_ways(graph)
-    graph.edges.collect {|e| e.source.get_mutual_way(e.target) if e.source}.uniq
-  end
-
   def validate
     add_error('no_relation') if !road.relation
     add_error('has_many_covered_relations') if road.relation and has_many_covered_relations
@@ -89,14 +85,14 @@ class RoadStatus
       add_error('has_ways_without_highway_tag', {:ways => ways_without_highway_tag})
     end
 
-    if !too_many_end_nodes.empty? or !too_few_end_nodes.empty?
-      add_warning('end_nodes', {:too_many => too_many_end_nodes, :too_few => too_few_end_nodes})
-    end
+    #if !too_many_end_nodes.empty? or !too_few_end_nodes.empty?
+    #  add_warning('end_nodes', {:too_many => too_many_end_nodes, :too_few => too_few_end_nodes})
+    #end
 
     if road.relation
       # First of all, if the road relation does not have a proper number of components - skip reporting other stuff.
       if !connected?
-        add_error('relation_disconnected')
+        add_error('road_disconnected')
       else
         if road.length
           add_info('osm_length')
