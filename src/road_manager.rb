@@ -23,14 +23,14 @@ class RoadManager
       data = []
 
       log_time " load_ways" do data = load_ways(road) end
-      log_time " create_relation_graph" do road.create_relation_graph(data) end
-      log_time " calculate_paths" do road.relation_comps.each {|c| c.calculate_paths} if road.relation_num_comps == 1 end
+      log_time " create_graph" do road.create_graph(data) end
+      log_time " calculate_paths" do road.comps.each {|c| c.calculate_paths} if road.num_comps == 1 end
     end
 
     log_time " load_node_xy" do
-      road.relation_comps.each {|c| c.end_nodes.each {|node| node.x, node.y = get_node_xy(node.id)}}
-      road.relation_comps.each {|c| c.paths.each {|p| p.from.x, p.from.y = get_node_xy(p.from.id)}}
-      road.relation_comps.each {|c| c.paths.each {|p| p.to.x, p.to.y = get_node_xy(p.to.id)}}
+      road.comps.each {|c| c.end_nodes.each {|node| node.x, node.y = get_node_xy(node.id)}}
+      road.comps.each {|c| c.paths.each {|p| p.from.x, p.from.y = get_node_xy(p.from.id)}}
+      road.comps.each {|c| c.paths.each {|p| p.to.x, p.to.y = get_node_xy(p.to.id)}}
     end
 
     #data = load_ref_ways(road)
@@ -55,38 +55,6 @@ class RoadManager
     result = @conn.query(query).collect {|row| process_tags(row)}
     road.relation = result[0] if result.size > 0 and result[0]['covered'] == 't'
     road.other_relations = result[1..-1].select {|r| r['covered'] == 't'} if result.size > 1
-  end
-
-  def load_relation_ways(road)
-    before = Time.now
-
-    sql = "(
-  SELECT
-    rm.relation_id AS relation_id,
-    rm.member_role AS member_role,
-    rm.sequence_id AS relation_sequence_id,
-    wn.way_id AS way_id,
-    w.tags AS way_tags,
-    ST_AsText(w.linestring) AS way_geom,
-    ST_AsText(wn.node_geom) AS node_geom,
-    wn.node_id AS node_id,
-    wn.dist_to_next AS node_dist_to_next
-  FROM way_nodes wn
-  INNER JOIN relation_members rm ON (rm.member_id = way_id)
-  INNER JOIN ways w ON (w.id = wn.way_id)
-  WHERE rm.relation_id = #{road.relation['id']}
-  ORDER BY rm.sequence_id, wn.way_id, wn.sequence_id
-  )"
-
-    result = @conn.query(sql).collect do |row|
-      # This simply translates "tags" columns to Ruby hashes.
-      process_tags(row, 'way_tags')
-      process_tags(row, 'node_tags')
-    end
-
-    #@log.debug("   load_road_graph: query took #{Time.now - before}")
-
-    return result
   end
 
   def load_ways(road)

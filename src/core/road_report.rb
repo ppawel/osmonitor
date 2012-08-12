@@ -66,15 +66,15 @@ class RoadStatus
   end
 
   def connected?
-    road.relation_num_comps == 1
+    road.num_comps == 1
   end
 
   def too_many_end_nodes
-    road.relation_comps.collect {|comp| comp.end_nodes if comp.end_nodes.size > 4}.select {|x| x}
+    road.comps.collect {|comp| comp.end_nodes if comp.end_nodes.size > 4}.select {|x| x}
   end
 
   def too_few_end_nodes
-    road.relation_comps.collect {|comp| comp.end_nodes if comp.end_nodes.size < 2}.select {|x| x}
+    road.comps.collect {|comp| comp.end_nodes if comp.end_nodes.size < 2}.select {|x| x}
   end
 
   def graph_to_ways(graph)

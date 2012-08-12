@@ -19,10 +19,8 @@ class Road
   attr_accessor :other_relations
   attr_accessor :ways
   attr_accessor :nodes
-  attr_accessor :relation_graph
-  attr_accessor :ref_graph
-  attr_accessor :relation_comps
-  attr_accessor :ref_comps
+  attr_accessor :graph
+  attr_accessor :comps
 
   def initialize(ref_prefix, ref_number)
     self.ref_prefix = ref_prefix
@@ -30,8 +28,7 @@ class Road
     self.nodes = {}
     self.ways = {}
     self.other_relations = []
-    self.relation_comps = []
-    self.ref_comps = []
+    self.comps = []
   end
 
   # Returns a list of strings representing the "ref" tag. This is a list because sometimes this tag contains many values, e.g. "34; S1".
@@ -58,32 +55,21 @@ class Road
     way
   end
 
-  def relation_num_comps
-    @relation_comps.size
-  end
-
-  def create_relation_graph(data)
-    @relation_graph, @relation_comps = create_graph(data)
-  end
-
-  def create_ref_graph(data)
-    @ref_graph, @ref_comps = create_graph(data)
-    @ref_comps.each {|c| c.calculate_paths}
+  def num_comps
+    @comps.size
   end
 
   def length
-    return if !relation_comps[0] or !relation_comps[0].longest_complete_path
-    relation_comps[0].longest_complete_path.length / 1000.0
+    return if !comps[0] or !comps[0].longest_complete_path
+    comps[0].longest_complete_path.length / 1000.0
   end
 
   def has_incomplete_paths?
-    !relation_comps.detect {|c| c.has_incomplete_paths?}.nil?
+    !comps.detect {|c| c.has_incomplete_paths?}.nil?
   end
 
-  protected
-  
   def create_graph(data)
-    graph = RGL::DirectedAdjacencyGraph.new
+    @graph = RGL::DirectedAdjacencyGraph.new
 
     prev_way_id = nil
     i = 0
@@ -98,10 +84,10 @@ class Road
         i += 1
       end
 
-      add_way_to_graph(graph, way_rows)
+      add_way_to_graph(@graph, way_rows)
     end
 
-    return graph, graph.to_undirected.connected_components_nonrecursive.collect {|c| RoadComponent.new(self, c)}
+    @comps = @graph.to_undirected.connected_components_nonrecursive.collect {|c| RoadComponent.new(self, c)}
   end
 
   def add_way_to_graph(graph, way_rows)
@@ -171,7 +157,7 @@ class RoadComponent
 
   def calculate_paths
     @end_nodes.each do |node|
-      it = RGL::DijkstraIterator.new(road.relation_graph, node, nil)
+      it = RGL::DijkstraIterator.new(road.graph, node, nil)
       it.go
       @end_node_dijkstras[node] = it
     end
@@ -183,8 +169,8 @@ class RoadComponent
     path = @end_node_dijkstras[end_node].to(some_node)
     segments = []
     #puts "path = #{path.inspect}"
-    #puts road.relation_graph
-    path.each_cons(2) {|node1, node2| segments << road.relation_graph.get_label(node1, node2)}
+    #puts road.graph
+    path.each_cons(2) {|node1, node2| segments << road.graph.get_label(node1, node2)}
     segments
   end
 
@@ -200,7 +186,7 @@ class RoadComponent
       puts "dist(#{end_node}, #{en}) = #{dist(end_node, en)}"
 
       if dist(end_node, en).nil?
-        it = RGL::PathIterator.new(road.relation_graph, end_node, en)
+        it = RGL::PathIterator.new(road.graph, end_node, en)
         it.set_to_end
         segments = []
         it.path.each_cons(2) {|node1, node2| segments << @graph.get_label(node1, node2)}
@@ -241,7 +227,7 @@ class RoadComponent
             found_roundtrip = true
           else
             # Target cannot be reached from source - so we do a BFS search to find the partial path (useful for displaying on the map).
-            it = RGL::PathIterator.new(road.relation_graph, node1, node2)
+            it = RGL::PathIterator.new(road.graph, node1, node2)
             it.set_to_end
             puts "failed #{node1}->#{node2}: bfs size = #{it.path.size}"
             segments = []
@@ -278,20 +264,20 @@ puts "dist = #{dist}, roundtrip = #{roundtrip_dist}"
   end
 =begin
     @end_nodes.each_pair do |source, target|
-      it = RGL::DijkstraIterator.new(road.relation_graph, source, target)
+      it = RGL::DijkstraIterator.new(road.graph, source, target)
       it.go
       path = it.to(target)
 
       if path.size == 1
         # Target cannot be reached from source - so we do a BFS search to find the partial path (useful for displaying on the map).
-        it = RGL::PathIterator.new(road.relation_graph, source, target)
+        it = RGL::PathIterator.new(road.graph, source, target)
         it.set_to_end
         segments = []
-        it.path.each_slice(2) {|node1, node2| segments << road.relation_graph.get_label(node1, node2)}
+        it.path.each_slice(2) {|node1, node2| segments << road.graph.get_label(node1, node2)}
         @paths << RoadComponentPath.new(source, target, false, segments)
       else
         segments = []
-        path.each_cons(2) {|node1, node2| segments << road.relation_graph.get_label(node1, node2)}
+        path.each_cons(2) {|node1, node2| segments << road.graph.get_label(node1, node2)}
         @paths << RoadComponentPath.new(source, target, true, segments)
       end
     end
@@ -339,6 +325,15 @@ class RoadComponentPath
     self.complete = complete
     self.segments = segments
     self.length = segments.reduce(0) {|total, segment| segment.length ? total + segment.length : total}
+  end
+
+  def points
+    p = []
+    @segments.each do |segment|
+      p << segment.from_node.point_wkt
+      p << segment.to_node.point_wkt
+    end
+    p
   end
 
   def wkt

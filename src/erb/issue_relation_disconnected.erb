@@ -1,7 +1,1 @@
-* <small>relation disconnected (<%= status.road.relation_num_comps %>)</small>
-<% if !status.backward_fixes.empty? %>
-* <small>potential backward problems: <% status.backward_fixes.each {|way| %>{{way|<%= way.id %>}} <% } %>
-<% end %>
-<% if !status.forward_fixes.empty? %>
-* <small>potential forward problems: <% status.forward_fixes.each {|way| %>{{way|<%= way.id %>}} <% } %>
-<% end %>
+* <small>relation disconnected (<%= status.road.num_comps %>)</small>

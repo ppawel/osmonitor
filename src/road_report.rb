@@ -126,7 +126,7 @@ def self.run_report(input_page, output_page)
     report.add_status(status)
 
     @@log.debug("END road #{road.ref_prefix + road.ref_number} took #{Time.now - road_before} " +
-      "(comps = #{status.road.relation_comps.map {|c| c.graph.num_vertices}.inspect})")
+      "(comps = #{status.road.comps.map {|c| c.graph.num_vertices}.inspect})")
   end
 
   insert_stats(page, report)
