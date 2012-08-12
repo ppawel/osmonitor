@@ -156,7 +156,8 @@ class RoadManager
     wn.dist_to_next AS node_dist_to_next
   FROM way_nodes wn
   INNER JOIN ways w ON (w.id = wn.way_id)
-  WHERE #{eval($sql_where_by_road_type_ways[road.ref_prefix], binding())} AND (NOT w.tags ?| ARRAY['aeroway', 'railway', 'construction']) AND
+  WHERE #{eval($sql_where_by_road_type_ways[road.ref_prefix], binding())} AND
+  (NOT w.tags ?| ARRAY['aerialway', 'aeroway', 'building', 'construction', 'railway']) AND
   (SELECT ST_Contains(OSM_GetConfigGeomValue('boundary_PL'), w.linestring)) = True"
   end
 
