@@ -1,3 +1,5 @@
+require 'config_sensitive'
+
 def get_relation_network(prefix)
   return $road_type_network_tag[prefix]
 end
@@ -9,23 +11,23 @@ def create_overpass_url(ways)
 end
 
 def create_osmonitor_url(road)
-  "http://geowebhost.pl:3333/browse/road/#{road.ref_prefix + road.ref_number.to_s}"
+  "http://geowebhost.pl/osmonitor/browse/road/#{road.ref_prefix + road.ref_number.to_s}"
 end
 
-$config = {
+$sql_where_by_road_type_ways = {
 
-  'wiki_username' => '',
-  'wiki_password' => '',
-  'host' => 'localhost',
-  'dbname' => 'osmdb',
-  'user' => 'postgres',
-  'password' => ''
+  'A' => '"(w.refs @> ARRAY[\'#{road.ref_prefix + road.ref_number}\'])"',
 
+  'S' => '"(w.refs @> ARRAY[\'#{road.ref_prefix + road.ref_number}\'])"',
+
+  'DK' => '"(w.refs @> ARRAY[\'#{road.ref_prefix + road.ref_number}\'] OR w.refs @> ARRAY[\'#{road.ref_number}\'])"',
+
+  'DW' => '"(w.refs @> ARRAY[\'#{road.ref_prefix + road.ref_number}\'] OR w.refs @> ARRAY[\'#{road.ref_number}\'])"'
 }
 
-$sql_where_by_road_type = {
+$sql_where_by_road_type_relations = {
 
-  'A' => '"(r.tags -> \'ref\' ilike \'#{road.ref_prefix + road.ref_number}\' OR replace(r.tags -> \'ref\', \' \', \'\') ilike \'#{road.ref_prefix + road.ref_number}\')"',
+  'A' => '"(r.tags @>  \'\"ref\"=>\"#{road.ref_prefix + road.ref_number}\"\')"',
 
   'S' => '"(r.tags -> \'ref\' ilike \'#{road.ref_prefix + road.ref_number}\' OR replace(r.tags -> \'ref\', \' \', \'\') ilike \'#{road.ref_prefix + road.ref_number}\')"',
 

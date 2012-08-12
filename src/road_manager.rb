@@ -9,6 +9,7 @@ class RoadManager
 
   def initialize(conn)
     self.conn = conn
+    self.conn.query('set enable_seqscan = false;');
   end
 
   def load_road(ref_prefix, ref_number)
@@ -21,7 +22,7 @@ class RoadManager
     if road.relation
       data = []
 
-      log_time " load_relation_ways" do data = load_relation_ways(road) end
+      log_time " load_ways" do data = load_ways(road) end
       log_time " create_relation_graph" do road.create_relation_graph(data) end
       log_time " calculate_paths" do road.relation_comps.each {|c| c.calculate_paths} if road.relation_num_comps == 1 end
     end
@@ -44,13 +45,13 @@ class RoadManager
   end
 
   def fill_road_relation(road)
-    sql_select = "SELECT *, OSM_IsMostlyCoveredBy(936128, r.id) AS covered
+    sql_select = "SELECT *, OSM_IsMostlyCoveredBy('boundary_PL', r.id) AS covered
   FROM relations r
   WHERE
     r.tags -> 'type' = 'route' AND
     r.tags -> 'route' = 'road' AND"
 
-    query = sql_select + eval($sql_where_by_road_type[road.ref_prefix], binding()) + " ORDER BY covered DESC, r.id"
+    query = sql_select + eval($sql_where_by_road_type_relations[road.ref_prefix], binding()) + " ORDER BY covered DESC, r.id"
     result = @conn.query(query).collect {|row| process_tags(row)}
     road.relation = result[0] if result.size > 0 and result[0]['covered'] == 't'
     road.other_relations = result[1..-1].select {|r| r['covered'] == 't'} if result.size > 1
@@ -88,38 +89,29 @@ class RoadManager
     return result
   end
 
-  def load_ref_ways(road)
-    before = Time.now
-    sql_where = eval($sql_where_by_road_type[road.ref_prefix], binding())
+  def load_ways(road)
+    from_sql = ''
 
-    if !road.relation
-      sql = "
-  SELECT
-    NULL AS relation_id,
-    NULL AS member_role,
-    wn.way_id AS way_id,
-    r.tags AS way_tags,
-    ST_AsText(r.linestring) AS way_geom,
-    wn.node_id AS node_id
-  FROM way_nodes wn "
+    if road.relation
+      from_sql = "(#{get_sql_for_relation_ways(road)}) UNION (#{get_sql_for_ref_ways(road)})"
     else
-      sql = "
-  SELECT
-    rm.relation_id AS relation_id,
-    rm.member_role AS member_role,
-    wn.way_id AS way_id,
-    r.tags AS way_tags,
-    ST_AsText(r.linestring) AS way_geom,
-    wn.node_id AS node_id
-  FROM way_nodes wn 
-  LEFT JOIN relation_members rm ON (rm.member_id = way_id AND rm.relation_id = #{road.relation['id']}) "
+      from_sql = "(#{get_sql_for_ref_ways(road)})"
     end
 
-    sql += "
-  INNER JOIN ways r ON (r.id = wn.way_id)
-  WHERE r.tags ? 'ref' AND #{sql_where} AND
-  (SELECT ST_Contains((SELECT hull FROM relation_boundaries WHERE relation_id = 936128), r.linestring)) = True
-  "
+    sql =
+"SELECT DISTINCT ON (way_id, node_sequence_id)
+    relation_id,
+    member_role,
+    relation_sequence_id,
+    node_sequence_id,
+    way_id,
+    way_tags,
+    way_geom,
+    node_geom,
+    node_id,
+    node_dist_to_next
+  FROM (#{from_sql}) AS query
+  ORDER BY way_id, node_sequence_id, relation_id NULLS LAST"
 #puts sql
     result = @conn.query(sql).collect do |row|
       # This simply translates "tags" columns to Ruby hashes.
@@ -130,6 +122,42 @@ class RoadManager
     #@log.debug("   load_road_graph: query took #{Time.now - before}")
 
     return result
+  end
+
+  def get_sql_for_relation_ways(road)
+"SELECT
+    rm.relation_id AS relation_id,
+    rm.member_role AS member_role,
+    rm.sequence_id AS relation_sequence_id,
+    wn.sequence_id AS node_sequence_id,
+    wn.way_id AS way_id,
+    w.tags AS way_tags,
+    ST_AsText(w.linestring) AS way_geom,
+    ST_AsText(wn.node_geom) AS node_geom,
+    wn.node_id AS node_id,
+    wn.dist_to_next AS node_dist_to_next
+  FROM way_nodes wn
+  INNER JOIN relation_members rm ON (rm.member_id = way_id)
+  INNER JOIN ways w ON (w.id = wn.way_id)
+  WHERE rm.relation_id = #{road.relation['id']}"
+  end
+
+  def get_sql_for_ref_ways(road)
+"SELECT
+    NULL AS relation_id,
+    NULL AS member_role,
+    NULL AS relation_sequence_id,
+    wn.sequence_id AS node_sequence_id,
+    wn.way_id AS way_id,
+    w.tags AS way_tags,
+    ST_AsText(w.linestring) AS way_geom,
+    ST_AsText(wn.node_geom) AS node_geom,
+    wn.node_id AS node_id,
+    wn.dist_to_next AS node_dist_to_next
+  FROM way_nodes wn
+  INNER JOIN ways w ON (w.id = wn.way_id)
+  WHERE #{eval($sql_where_by_road_type_ways[road.ref_prefix], binding())} AND (NOT w.tags ?| ARRAY['aeroway', 'railway', 'construction']) AND
+  (SELECT ST_Contains(OSM_GetConfigGeomValue('boundary_PL'), w.linestring)) = True"
   end
 
   def get_node_xy(node_id)
