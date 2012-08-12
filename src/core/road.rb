@@ -180,22 +180,7 @@ class RoadComponent
 
   # Returns a node that is the furthest away from given end node.
   def furthest(end_node)
-    nodes = @end_nodes.max_by {|end_node2| @end_node_dijkstras[end_node].dist[end_node2] ? @end_node_dijkstras[end_node].dist[end_node2] : -1}
-=begin
-    @end_nodes.each do |en|
-      puts "dist(#{end_node}, #{en}) = #{dist(end_node, en)}"
-
-      if dist(end_node, en).nil?
-        it = RGL::PathIterator.new(road.graph, end_node, en)
-        it.set_to_end
-        segments = []
-        it.path.each_cons(2) {|node1, node2| segments << @graph.get_label(node1, node2)}
-        @paths << RoadComponentPath.new(end_node, en, false, segments.select {|s| s})
-        puts "  #{it.path.size}"
-      end
-    end
-=end
-    nodes
+    @end_nodes.max_by {|end_node2| @end_node_dijkstras[end_node].dist[end_node2] ? @end_node_dijkstras[end_node].dist[end_node2] : -1}
   end
 
   # Returns end nodes sorted by distance from an end node to given node.
@@ -211,7 +196,6 @@ class RoadComponent
       dist = dist(end_node, furthest)
       closest_to_furthest = closest_end_nodes(furthest)
       closest_to_end_node = closest_end_nodes(end_node)
-      found_roundtrip = false
       roundtrip_dist = nil
 
       closest_to_furthest.each do |node1|
@@ -224,7 +208,6 @@ class RoadComponent
           if !roundtrip_dist.nil? and roundtrip_dist > 0 and ((dist - roundtrip_dist).abs < 2222)
             paths << RoadComponentPath.new(end_node, furthest, true, segments(end_node, furthest))
             paths << RoadComponentPath.new(node1, node2, true, segments(node1, node2))
-            found_roundtrip = true
           else
             # Target cannot be reached from source - so we do a BFS search to find the partial path (useful for displaying on the map).
             it = RGL::PathIterator.new(road.graph, node1, node2)
@@ -238,61 +221,17 @@ class RoadComponent
           end
         end
       end
-
-      #puts "dist = #{dist}, roundtrip = #{roundtrip_dist}"
-=begin
-puts "furthest = #{furthest} closest(#{end_node}) = #{closest.inspect}"
-      roundtrip_dist = nil
-      roundtrip_node = nil
-      while (roundtrip_dist == 0.0 or roundtrip_dist.nil?) and !closest.empty?
-        roundtrip_node = closest.shift[0]
-        roundtrip_dist = dist(roundtrip_node, end_node)
-        closest2 = closest_end_nodes(end_node)
-        puts "tried #{roundtrip_node}->#{end_node}: #{roundtrip_dist}"
-      end
-puts "dist = #{dist}, roundtrip = #{roundtrip_dist}"
-      if dist and roundtrip_dist
-        #puts segments(end_node, furthest).inspect
-        paths << RoadComponentPath.new(end_node, furthest, true, segments(end_node, furthest))
-        paths << RoadComponentPath.new(roundtrip_node, end_node, true, segments(roundtrip_node, end_node))
-        #puts "dist = #{dist}, roundtrip = #{roundtrip_dist}"
-      end
-=end
-      
-      #puts dist(closest_end_nodes(furthest(end_node)), end_node).inspect
     end
   end
-=begin
-    @end_nodes.each_pair do |source, target|
-      it = RGL::DijkstraIterator.new(road.graph, source, target)
-      it.go
-      path = it.to(target)
 
-      if path.size == 1
-        # Target cannot be reached from source - so we do a BFS search to find the partial path (useful for displaying on the map).
-        it = RGL::PathIterator.new(road.graph, source, target)
-        it.set_to_end
-        segments = []
-        it.path.each_slice(2) {|node1, node2| segments << road.graph.get_label(node1, node2)}
-        @paths << RoadComponentPath.new(source, target, false, segments)
-      else
-        segments = []
-        path.each_cons(2) {|node1, node2| segments << road.graph.get_label(node1, node2)}
-        @paths << RoadComponentPath.new(source, target, true, segments)
-      end
+  def wkt_points
+    points = []
+    @graph.labels.values.each do |segment|
+      next if !segment
+      points << segment.from_node.point_wkt
+      points << segment.to_node.point_wkt
     end
-
-    # Remove empty paths - don't need them!
-    @paths.select! {|p| p.length and p.length > 0}
-
-    # Sort by length, it's more useful during display.
-    @paths.sort! {|p1, p2| -(p1.length <=> p2.length)}
-  end
-=end
-  def wkt
-    res = ""
-    @graph.labels.values.each {|segment| res << segment.from_node.point_wkt << "," if segment}
-    res[0..-2]
+    points
   end
 
   def longest_complete_path
@@ -327,25 +266,13 @@ class RoadComponentPath
     self.length = segments.reduce(0) {|total, segment| segment.length ? total + segment.length : total}
   end
 
-  def points
-    p = []
+  def wkt_points
+    points = []
     @segments.each do |segment|
-      p << segment.from_node.point_wkt
-      p << segment.to_node.point_wkt
+      points << segment.from_node.point_wkt
+      points << segment.to_node.point_wkt
     end
-    p
-  end
-
-  def wkt
-    res = ""
-    segments.each {|segment| res << segment.from_node.point_wkt << ","}
-    res[0..-2]
-    #points = []
-    #segments.each do |s|
-    #  points << s.line.point_n(0)
-    #  points << s.line.point_n(1)
-    #end
-    #RGeo::Geographic.spherical_factory().line_string(points).to_s
+    points
   end
 
   def to_s

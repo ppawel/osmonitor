@@ -21,25 +21,49 @@
 
       all_ways_layer = new OpenLayers.Layer.Vector("Road (all ways + end nodes)",
         {visibility: true, styleMap: new OpenLayers.StyleMap({'strokeWidth': 4, 'strokeColor': "black", strokeOpacity: 1})});
-      showWays(all_ways_layer, 'GEOMETRYCOLLECTION(<%= @all_ways_wkt %>)', 'green', true);
+      showWaysFromString(all_ways_layer, 'GEOMETRYCOLLECTION(<%= @all_ways_wkt %>)', 'green', true);
       map.addLayer(all_ways_layer);
 
-      <% @road.relation_comps.each_with_index do |comp, comp_index| %>
+      <% @road.comps.each_with_index do |comp, comp_index| %>
         component<%= comp_index %>_layer = new OpenLayers.Layer.Vector(
           'Component <%= comp_index + 1 %>',
-          {visibility: false, styleMap: new OpenLayers.StyleMap({'strokeWidth': 3, 'strokeColor': "blue"})});
-        showWays(component<%= comp_index %>_layer, 'GEOMETRYCOLLECTION(<%= comp.wkt %>)', 'blue');
+          {
+            visibility: false,
+            styleMap: new OpenLayers.StyleMap({'strokeWidth': 3, 'strokeColor': "blue", strokeOpacity: 1})
+          }
+        );
+
+        <% comp.wkt_points.each_slice(2) do |point_from, point_to| %>
+          component<%= comp_index %>_layer.addFeatures(new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(new Array(
+            OpenLayers.Geometry.fromWKT('<%= point_from %>'),
+            OpenLayers.Geometry.fromWKT('<%= point_to %>'))).transform(
+              new OpenLayers.Projection("EPSG:4326"),
+              map.baseLayer.projection
+            )));
+        <% end %>
+
         map.addLayer(component<%= comp_index %>_layer);
 
         <% comp.paths.each_with_index do |path, path_index| %>
-        <% color = path.complete ? 'green' : 'red' %>
-        component<%= comp_index %>path<%= path_index %>_layer = new OpenLayers.Layer.Vector(
-          '<span style="color: <%= color %>">Component <%= comp_index + 1 %> Path <%= path_index + 1 %> (<%= "%.2f" % (path.length / 1000.0) %> km)</span>',
-          {visibility: false, styleMap: new OpenLayers.StyleMap({'pointRadius': 10, 'strokeWidth': 3, 'strokeColor': "${waycolor}"})});
-        showWays(component<%= comp_index %>path<%= path_index %>_layer, 'GEOMETRYCOLLECTION(<%= path.wkt %>)', '<%= color %>');
-        showNode(component<%= comp_index %>path<%= path_index %>_layer, <%= path.from.x %>, <%= path.from.y %>, '<%= asset_path "flag_green.png" %>');
-        showNode(component<%= comp_index %>path<%= path_index %>_layer, <%= path.to.x %>, <%= path.to.y %>, '<%= asset_path "flag_finish.png" %>');
-        map.addLayer(component<%= comp_index %>path<%= path_index %>_layer);
+          <% color = path.complete ? 'green' : 'red' %>
+
+          component<%= comp_index %>path<%= path_index %>_layer = new OpenLayers.Layer.Vector(
+            '<span style="color: <%= color %>">Component <%= comp_index + 1 %> Path <%= path_index + 1 %> (<%= "%.2f" % (path.length / 1000.0) %> km)</span>',
+            {visibility: false, styleMap: new OpenLayers.StyleMap({'strokeWidth': 3, 'strokeColor': "${waycolor}"})});
+
+          <% path.wkt_points.each_slice(2) do |point_from, point_to| %>
+          component<%= comp_index %>path<%= path_index %>_layer.addFeatures(new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(new Array(
+            OpenLayers.Geometry.fromWKT('<%= point_from %>'),
+            OpenLayers.Geometry.fromWKT('<%= point_to %>'))).transform(
+              new OpenLayers.Projection("EPSG:4326"),
+              map.baseLayer.projection
+            ), {waycolor: '<%= color %>'}));
+          <% end %>
+
+          showNode(component<%= comp_index %>path<%= path_index %>_layer, <%= path.from.x %>, <%= path.from.y %>, '<%= asset_path "flag_green.png" %>');
+          showNode(component<%= comp_index %>path<%= path_index %>_layer, <%= path.to.x %>, <%= path.to.y %>, '<%= asset_path "flag_finish.png" %>');
+
+          map.addLayer(component<%= comp_index %>path<%= path_index %>_layer);
         <% end %>
       <% end %>
 
@@ -56,19 +80,18 @@
         {externalGraphic: image_url, graphicHeight: 24, graphicWidth: 24}));
   }
 
-  function showWays(layer, s, waycolor, zoom) {
-      var element = document.getElementById('text');
-      var features = wkt.read(s);
-      var bounds;
+  function showWays(layer, features, waycolor, zoom) {
+    var bounds;
       if(features) {
           if(features.constructor != Array) {
               features = [features];
           }
           okfeatures = new Array();
           for(var i=0; i<features.length; ++i) {
-              if (features[i] == undefined) {
+              if (features[i] == undefined || features[i].attributes == undefined) {
                 continue;
               }
+              //alert(features[i]);
               features[i].attributes.waycolor = waycolor;
               if (!bounds) {
                   bounds = features[i].geometry.getBounds();
@@ -82,11 +105,11 @@
           if (zoom) {
             map.zoomToExtent(bounds);
           }
-          //var plural = (features.length > 1) ? 's' : '';
-          //element.value = features.length + ' feature' + plural + ' added';
-      } else {
-          //element.value = 'Bad input ' + type;
       }
+  }
+
+  function showWaysFromString(layer, s, waycolor, zoom) {
+      showWays(layer, wkt.read(s), waycolor, zoom);
   }
 </script>
 
