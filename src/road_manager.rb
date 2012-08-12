@@ -27,11 +27,11 @@ class RoadManager
       log_time " calculate_paths" do road.comps.each {|c| c.calculate_paths} if road.num_comps == 1 end
     end
 
-    log_time " load_node_xy" do
-      road.comps.each {|c| c.end_nodes.each {|node| node.x, node.y = get_node_xy(node.id)}}
-      road.comps.each {|c| c.paths.each {|p| p.from.x, p.from.y = get_node_xy(p.from.id)}}
-      road.comps.each {|c| c.paths.each {|p| p.to.x, p.to.y = get_node_xy(p.to.id)}}
-    end
+    #log_time " load_node_xy" do
+    #  road.comps.each {|c| c.end_nodes.each {|node| node.x, node.y = get_node_xy(node.id)}}
+    #  road.comps.each {|c| c.paths.each {|p| p.from.x, p.from.y = get_node_xy(p.from.id)}}
+    #  road.comps.each {|c| c.paths.each {|p| p.to.x, p.to.y = get_node_xy(p.to.id)}}
+    #end
 
     #data = load_ref_ways(road)
     #road.create_ref_graph(data)

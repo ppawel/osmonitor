@@ -60,12 +60,13 @@ class Road
   end
 
   def length
-    return if !comps[0] or !comps[0].longest_complete_path
-    comps[0].longest_complete_path.length / 1000.0
+    return nil if !all_components_have_roundtrip?
+    meters = comps.reduce(0) {|total, comp| comp.length ? total + comp.length : total}
+    return meters / 1000.0 if meters
   end
 
-  def has_incomplete_paths?
-    !comps.detect {|c| c.has_incomplete_paths?}.nil?
+  def all_components_have_roundtrip?
+    comps.detect {|c| !c.has_roundtrips?}.nil?
   end
 
   def create_graph(data)
@@ -140,19 +141,22 @@ class Road
   end
 end
 
+# Representa a road component. A road component is a connected subgraph of a road.
 class RoadComponent
   attr_accessor :road
   attr_accessor :graph
   attr_accessor :end_nodes
   attr_accessor :end_node_dijkstras
-  attr_accessor :paths
+  attr_accessor :failed_paths
+  attr_accessor :roundtrips
 
   def initialize(road, graph)
     self.road = road
     self.graph = graph
     self.end_nodes = graph.vertices.select {|v| graph.out_degree(v) <= 1}
     self.end_node_dijkstras = {}
-    self.paths = []
+    self.failed_paths = []
+    self.roundtrips = []
   end
 
   def calculate_paths
@@ -200,28 +204,44 @@ class RoadComponent
 
       closest_to_furthest.each do |node1|
         next if node1 == end_node
+
         closest_to_end_node.each do |node2|
           next if node1 == node2
+
           roundtrip_dist = dist(node1, node2)
-          puts "tried #{node1}->#{node2}: #{roundtrip_dist} (dist = #{dist})"
+          #puts "tried #{node1}->#{node2}: #{roundtrip_dist} (dist = #{dist})"
 
           if !roundtrip_dist.nil? and roundtrip_dist > 0 and ((dist - roundtrip_dist).abs < 2222)
-            paths << RoadComponentPath.new(end_node, furthest, true, segments(end_node, furthest))
-            paths << RoadComponentPath.new(node1, node2, true, segments(node1, node2))
+            @roundtrips << RoadComponentRoundtrip.new(RoadComponentPath.new(end_node, furthest, true, segments(end_node, furthest)),
+              RoadComponentPath.new(node1, node2, true, segments(node1, node2)))
           else
             # Target cannot be reached from source - so we do a BFS search to find the partial path (useful for displaying on the map).
             it = RGL::PathIterator.new(road.graph, node1, node2)
             it.set_to_end
-            puts "failed #{node1}->#{node2}: bfs size = #{it.path.size}"
+            #puts "failed #{node1}->#{node2}: bfs size = #{it.path.size}"
             segments = []
+
             if !it.path.empty?
               it.path.each_cons(2) {|n1, n2| segments << @graph.get_label(n1, n2)}
-              @paths << RoadComponentPath.new(node1, node2, false, segments.select {|s| s})
+              @failed_paths << RoadComponentPath.new(node1, node2, false, segments.select {|s| s})
             end
           end
         end
       end
     end
+  end
+
+  def length
+    roundtrip = longest_roundtrip
+    longest_roundtrip.length if roundtrip
+  end
+
+  def has_roundtrips?
+    @roundtrips.size > 0
+  end
+
+  def longest_roundtrip
+    @roundtrips.max_by {|roundtrip| roundtrip.length} if has_roundtrips?
   end
 
   def wkt_points
@@ -233,24 +253,11 @@ class RoadComponent
     end
     points
   end
-
-  def longest_complete_path
-    complete_paths.max {|p1, p2| p1.length <=> p2.length}
-  end
-
-  def has_complete_paths?
-    complete_paths.size > 0
-  end
-
-  def has_incomplete_paths?
-    paths.select {|p| !p.complete}.size > 0
-  end
-
-  def complete_paths
-    paths.select {|p| p.complete}
-  end
 end
 
+# Represents a path within a road component. A path is a set of segments leading from one point to another.
+# A path does not have to go all the way from start to end - it can be an incomplete path (useful for tracking
+# down navigability problems).
 class RoadComponentPath
   attr_accessor :from
   attr_accessor :to
@@ -277,5 +284,24 @@ class RoadComponentPath
 
   def to_s
     "RoadComponentPath(#{from.id}->#{to.id}, #{length}, #{complete})"
+  end
+end
+
+# Represents a roundtrip within a road component. Roundtrip is two paths - from A to B and back.
+class RoadComponentRoundtrip
+  attr_accessor :forward_path
+  attr_accessor :backward_path
+
+  def initialize(forward_path, backward_path)
+    self.forward_path = forward_path
+    self.backward_path = backward_path
+  end
+
+  def length
+    (@forward_path.length + @backward_path.length) / 2.0
+  end
+
+  def to_s
+    "RoadComponentRoundtrip(#{forward_path}, #{backward_path})"
   end
 end
