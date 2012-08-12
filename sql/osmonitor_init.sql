@@ -25,7 +25,7 @@ INSERT INTO config_options (option_key, date_value) VALUES ('last_preprocessing_
 DROP FUNCTION IF EXISTS OSM_GetDataTimestamp();
 
 CREATE FUNCTION OSM_GetDataTimestamp() RETURNS TIMESTAMP AS $$
-	SELECT MAX(tstamp) FROM relations
+	SELECT MAX(tstamp) FROM ways
 $$ LANGUAGE SQL;
 
 DROP FUNCTION IF EXISTS OSM_GetRelationGeometry(bigint);

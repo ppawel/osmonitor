@@ -67,7 +67,7 @@ class RoadManager
     wn.way_id AS way_id,
     w.tags AS way_tags,
     ST_AsText(w.linestring) AS way_geom,
-    ST_AsText(wn.geom) AS node_geom,
+    ST_AsText(wn.node_geom) AS node_geom,
     wn.node_id AS node_id,
     wn.dist_to_next AS node_dist_to_next
   FROM way_nodes wn
