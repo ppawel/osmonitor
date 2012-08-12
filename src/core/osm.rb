@@ -65,7 +65,9 @@ class Way
   end
 
   def oneway?
-    tags['oneway'] and ['yes', 'true', '1'].include?(tags['oneway'].downcase)
+    return true if tags['oneway'] and ['yes', 'true', '1'].include?(tags['oneway'].downcase)
+    return true if tags['junction'] == 'roundabout'
+    return false
   end
 
   def length
