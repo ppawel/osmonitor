@@ -10,11 +10,11 @@ CREATE INDEX idx_relation_members_relation_id
   USING btree
   (relation_id );
 
-DROP INDEX IF EXISTS idx_way_nodes_node_id;
-CREATE INDEX idx_way_nodes_node_id
-  ON way_nodes
-  USING btree
-  (node_id );
+--DROP INDEX IF EXISTS idx_way_nodes_node_id;
+--CREATE INDEX idx_way_nodes_node_id
+--  ON way_nodes
+--  USING btree
+--  (node_id );
 
 DROP INDEX IF EXISTS idx_way_nodes_way_id;
 CREATE INDEX idx_way_nodes_way_id
