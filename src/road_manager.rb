@@ -19,13 +19,11 @@ class RoadManager
       fill_road_relation(road)
     end
 
-    if road.relation
-      data = []
+    data = []
 
-      log_time " load_ways" do data = load_ways(road) end
-      log_time " create_graph" do road.create_graph(data) end
-      log_time " calculate_paths" do road.comps.each {|c| c.calculate_paths} if road.num_comps == 1 end
-    end
+    log_time " load_ways" do data = load_ways(road) end
+    log_time " create_graph" do road.create_graph(data) end
+    log_time " calculate_paths" do road.comps.each {|c| c.calculate_paths} if road.num_comps == 1 end
 
     #log_time " load_node_xy" do
     #  road.comps.each {|c| c.end_nodes.each {|node| node.x, node.y = get_node_xy(node.id)}}
@@ -111,10 +109,11 @@ class RoadManager
   end
 
   def get_sql_for_ref_ways(road)
+    # Need to cast because of http://archives.postgresql.org/pgsql-bugs/2010-12/msg00153.php
 "SELECT
-    NULL AS relation_id,
-    NULL AS member_role,
-    NULL AS relation_sequence_id,
+    NULL::bigint AS relation_id,
+    NULL::text AS member_role,
+    NULL::bigint AS relation_sequence_id,
     wn.sequence_id AS node_sequence_id,
     wn.way_id AS way_id,
     w.tags AS way_tags,

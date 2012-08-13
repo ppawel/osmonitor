@@ -78,6 +78,9 @@ class RoadStatus
   end
 
   def validate
+    add_info('osm_length')
+    add_info('way_stats')
+
     add_error('no_relation') if !road.relation
     add_error('has_many_covered_relations') if road.relation and has_many_covered_relations
 
@@ -89,22 +92,16 @@ class RoadStatus
     #  add_warning('end_nodes', {:too_many => too_many_end_nodes, :too_few => too_few_end_nodes})
     #end
 
-    if road.relation
-      # First of all, if the road relation does not have a proper number of components - skip reporting other stuff.
-      if !connected?
-        add_error('road_disconnected')
-      else
-        if road.length
-          add_info('osm_length')
-          add_warning('wrong_length') if input.length and !has_proper_length
-        end
-
-        add_error('not_navigable') if road.length.nil?#road.has_incomplete_paths?
-      end
-
-      add_warning('wrong_network') if !has_proper_network
-      add_info('way_stats')
+    # First of all, if the road relation does not have a proper number of components - skip reporting other stuff.
+    if !connected?
+      add_error('road_disconnected')
+    else
+      add_warning('wrong_length') if road.length and input.length and !has_proper_length
+      add_error('not_navigable') if road.length.nil?#road.has_incomplete_paths?
     end
+
+    add_warning('wrong_network') if road.relation and !has_proper_network
+
 =begin
     #if !road.ways_with_wrong_ref.empty?
     #  add_error('ways_with_wrong_ref', {:ways => road.ways_with_wrong_ref})
