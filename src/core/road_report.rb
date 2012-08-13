@@ -79,7 +79,7 @@ class RoadStatus
 
   def validate
     add_info('osm_length')
-    add_info('way_stats')
+    add_info('way_stats') if !percent_with_lanes.nan? and !percent_with_maxspeed.nan?
 
     add_error('no_relation') if !road.relation
     add_error('has_many_covered_relations') if road.relation and has_many_covered_relations
@@ -145,11 +145,11 @@ class RoadStatus
   end
 
   def percent_with_lanes
-    return ((road.ways.values.select { |way| way.tags.has_key?('lanes') }.size / road.ways.size.to_f) * 100).to_i
+    return (road.ways.values.select { |way| way.tags.has_key?('lanes') }.size / road.ways.size.to_f) * 100
   end
 
   def percent_with_maxspeed
-    return ((road.ways.values.select { |way| way.tags.has_key?('maxspeed') }.size / road.ways.size.to_f) * 100).to_i
+    return (road.ways.values.select { |way| way.tags.has_key?('maxspeed') }.size / road.ways.size.to_f) * 100
   end
 
   # Finds ways without "highway" tag (exception is ferry ways, see http://www.openstreetmap.org/browse/way/23541424).
