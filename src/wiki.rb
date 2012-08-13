@@ -54,7 +54,7 @@ class WikiTable
   end
 
   private
-  
+
   def parse_rows(table_text)
     rows = []  
 
@@ -113,6 +113,7 @@ class WikiTableRow
   def update_text(new_row)
     table.update_row_text(self, new_row)
     self.row_text = new_row
+    @cells = parse_cells(new_row)
   end
 
   private
@@ -120,10 +121,10 @@ class WikiTableRow
   def parse_cells(row_text)
     cells = []
 
-    row_text.split("\n|").drop(1).each do |cell_text|
-      cells << WikiTableCell.new(self, cell_text)
+    (row_text + "|").scan(/(?<=\|)(.*?)\n(?=\|)/im) do |cell_text|
+      next if $1.start_with?("-") # Skip the header
+      cells << WikiTableCell.new(self, $1, Regexp.last_match.begin(0))
     end
-
     return cells
   end
 end
@@ -131,14 +132,17 @@ end
 class WikiTableCell
   attr_accessor :row
   attr_accessor :cell_text
+  attr_accessor :start_pos
 
-  def initialize(row, cell_text)
+  def initialize(row, cell_text, start_pos)
     self.row = row
     self.cell_text = cell_text
+    self.start_pos = start_pos
   end
 
   def update_text(new_cell)
-    new_row = row.row_text.gsub(cell_text, new_cell)
+    new_row = row.row_text.dup
+    new_row[@start_pos..@start_pos + @cell_text.size] = new_cell + "\n"
     row.update_text(new_row)
     self.cell_text = new_cell
   end
