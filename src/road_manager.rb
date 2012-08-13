@@ -9,7 +9,7 @@ class RoadManager
 
   def initialize(conn)
     self.conn = conn
-    self.conn.query('set enable_seqscan = false;');
+    self.conn.query('set enable_seqscan = false;') if conn
   end
 
   def load_road(ref_prefix, ref_number)
@@ -79,7 +79,7 @@ class RoadManager
     node_id,
     node_dist_to_next
   FROM (#{from_sql}) AS query
-  ORDER BY way_id, node_sequence_id, relation_id NULLS LAST"
+  ORDER BY way_id, node_sequence_id, relation_sequence_id NULLS LAST, relation_id NULLS LAST"
 #puts sql
     result = @conn.query(sql).collect do |row|
       # This simply translates "tags" columns to Ruby hashes.
@@ -138,7 +138,7 @@ class RoadManager
   def get_road_data(ref_prefix, ref_number)
     road = Road.new(ref_prefix, ref_number)
     fill_road_relation(road)
-    return load_relation_ways(road)
+    return load_ways(road)
   end
 end
 
