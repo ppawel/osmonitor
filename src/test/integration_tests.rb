@@ -225,6 +225,15 @@ class IntegrationTests < Test::Unit::TestCase
     assert(@status.has_issue_by_name?('road_disconnected'))
     assert_equal(2, @road.num_comps)
   end
+
+  # This road has no end nodes - starts and ends with a roundabout... support it maybe in the future?
+  def test_dw471
+    instance_eval { setup_from_file.call('DW', '471') }
+    @status.validate
+    assert(!@status.has_issue_by_name?('road_disconnected'))
+    assert_equal(1, @road.num_comps)
+    assert_equal(0, @road.comps[0].end_nodes.size)
+  end
 end
 
 end

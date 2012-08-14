@@ -67,7 +67,7 @@ class Road
   end
 
   def all_components_have_roundtrip?
-    comps.detect {|c| !c.has_roundtrips?}.nil?
+    comps.detect {|c| !c.has_complete_roundtrip?}.nil?
   end
 
   # Determines whether given way should be skipped during road graph creation.
@@ -154,16 +154,14 @@ class RoadComponent
   attr_accessor :graph
   attr_accessor :end_nodes
   attr_accessor :end_node_dijkstras
-  attr_accessor :failed_paths
-  attr_accessor :roundtrips
+  attr_accessor :roundtrip
 
   def initialize(road, graph)
     self.road = road
     self.graph = graph
     self.end_nodes = []
     self.end_node_dijkstras = {}
-    self.failed_paths = []
-    self.roundtrips = []
+    self.roundtrip = nil
 
     calculate_end_nodes
   end
@@ -200,15 +198,25 @@ class RoadComponent
   # by furthest end nodes. In order to find the roundtrip, two paths (forward and backward) need to be found (unless the road
   # component is oneway then one path is enough) between furthest end nodes. In the process, end nodes closest to the beginning
   # and end one are tried to account for trunk links, multiple oneway end nodes in close proximity etc.
-  def calculate_roundtrips
+  def calculate_roundtrip
     max_pair, max = furthest_pair_of_end_nodes
 
     @@log.debug "max_pair = #{max_pair}, max = #{max}"
+
+    if !max_pair
+      @@log.debug "Unable to found a pair of end nodes?"
+      return
+    end
 
     end_node = max_pair[0]
     furthest = max_pair[1]
 
     dist = dist(end_node, furthest)
+
+    forward_path = RoadComponentPath.new(end_node, furthest, true, segments(end_node, furthest))
+    backward_path = nil
+    failed_paths = []
+
     closest_to_furthest = closest_end_nodes(furthest, max * 0.5)
     closest_to_end_node = closest_end_nodes(end_node, max * 0.5)
 
@@ -227,22 +235,35 @@ class RoadComponent
 
         if !roundtrip_dist.nil? and roundtrip_dist > 0 and ((dist - roundtrip_dist).abs < 2222)
           @@log.debug " Found roundtrip: #{end_node}-#{furthest} (dist = #{dist}, roundtrip_dist = #{roundtrip_dist})"
-          @roundtrips << RoadComponentRoundtrip.new(RoadComponentPath.new(end_node, furthest, true, segments(end_node, furthest)),
-            RoadComponentPath.new(node1, node2, true, segments(node1, node2)))
+          backward_path = RoadComponentPath.new(node1, node2, true, segments(node1, node2))
         else
-          @@log.debug " No path: #{node1}-#{node2}"
           # Target cannot be reached from source - so we do a BFS search to find the partial path (useful for displaying on the map).
-          it = RGL::PathIterator.new(road.graph, node1, node2)
-          it.set_to_end
-          #puts "failed #{node1}->#{node2}: bfs size = #{it.path.size}"
-          segments = []
-
-          if !it.path.empty?
-            it.path.each_cons(2) {|n1, n2| segments << @graph.get_label(n1, n2)}
-            @failed_paths << RoadComponentPath.new(node1, node2, false, segments.select {|s| s})
-          end
+          path = calculate_failed_path(node1, node2)
+          failed_paths << path if path
         end
+
+        break if backward_path
       end
+
+      break if backward_path
+    end
+
+    @roundtrip = RoadComponentRoundtrip.new(forward_path, backward_path)
+
+    if backward_path.nil?
+      # Backward path was not found - this means that there is a routing problem or the component is oneway.
+      @roundtrip.failed_paths = failed_paths
+    end
+  end
+
+  def calculate_failed_path(node1, node2)
+    it = RGL::PathIterator.new(road.graph, node1, node2)
+    it.set_to_end
+
+    if !it.path.empty?
+      segments = []
+      it.path.each_cons(2) {|n1, n2| segments << @graph.get_label(n1, n2)}
+      return RoadComponentPath.new(node1, node2, false, segments.select {|s| s})
     end
   end
 
@@ -299,16 +320,11 @@ class RoadComponent
   end
 
   def length
-    roundtrip = longest_roundtrip
-    longest_roundtrip.length if roundtrip
+    roundtrip.length if roundtrip
   end
 
-  def has_roundtrips?
-    @roundtrips.size > 0
-  end
-
-  def longest_roundtrip
-    @roundtrips.max_by {|roundtrip| roundtrip.length} if has_roundtrips?
+  def has_complete_roundtrip?
+    @roundtrip and @roundtrip.backward_path
   end
 
   def wkt_points
@@ -358,13 +374,20 @@ end
 class RoadComponentRoundtrip
   attr_accessor :forward_path
   attr_accessor :backward_path
+  attr_accessor :failed_paths
 
   def initialize(forward_path, backward_path)
     self.forward_path = forward_path
     self.backward_path = backward_path
+    self.failed_paths = []
+  end
+
+  def complete?
+    !@backward_path.nil?
   end
 
   def length
+    return nil if !complete?
     (@forward_path.length + @backward_path.length) / 2.0
   end
 
