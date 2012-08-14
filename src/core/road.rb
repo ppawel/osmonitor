@@ -173,7 +173,7 @@ class RoadComponent
     max = -1
 
     @end_nodes.each do |node|
-      it = RGL::DijkstraIterator.new(road.graph.to_undirected, node, nil)
+      it = RGL::DijkstraIterator.new(graph, node, nil)
       it.go
       @end_node_dijkstras[node] = it
 
