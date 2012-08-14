@@ -191,7 +191,7 @@ class RoadComponent
       @end_node_dijkstras[node] = it
     end
 
-    @@log.debug "End nodes = #{@end_nodes}"
+    @@log.debug " end nodes = #{@end_nodes}"
   end
 
   # Attemtps to calculate a roundtrip between the beginning and end of the road component. Beginning and end are defined
@@ -201,10 +201,10 @@ class RoadComponent
   def calculate_roundtrip
     max_pair, max = furthest_pair_of_end_nodes
 
-    @@log.debug "max_pair = #{max_pair}, max = #{max}"
+    @@log.debug " max_pair = #{max_pair}, max = #{max}"
 
     if !max_pair
-      @@log.debug "Unable to found a pair of end nodes?"
+      @@log.debug " Unable to found a pair of end nodes?"
       return
     end
 
@@ -220,7 +220,7 @@ class RoadComponent
     closest_to_furthest = closest_end_nodes(furthest, max * 0.5)
     closest_to_end_node = closest_end_nodes(end_node, max * 0.5)
 
-    @@log.debug "Trying to find roundtrip from #{end_node} (furthest = #{furthest}, closest_to_furthest = #{closest_to_furthest}, closest_to_end_node = #{closest_to_end_node})"
+    @@log.debug " Trying to find roundtrip from #{end_node} (furthest = #{furthest}, closest_to_furthest = #{closest_to_furthest}, closest_to_end_node = #{closest_to_end_node})"
 
     roundtrip_dist = nil
 
