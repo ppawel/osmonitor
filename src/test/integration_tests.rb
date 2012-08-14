@@ -234,6 +234,16 @@ class IntegrationTests < Test::Unit::TestCase
     assert_equal(1, @road.num_comps)
     assert_equal(0, @road.comps[0].end_nodes.size)
   end
+
+  # This road has a very convoluted end nodes but still it should (? - TBD) be navigable.
+  def test_dw102
+    instance_eval { setup_from_file.call('DW', '102') }
+    @status.validate
+    assert(!@status.has_issue_by_name?('road_disconnected'))
+    assert(!@status.has_issue_by_name?('not_navigable'))
+    assert_equal(1, @road.num_comps)
+    #assert_equal(5, @road.comps[0].end_nodes.size)
+  end
 end
 
 end

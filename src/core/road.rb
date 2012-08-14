@@ -234,11 +234,12 @@ class RoadComponent
         #puts "tried #{node1}->#{node2}: #{roundtrip_dist} (dist = #{dist})"
 
         if !roundtrip_dist.nil? and roundtrip_dist > 0 and ((dist - roundtrip_dist).abs < 2222)
-          @@log.debug " Found roundtrip: #{end_node}-#{furthest} (dist = #{dist}, roundtrip_dist = #{roundtrip_dist})"
+          @@log.debug " Found backward path: #{node1}-#{node2} (dist = #{dist}, roundtrip_dist = #{roundtrip_dist})"
           backward_path = RoadComponentPath.new(node1, node2, true, segments(node1, node2))
         else
           # Target cannot be reached from source - so we do a BFS search to find the partial path (useful for displaying on the map).
           path = calculate_failed_path(node1, node2)
+          @@log.debug " Failed path: #{node1}-#{node2} (path = #{path})"
           failed_paths << path if path
         end
 
