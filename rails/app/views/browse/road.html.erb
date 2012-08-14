@@ -29,7 +29,7 @@
           'Component <%= comp_index + 1 %>',
           {
             visibility: false,
-            styleMap: new OpenLayers.StyleMap({'strokeWidth': 3, 'strokeColor': "blue", strokeOpacity: 1})
+            styleMap: new OpenLayers.StyleMap({'strokeWidth': 2, 'strokeColor': "blue", strokeOpacity: 1})
           }
         );
 
@@ -44,15 +44,15 @@
 
         map.addLayer(component<%= comp_index %>_layer);
 
-        <% comp.paths.each_with_index do |path, path_index| %>
-          <% color = path.complete ? 'green' : 'red' %>
+        <% comp.roundtrips.each_with_index do |roundtrip, roundtrip_index| %>
+          <% color = roundtrip.forward_path.complete ? 'green' : 'red' %>
 
-          component<%= comp_index %>path<%= path_index %>_layer = new OpenLayers.Layer.Vector(
-            '<span style="color: <%= color %>">Component <%= comp_index + 1 %> Path <%= path_index + 1 %> (<%= "%.2f" % (path.length / 1000.0) %> km)</span>',
-            {visibility: false, styleMap: new OpenLayers.StyleMap({'strokeWidth': 3, 'strokeColor': "${waycolor}"})});
+          component<%= comp_index %>roundtrip_forward<%= roundtrip_index %>_layer = new OpenLayers.Layer.Vector(
+            '<span style="color: <%= color %>">&nbsp;&nbsp;&nbsp;Roundtrip <%= roundtrip_index + 1 %> (<%= "%.2f" % (roundtrip.length / 1000.0) %> km)</span>',
+            {visibility: false, styleMap: new OpenLayers.StyleMap({'strokeWidth': 2, 'strokeColor': "${waycolor}"})});
 
-          <% path.wkt_points.each_slice(2) do |point_from, point_to| %>
-          component<%= comp_index %>path<%= path_index %>_layer.addFeatures(new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(new Array(
+          <% roundtrip.forward_path.wkt_points.each_slice(2) do |point_from, point_to| %>
+          component<%= comp_index %>roundtrip_forward<%= roundtrip_index %>_layer.addFeatures(new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(new Array(
             OpenLayers.Geometry.fromWKT('<%= point_from %>'),
             OpenLayers.Geometry.fromWKT('<%= point_to %>'))).transform(
               new OpenLayers.Projection("EPSG:4326"),
@@ -60,24 +60,63 @@
             ), {waycolor: '<%= color %>'}));
           <% end %>
 
-          showNode(component<%= comp_index %>path<%= path_index %>_layer, <%= path.from.x %>, <%= path.from.y %>, '<%= asset_path "flag_green.png" %>');
-          showNode(component<%= comp_index %>path<%= path_index %>_layer, <%= path.to.x %>, <%= path.to.y %>, '<%= asset_path "flag_finish.png" %>');
+          showNode(component<%= comp_index %>roundtrip_forward<%= roundtrip_index %>_layer, '<%= roundtrip.forward_path.from.point_wkt %>', '<%= asset_path "flag_green.png" %>');
+          showNode(component<%= comp_index %>roundtrip_forward<%= roundtrip_index %>_layer, '<%= roundtrip.forward_path.to.point_wkt %>', '<%= asset_path "flag_finish.png" %>');
 
-          map.addLayer(component<%= comp_index %>path<%= path_index %>_layer);
+          map.addLayer(component<%= comp_index %>roundtrip_forward<%= roundtrip_index %>_layer);
+
+
+          component<%= comp_index %>roundtrip_backward<%= roundtrip_index %>_layer = new OpenLayers.Layer.Vector(
+            '<span style="color: <%= color %>">&nbsp;&nbsp;&nbsp;Roundtrip <%= roundtrip_index + 1 %> (<%= "%.2f" % (roundtrip.length / 1000.0) %> km)</span>',
+            {visibility: false, styleMap: new OpenLayers.StyleMap({'strokeWidth': 2, 'strokeColor': "${waycolor}"})});
+
+          <% roundtrip.backward_path.wkt_points.each_slice(2) do |point_from, point_to| %>
+          component<%= comp_index %>roundtrip_backward<%= roundtrip_index %>_layer.addFeatures(new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(new Array(
+            OpenLayers.Geometry.fromWKT('<%= point_from %>'),
+            OpenLayers.Geometry.fromWKT('<%= point_to %>'))).transform(
+              new OpenLayers.Projection("EPSG:4326"),
+              map.baseLayer.projection
+            ), {waycolor: '<%= color %>'}));
+          <% end %>
+
+          showNode(component<%= comp_index %>roundtrip_backward<%= roundtrip_index %>_layer, '<%= roundtrip.backward_path.from.point_wkt %>', '<%= asset_path "flag_green.png" %>');
+          showNode(component<%= comp_index %>roundtrip_backward<%= roundtrip_index %>_layer, '<%= roundtrip.backward_path.to.point_wkt %>', '<%= asset_path "flag_finish.png" %>');
+
+          map.addLayer(component<%= comp_index %>roundtrip_backward<%= roundtrip_index %>_layer);
+        <% end %>
+
+        <% comp.failed_paths.each_with_index do |path, path_index| %>
+          <% color = 'red' %>
+
+          component<%= comp_index %>failed_path<%= path_index %>_layer = new OpenLayers.Layer.Vector(
+            '<span style="color: <%= color %>">&nbsp;&nbsp;&nbsp;Failed path <%= path_index + 1 %> (<%= "%.2f" % (path.length / 1000.0) %> km)</span>',
+            {visibility: false, styleMap: new OpenLayers.StyleMap({'strokeWidth': 2, 'strokeColor': "${waycolor}"})});
+
+          <% path.wkt_points.each_slice(2) do |point_from, point_to| %>
+          component<%= comp_index %>failed_path<%= path_index %>_layer.addFeatures(new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(new Array(
+            OpenLayers.Geometry.fromWKT('<%= point_from %>'),
+            OpenLayers.Geometry.fromWKT('<%= point_to %>'))).transform(
+              new OpenLayers.Projection("EPSG:4326"),
+              map.baseLayer.projection
+            ), {waycolor: '<%= color %>'}));
+          <% end %>
+
+          showNode(component<%= comp_index %>failed_path<%= path_index %>_layer, '<%= path.from.point_wkt %>', '<%= asset_path "flag_green.png" %>');
+          showNode(component<%= comp_index %>failed_path<%= path_index %>_layer, '<%= path.to.point_wkt %>', '<%= asset_path "flag_finish.png" %>');
+
+          map.addLayer(component<%= comp_index %>failed_path<%= path_index %>_layer);
         <% end %>
       <% end %>
 
-      <% @mark_points_all.each do |p| %>showNode(all_ways_layer, <%= p[0] %>, <%= p[1] %>, '<%= asset_path "flag_blue.png" %>');<% end %>
+      <% @mark_points_all.each do |p| %>
+        showNode(all_ways_layer, '<%= p %>', '<%= asset_path "flag_blue.png" %>');
+      <% end %>
   }
 
-  function showNode(vector_layer, x, y, image_url) {
+  function showNode(vector_layer, point_wkt, image_url) {
     vector_layer.addFeatures(new OpenLayers.Feature.Vector(
-            new OpenLayers.Geometry.Point(x, y).transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.baseLayer.projection
-          ),
-        {some:'data'},
-        {externalGraphic: image_url, graphicHeight: 24, graphicWidth: 24}));
+            OpenLayers.Geometry.fromWKT(point_wkt).transform(new OpenLayers.Projection("EPSG:4326"), map.baseLayer.projection),
+            {}, {externalGraphic: image_url, graphicHeight: 24, graphicWidth: 24}));
   }
 
   function showWays(layer, features, waycolor, zoom) {

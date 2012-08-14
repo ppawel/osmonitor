@@ -7,8 +7,6 @@ end
 class Node
   attr_accessor :id
   attr_accessor :tags
-  attr_accessor :x
-  attr_accessor :y
   attr_accessor :point_wkt
 
   def initialize(id, tags, wkt)
@@ -39,8 +37,6 @@ class Way
   attr_accessor :geom
   attr_accessor :relation
   attr_accessor :segments
-  attr_accessor :segment_lengths
-  attr_accessor :segment_lines
   attr_accessor :in_relation
 
   def initialize(id, member_role, tags)
@@ -48,11 +44,6 @@ class Way
     self.member_role = member_role
     self.tags = tags
     self.segments = []
-    self.segment_lengths = []
-  end
-
-  def set_mock_segment_lengths(length)
-    (1..100).each {|i| @segment_lengths << length.to_f}
   end
 
   def add_segment(node1, node2, dist)

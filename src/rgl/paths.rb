@@ -63,7 +63,9 @@ module RGL
 
         @graph.each_adjacent(u) do |v|
           next if !q.has_key?(v)
-          new_dist = dist + @graph.get_label(u, v).length
+          label = @graph.get_label(u, v)
+          label = @graph.get_label(v, u) if !label and !@graph.directed?
+          new_dist = dist + label.length
           if q[v].nil? or new_dist < q[v]
             @prev[v] = u
             q.change_priority(v, new_dist)

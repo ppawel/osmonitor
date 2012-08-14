@@ -1,4 +1,5 @@
 require 'config'
+require 'core/logging'
 require 'core/osm'
 require 'rgeo'
 require 'rgl/adjacency'
@@ -69,6 +70,10 @@ class Road
     comps.detect {|c| !c.has_roundtrips?}.nil?
   end
 
+  def skip_way?(way)
+    way.tags.has_key?('construction') or way.tags['highway'] == 'construction'
+  end
+
   def create_graph(data)
     @graph = RGL::DirectedAdjacencyGraph.new
 
@@ -104,12 +109,11 @@ class Road
     end
 
     way = create_way(way_rows[0])
+    return if skip_way?(way)
 
     i = 0
 
     way_rows.each_cons(2) do |a, b|
-      #next if is_link?(a['member_role'], a['way_tags'])
-
       a_node_id = a['node_id'].to_i
       b_node_id = b['node_id'].to_i
 
@@ -135,7 +139,6 @@ class Road
   def create_way(row)
     way = Way.new(row['way_id'].to_i, row['member_role'], row['way_tags'])
     way.geom = row['way_geom'] if row['way_geom']
-    way.set_mock_segment_lengths(row['way_length']) if row['way_length'] # Used in integration tests.
     way.in_relation = !row['relation_id'].nil?
     way
   end
@@ -143,6 +146,8 @@ end
 
 # Representa a road component. A road component is a connected subgraph of a road.
 class RoadComponent
+  include OSMonitorLogger
+
   attr_accessor :road
   attr_accessor :graph
   attr_accessor :end_nodes
@@ -160,12 +165,28 @@ class RoadComponent
   end
 
   def calculate_paths
+    new_end_nodes = []
+    max = -1
+
+    @end_nodes.each do |node|
+      it = RGL::DijkstraIterator.new(road.graph.to_undirected, node, nil)
+      it.go
+      @end_node_dijkstras[node] = it
+
+      if max_dist(node)[1] > max
+        new_end_nodes = [node, max_dist(node)[0]]
+      end
+    end
+
+    @end_nodes += new_end_nodes
+    @end_nodes = @end_nodes.uniq
+
     @end_nodes.each do |node|
       it = RGL::DijkstraIterator.new(road.graph, node, nil)
       it.go
       @end_node_dijkstras[node] = it
     end
-
+#@end_node_dijkstras.each {|node, d| puts "#{node}: #{d.dist}"}
     calculate_roundtrips
   end
 
@@ -174,57 +195,89 @@ class RoadComponent
     segments = []
     #puts "path = #{path.inspect}"
     #puts road.graph
-    path.each_cons(2) {|node1, node2| segments << road.graph.get_label(node1, node2)}
+    path.each_cons(2) {|node1, node2| segments << road.graph.get_label(node1, node2) if road.graph.get_label(node1, node2)}
     segments
+  end
+
+  def max_dist(end_node)
+    @end_node_dijkstras[end_node].dist.max_by {|end_node, dist| dist}
   end
 
   def dist(end_node, some_node)
     @end_node_dijkstras[end_node].dist[some_node]
   end
 
-  # Returns a node that is the furthest away from given end node.
+  # Returns an end node that is the furthest away from given end node.
   def furthest(end_node)
     @end_nodes.max_by {|end_node2| @end_node_dijkstras[end_node].dist[end_node2] ? @end_node_dijkstras[end_node].dist[end_node2] : -1}
   end
 
-  # Returns end nodes sorted by distance from an end node to given node.
-  def closest_end_nodes(node, max_dist = 2 << 64)
-    @end_node_dijkstras.sort_by {|end_node, it| it.dist[node].nil? ? 2 << 64 : it.dist[node]}.collect {|end_node, it| end_node}
+  # Returns a list of end nodes that are within max_dist to given end node.
+  def closest_end_nodes(target_end_node, max_dist = 2 << 64)
+    closest = []  
+    @end_node_dijkstras.each do |end_node, it|
+      dist = dist(end_node, target_end_node)
+      dist_reverse = dist(target_end_node, end_node)
+      closest << end_node if !dist.nil? and dist < max_dist
+      closest << end_node if !dist_reverse.nil? and dist_reverse < max_dist
+    end
+    closest.uniq
   end
 
   def calculate_roundtrips
+    @@log.debug "End nodes = #{@end_nodes}"
+
+    max = -1
+    max_pair = nil
+
     @end_nodes.each do |end_node|
       furthest = furthest(end_node)
-      next if end_node == furthest
-
       dist = dist(end_node, furthest)
-      closest_to_furthest = closest_end_nodes(furthest)
-      closest_to_end_node = closest_end_nodes(end_node)
-      roundtrip_dist = nil
 
-      closest_to_furthest.each do |node1|
-        next if node1 == end_node
+      if dist > max
+        max = dist
+        max_pair = end_node, furthest
+      end
+    end
 
-        closest_to_end_node.each do |node2|
-          next if node1 == node2
+    @@log.debug "max_pair = #{max_pair}, max = #{max}"
 
-          roundtrip_dist = dist(node1, node2)
-          #puts "tried #{node1}->#{node2}: #{roundtrip_dist} (dist = #{dist})"
+    end_node = max_pair[0]
+    furthest = max_pair[1]#furthest(end_node)
+    #next if end_node == furthest
 
-          if !roundtrip_dist.nil? and roundtrip_dist > 0 and ((dist - roundtrip_dist).abs < 2222)
-            @roundtrips << RoadComponentRoundtrip.new(RoadComponentPath.new(end_node, furthest, true, segments(end_node, furthest)),
-              RoadComponentPath.new(node1, node2, true, segments(node1, node2)))
-          else
-            # Target cannot be reached from source - so we do a BFS search to find the partial path (useful for displaying on the map).
-            it = RGL::PathIterator.new(road.graph, node1, node2)
-            it.set_to_end
-            #puts "failed #{node1}->#{node2}: bfs size = #{it.path.size}"
-            segments = []
+    dist = dist(end_node, furthest)
+    closest_to_furthest = closest_end_nodes(furthest, max * 0.5)
+    closest_to_end_node = closest_end_nodes(end_node, max * 0.5)
 
-            if !it.path.empty?
-              it.path.each_cons(2) {|n1, n2| segments << @graph.get_label(n1, n2)}
-              @failed_paths << RoadComponentPath.new(node1, node2, false, segments.select {|s| s})
-            end
+    @@log.debug "Trying to find roundtrip from #{end_node} (furthest = #{furthest}, closest_to_furthest = #{closest_to_furthest}, closest_to_end_node = #{closest_to_end_node})"
+
+    roundtrip_dist = nil
+
+    closest_to_furthest.each do |node1|
+      next if node1 == end_node
+
+      closest_to_end_node.each do |node2|
+        next if node1 == node2
+
+        roundtrip_dist = dist(node1, node2)
+        #puts "tried #{node1}->#{node2}: #{roundtrip_dist} (dist = #{dist})"
+
+        if !roundtrip_dist.nil? and roundtrip_dist > 0 and ((dist - roundtrip_dist).abs < 2222)
+          @@log.debug " Found roundtrip: #{end_node}-#{furthest} (dist = #{dist}, roundtrip_dist = #{roundtrip_dist})"
+          @roundtrips << RoadComponentRoundtrip.new(RoadComponentPath.new(end_node, furthest, true, segments(end_node, furthest)),
+            RoadComponentPath.new(node1, node2, true, segments(node1, node2)))
+        else
+          @@log.debug " No path: #{node1}-#{node2}"
+          # Target cannot be reached from source - so we do a BFS search to find the partial path (useful for displaying on the map).
+          it = RGL::PathIterator.new(road.graph, node1, node2)
+          it.set_to_end
+          #puts "failed #{node1}->#{node2}: bfs size = #{it.path.size}"
+          segments = []
+
+          if !it.path.empty?
+            it.path.each_cons(2) {|n1, n2| segments << @graph.get_label(n1, n2)}
+            @failed_paths << RoadComponentPath.new(node1, node2, false, segments.select {|s| s})
           end
         end
       end

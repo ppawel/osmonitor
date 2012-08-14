@@ -124,8 +124,7 @@ class RoadManager
   FROM way_nodes wn
   INNER JOIN ways w ON (w.id = wn.way_id)
   WHERE #{eval($sql_where_by_road_type_ways[road.ref_prefix], binding())} AND
-  (NOT w.tags ?| ARRAY['aerialway', 'aeroway', 'building', 'construction', 'railway']) AND
-  (NOT w.tags -> 'highway' = 'construction') AND
+  (NOT w.tags ?| ARRAY['aerialway', 'aeroway', 'building', 'construction', 'railway', 'waterway']) AND
   (SELECT ST_Contains(OSM_GetConfigGeomValue('boundary_PL'), w.linestring)) = True"
   end
 
