@@ -117,7 +117,7 @@ def self.run_report(input_page, output_page)
 
   inputs.each_with_index do |input, i|
     road_before = Time.now
-    @@log.debug("BEGIN road #{input.ref_prefix + input.ref_number} (#{i + 1} of #{inputs.size}) (input length = #{input.length})")
+    @@log.debug("BEGIN road #{input.ref_prefix + input.ref_number} (#{i + 1} of #{inputs.size}) (input length = #{input.length.inspect})")
 
     road = road_manager.load_road(input.ref_prefix, input.ref_number)
     status = RoadStatus.new(input, road)

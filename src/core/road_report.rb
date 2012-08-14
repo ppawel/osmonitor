@@ -78,7 +78,13 @@ class RoadStatus
   end
 
   def validate
-    add_info('osm_length')
+    if input.length
+      add_info('osm_length')
+    else
+      # No input length = warning.
+      add_warning('osm_length')
+    end
+
     add_info('way_stats') if !percent_with_lanes.nan? and !percent_with_maxspeed.nan?
 
     add_error('no_relation') if !road.relation
