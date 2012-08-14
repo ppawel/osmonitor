@@ -244,6 +244,24 @@ class IntegrationTests < Test::Unit::TestCase
     assert_equal(1, @road.num_comps)
     #assert_equal(5, @road.comps[0].end_nodes.size)
   end
+
+  # This road needs better error (failed paths) reporting.
+  def test_dw812
+    instance_eval { setup_from_file.call('DW', '812') }
+    @status.validate
+    assert(!@status.has_issue_by_name?('road_disconnected'))
+    assert(@status.has_issue_by_name?('not_navigable'))
+    assert_equal(1, @road.num_comps)
+    assert(@road.comps[0].roundtrip.failed_paths.size > 0)
+  end
+
+  # This road has some strange end nodes. Should be navigable.
+  def test_dw967
+    instance_eval { setup_from_file.call('DW', '967') }
+    @status.validate
+    assert(!@status.has_issue_by_name?('road_disconnected'))
+    assert(!@status.has_issue_by_name?('not_navigable'))
+  end
 end
 
 end
