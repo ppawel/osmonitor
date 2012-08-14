@@ -70,8 +70,10 @@ class Road
     comps.detect {|c| !c.has_roundtrips?}.nil?
   end
 
+  # Determines whether given way should be skipped during road graph creation.
   def skip_way?(way)
-    way.tags.has_key?('construction') or way.tags['highway'] == 'construction'
+    # Ferry routes are an exception to accommodate roads in Poland :)
+    (!way.tags.has_key?('highway') and way.tags['route'] != 'ferry') or way.tags.has_key?('construction') or way.tags['highway'] == 'construction'
   end
 
   def create_graph(data)
@@ -158,13 +160,17 @@ class RoadComponent
   def initialize(road, graph)
     self.road = road
     self.graph = graph
-    self.end_nodes = graph.vertices.select {|v| graph.out_degree(v) <= 1}
+    self.end_nodes = []
     self.end_node_dijkstras = {}
     self.failed_paths = []
     self.roundtrips = []
+
+    calculate_end_nodes
   end
 
-  def calculate_paths
+  # Calculates end nodes and puts them in the @end_nodes list.
+  def calculate_end_nodes
+    @end_nodes = graph.vertices.select {|v| graph.out_degree(v) <= 1}
     new_end_nodes = []
     max = -1
 
@@ -186,65 +192,21 @@ class RoadComponent
       it.go
       @end_node_dijkstras[node] = it
     end
-#@end_node_dijkstras.each {|node, d| puts "#{node}: #{d.dist}"}
-    calculate_roundtrips
-  end
 
-  def segments(end_node, some_node)
-    path = @end_node_dijkstras[end_node].to(some_node)
-    segments = []
-    #puts "path = #{path.inspect}"
-    #puts road.graph
-    path.each_cons(2) {|node1, node2| segments << road.graph.get_label(node1, node2) if road.graph.get_label(node1, node2)}
-    segments
-  end
-
-  def max_dist(end_node)
-    @end_node_dijkstras[end_node].dist.max_by {|end_node, dist| dist}
-  end
-
-  def dist(end_node, some_node)
-    @end_node_dijkstras[end_node].dist[some_node]
-  end
-
-  # Returns an end node that is the furthest away from given end node.
-  def furthest(end_node)
-    @end_nodes.max_by {|end_node2| @end_node_dijkstras[end_node].dist[end_node2] ? @end_node_dijkstras[end_node].dist[end_node2] : -1}
-  end
-
-  # Returns a list of end nodes that are within max_dist to given end node.
-  def closest_end_nodes(target_end_node, max_dist = 2 << 64)
-    closest = []  
-    @end_node_dijkstras.each do |end_node, it|
-      dist = dist(end_node, target_end_node)
-      dist_reverse = dist(target_end_node, end_node)
-      closest << end_node if !dist.nil? and dist < max_dist
-      closest << end_node if !dist_reverse.nil? and dist_reverse < max_dist
-    end
-    closest.uniq
-  end
-
-  def calculate_roundtrips
     @@log.debug "End nodes = #{@end_nodes}"
+  end
 
-    max = -1
-    max_pair = nil
-
-    @end_nodes.each do |end_node|
-      furthest = furthest(end_node)
-      dist = dist(end_node, furthest)
-
-      if dist > max
-        max = dist
-        max_pair = end_node, furthest
-      end
-    end
+  # Attemtps to calculate a roundtrip between the beginning and end of the road component. Beginning and end are defined
+  # by furthest end nodes. In order to find the roundtrip, two paths (forward and backward) need to be found (unless the road
+  # component is oneway then one path is enough) between furthest end nodes. In the process, end nodes closest to the beginning
+  # and end one are tried to account for trunk links, multiple oneway end nodes in close proximity etc.
+  def calculate_roundtrips
+    max_pair, max = furthest_pair_of_end_nodes
 
     @@log.debug "max_pair = #{max_pair}, max = #{max}"
 
     end_node = max_pair[0]
-    furthest = max_pair[1]#furthest(end_node)
-    #next if end_node == furthest
+    furthest = max_pair[1]
 
     dist = dist(end_node, furthest)
     closest_to_furthest = closest_end_nodes(furthest, max * 0.5)
@@ -282,6 +244,58 @@ class RoadComponent
         end
       end
     end
+  end
+
+  def segments(end_node, some_node)
+    path = @end_node_dijkstras[end_node].to(some_node)
+    segments = []
+    #puts "path = #{path.inspect}"
+    #puts road.graph
+    path.each_cons(2) {|node1, node2| segments << road.graph.get_label(node1, node2) if road.graph.get_label(node1, node2)}
+    segments
+  end
+
+  def max_dist(end_node)
+    @end_node_dijkstras[end_node].dist.max_by {|end_node, dist| dist}
+  end
+
+  def dist(end_node, some_node)
+    @end_node_dijkstras[end_node].dist[some_node]
+  end
+
+  # Returns an end node that is the furthest away from given end node.
+  def furthest(end_node)
+    @end_nodes.max_by {|end_node2| @end_node_dijkstras[end_node].dist[end_node2] ? @end_node_dijkstras[end_node].dist[end_node2] : -1}
+  end
+
+  # Returns a list of end nodes that are within max_dist to given end node.
+  def closest_end_nodes(target_end_node, max_dist = 2 << 64)
+    closest = []  
+    @end_node_dijkstras.each do |end_node, it|
+      dist = dist(end_node, target_end_node)
+      dist_reverse = dist(target_end_node, end_node)
+      closest << end_node if !dist.nil? and dist < max_dist
+      closest << end_node if !dist_reverse.nil? and dist_reverse < max_dist
+    end
+    closest.uniq
+  end
+
+  # Returns a pair of end nodes (and the distance between them) that are furthest apart.
+  def furthest_pair_of_end_nodes
+    max = -1
+    max_pair = nil
+
+    @end_nodes.each do |end_node|
+      furthest = furthest(end_node)
+      dist = dist(end_node, furthest)
+
+      if dist > max
+        max = dist
+        max_pair = end_node, furthest
+      end
+    end
+
+    return max_pair, max
   end
 
   def length

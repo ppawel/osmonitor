@@ -217,6 +217,14 @@ class IntegrationTests < Test::Unit::TestCase
     @status.validate
     assert(@status.has_issue_by_name?('road_disconnected'))
   end
+
+  # This road has some ways without the highway tag - these should be ignored, let's test for that.
+  def test_dw530
+    instance_eval { setup_from_file.call('DW', '530') }
+    @status.validate
+    assert(@status.has_issue_by_name?('road_disconnected'))
+    assert_equal(2, @road.num_comps)
+  end
 end
 
 end
