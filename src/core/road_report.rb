@@ -23,26 +23,11 @@ class RoadStatus
   attr_accessor :road
   attr_accessor :input
   attr_accessor :issues
-  attr_accessor :all_components
-  attr_accessor :backward_components
-  attr_accessor :forward_components
-  attr_accessor :ref_components
-  attr_accessor :backward_fixes
-  attr_accessor :forward_fixes
-  attr_accessor :all_url
-  attr_accessor :backward_url
-  attr_accessor :forward_url
 
   def initialize(road_input, road)
     self.road = road
     self.input = road_input
     self.issues = []
-    self.all_components = []
-    self.backward_components = []
-    self.forward_components = []
-    self.ref_components = []
-    self.backward_fixes = []
-    self.forward_fixes = []
   end
 
   def add_error(name, data = {})
