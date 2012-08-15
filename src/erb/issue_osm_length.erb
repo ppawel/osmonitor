@@ -1,4 +1,4 @@
-* <small><% if status.road.length %>OSM length: <b><%= '%.2f' % status.road.length %></b> km <% end %>[<%= create_osmonitor_url(status.road) %> show in OSMonitor]
-<% if !status.input.length %>
-* <small>no input length ([[OSMonitor#Tags|how to add it?]])
+<li> <small><% if status.road.length %>OSM length: <b><%= '%.2f' % status.road.length %></b> km <% end %>[<%= create_osmonitor_url(status.road) %> show in OSMonitor]</small>
+<% if status.road.relation and !status.input_length %>
+<li> <small>no input length ([[OSMonitor#Tags|how to add it?]])</small>
 <% end %>

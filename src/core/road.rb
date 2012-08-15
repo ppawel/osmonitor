@@ -14,6 +14,11 @@ require 'rgl/bidirectional'
 @rgeo_factory = ::RGeo::Geographic.spherical_factory()
 
 class Road
+  def self.parse_ref(ref)
+    ref.scan(/([^\d]+)(\d+)/)
+    return $1, $2
+  end
+
   attr_accessor :ref_prefix
   attr_accessor :ref_number
   attr_accessor :relation

@@ -1,0 +1,36 @@
+<center>
+<table class="wikitable" border="1" cellspacing="0" cellpadding="2" width="80%">
+<tr style="background-color:#E9E9E9">
+<th scope="col" width="2%">Ref
+</th>
+<th scope="col" width="35%">Relation
+</th>
+<th scope="col" width="43%">Bot report
+</th>
+</tr>
+
+<% report.statuses.each do |status| %>
+<%
+  color = OK_COLOR
+  color = WARNING_COLOR if status.get_issues(:WARNING).size > 0
+  color = ERROR_COLOR if status.get_issues(:ERROR).size > 0
+%>
+<tr style="background-color:<%= color %>">
+<td style="text-align: center">
+{{<%= country %>-<%= status.road.ref_prefix %>|<%= status.road.ref_number %>}}
+</td>
+<td>
+<% if status.road.relation %>{{relation|<%= status.road.relation.id %>}}<% end %>
+</td>
+<td>
+<ul>
+<% status.issues.each do |issue| %>
+<%= render("erb/issue_#{issue.name}.erb", status, issue) %>
+<% end %>
+</ul>
+</td>
+</tr>
+<% end %>
+
+</table>
+</center>

@@ -12,27 +12,16 @@ class RoadManager
     self.conn.query('set enable_seqscan = false;') if conn
   end
 
-  def load_road(ref_prefix, ref_number)
+  def load_road(country, ref_prefix, ref_number)
     road = Road.new(ref_prefix, ref_number)
 
-    log_time " fill_road_relation" do
-      fill_road_relation(road)
-    end
+    log_time " fill_road_relation" do fill_road_relation(road) end
 
     data = []
 
     log_time " load_ways" do data = load_ways(road) end
     log_time " create_graph" do road.create_graph(data) end
     log_time " calculate_roundtrips" do road.comps.each {|c| c.calculate_roundtrip} if road.num_comps == 1 end
-
-    #log_time " load_node_xy" do
-    #  road.comps.each {|c| c.end_nodes.each {|node| node.x, node.y = get_node_xy(node.id)}}
-    #  road.comps.each {|c| c.paths.each {|p| p.from.x, p.from.y = get_node_xy(p.from.id)}}
-    #  road.comps.each {|c| c.paths.each {|p| p.to.x, p.to.y = get_node_xy(p.to.id)}}
-    #end
-
-    #data = load_ref_ways(road)
-    #road.create_ref_graph(data)
 
     return road
   end

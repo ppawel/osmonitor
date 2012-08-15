@@ -1,32 +1,9 @@
-class RoadInput
-  attr_accessor :row
-  attr_accessor :length
-  attr_accessor :ref_prefix
-  attr_accessor :ref_number
-
-  def from_wiki_table_row(wiki_table_row)
-    @row = wiki_table_row
-    m = row.row_text.scan(/PL\-(\w+)\|(\d+)/)
-
-    if $1 and $2
-      @ref_prefix = $1
-      @ref_number = $2
-
-      # Now let's try to parse input length for the road.
-      length_text = row.cells[2].cell_text.strip.gsub('km', '').gsub(',', '.')
-      @length = length_text.to_f if !length_text.empty?
-    end
-  end
-end
-
 class RoadStatus
   attr_accessor :road
-  attr_accessor :input
   attr_accessor :issues
 
-  def initialize(road_input, road)
+  def initialize(road)
     self.road = road
-    self.input = road_input
     self.issues = []
   end
 
@@ -62,8 +39,12 @@ class RoadStatus
     road.comps.collect {|comp| comp.end_nodes if comp.end_nodes.size < 2}.select {|x| x}
   end
 
+  def input_length
+    road.relation.distance if road.relation
+  end
+
   def validate
-    if input.length
+    if road.relation and road.relation.distance
       add_info('osm_length')
     else
       # No input length = warning.
@@ -87,7 +68,7 @@ class RoadStatus
     if !connected?
       add_error('road_disconnected')
     else
-      add_warning('wrong_length') if road.length and input.length and !has_proper_length
+      add_warning('wrong_length') if road.length and road.relation.distance and !has_proper_length
       add_error('not_navigable') if road.length.nil?#road.has_incomplete_paths?
     end
 
@@ -107,11 +88,11 @@ class RoadStatus
   end
 
   def length_diff
-    return (road.length - input.length).abs.to_i
+    return (road.length - road.relation.distance).abs.to_i
   end
 
   def has_proper_length
-    return nil if !road.relation or !road.length or !input.length
+    return nil if !road.relation or !road.length or !road.relation.distance
     return length_diff < 2
   end
 
@@ -191,7 +172,7 @@ class RoadReport
 
   # Returns length statistics (in km): total_input_length, green_length, green_length_percent.
   def get_length_stats
-    total_input_length = statuses.reduce(0) {|total, status| status.input.length.nil? ? total : (total + status.input.length)}
+    total_input_length = statuses.reduce(0) {|total, status| status.input_length.nil? ? total : (total + status.input_length)}
     green_length = statuses.inject(0) {|total, status| status.green? ? total + status.road.length : total}
     green_length_percent = 0
     green_length_percent = green_length / total_input_length * 100 if total_input_length > 0
