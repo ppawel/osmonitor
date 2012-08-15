@@ -6,12 +6,9 @@ require 'road_manager'
 class BrowseController < ApplicationController
   def road
     @conn = PGconn.open( :host => $config['host'], :dbname => $config['dbname'], :user => $config['user'], :password => $config['password'] )
-    @road = nil
     road_manager = OSMonitor::RoadManager.new(@conn)
-
-    params[:ref].scan(/([^\d]+)(\d+)/i) do |m|
-      @road = road_manager.load_road($1, $2)
-    end
+    ref_prefix, ref_number = Road.parse_ref(params[:ref])
+    @road = road_manager.load_road('PL', ref_prefix, ref_number)
 
     @all_ways_wkt = []
     @mark_points_all = []
