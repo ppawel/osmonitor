@@ -1,6 +1,16 @@
-# Determines if given tags and/or relation member role way defines a highway link.
-def is_link?(member_role, tags)
-  member_role == 'link' or (tags['highway'] and tags['highway'].include?('link'))
+# Represents an OSM relation.
+class Relation
+  attr_accessor :id
+  attr_accessor :tags
+
+  def initialize(id, tags)
+    self.id = id
+    self.tags = tags
+  end
+
+  def distance
+    @tags['distance'].to_f if @tags['distance']
+  end
 end
 
 # Represents a node in OSM sense.

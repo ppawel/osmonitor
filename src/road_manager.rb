@@ -43,15 +43,17 @@ class RoadManager
   end
 
   def fill_road_relation(road)
-    sql_select = "SELECT *, OSM_IsMostlyCoveredBy('boundary_PL', r.id) AS covered
+    sql = "
+  SELECT *, OSM_IsMostlyCoveredBy('boundary_PL', r.id) AS covered
   FROM relations r
   WHERE
     r.tags -> 'type' = 'route' AND
-    r.tags -> 'route' = 'road' AND"
+    r.tags -> 'route' = 'road' AND
+    #{eval($sql_where_by_road_type_relations[road.ref_prefix], binding())}
+  ORDER BY covered DESC, r.id"
 
-    query = sql_select + eval($sql_where_by_road_type_relations[road.ref_prefix], binding()) + " ORDER BY covered DESC, r.id"
-    result = @conn.query(query).collect {|row| process_tags(row)}
-    road.relation = result[0] if result.size > 0 and result[0]['covered'] == 't'
+    result = @conn.query(sql).collect {|row| process_tags(row)}
+    road.relation = Relation.new(result[0]['id'].to_i, result[0]['tags']) if result.size > 0 and result[0]['covered'] == 't'
     road.other_relations = result[1..-1].select {|r| r['covered'] == 't'} if result.size > 1
   end
 
@@ -105,7 +107,7 @@ class RoadManager
   FROM way_nodes wn
   INNER JOIN relation_members rm ON (rm.member_id = way_id)
   INNER JOIN ways w ON (w.id = wn.way_id)
-  WHERE rm.relation_id = #{road.relation['id']}"
+  WHERE rm.relation_id = #{road.relation.id}"
   end
 
   def get_sql_for_ref_ways(road)

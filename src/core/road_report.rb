@@ -131,7 +131,7 @@ class RoadStatus
   end
 
   def get_network
-    road.relation['tags']['network'] if road.relation['tags']['network']
+    road.relation.tags['network'] if road.relation.tags['network']
   end
 
   def get_proper_network
