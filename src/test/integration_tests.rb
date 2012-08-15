@@ -18,7 +18,7 @@ module OSMonitor
 # We don't use Postgres here in tests so replace some database-using methods.
 class RoadManager
   def fill_road_relation(road)
-    road.relation = {'id' => 1, 'tags' => {} }
+    road.relation = Relation.new(1, {})
   end
 
   def get_node_xy(node_id)
@@ -40,9 +40,8 @@ class IntegrationTests < Test::Unit::TestCase
       road_data_from_file("road_data_#{road.ref_prefix}#{road.ref_number}.txt")
     end
 
-    @input = RoadInput.new
-    @road = road_manager.load_road(ref_prefix, ref_number)
-    @status = RoadStatus.new(@input, @road)
+    @road = road_manager.load_road('PL', ref_prefix, ref_number)
+    @status = RoadStatus.new(@road)
     }
   end
 
@@ -57,9 +56,8 @@ class IntegrationTests < Test::Unit::TestCase
       {'member_role' => '', 'way_id' => 100, 'node_id' => 5, 'way_tags' => {}, 'way_length' => 55}]
     end
 
-    input = RoadInput.new
-    road = road_manager.load_road('A', '1')
-    status = RoadStatus.new(input, road)
+    road = road_manager.load_road('PL', 'A', '1')
+    status = RoadStatus.new(road)
     status.validate
     assert(status.issues.size > 0)
     assert(!status.issues.detect {|i| i.name == 'relation_disconnected'})
@@ -80,9 +78,8 @@ class IntegrationTests < Test::Unit::TestCase
       {'member_role' => '', 'way_id' => 102, 'node_id' => 9, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55}]
     end
 
-    input = RoadInput.new
-    road = road_manager.load_road('A', '1')
-    status = RoadStatus.new(input, road)
+    road = road_manager.load_road('PL', 'A', '1')
+    status = RoadStatus.new(road)
     status.validate
     assert(status.issues.detect {|i| i.name == 'road_disconnected'})
   end
@@ -107,9 +104,8 @@ class IntegrationTests < Test::Unit::TestCase
       {'member_role' => '', 'way_id' => 104, 'node_id' => 9, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 66}]
     end
 
-    input = RoadInput.new
-    road = road_manager.load_road('A', '1')
-    status = RoadStatus.new(input, road)
+    road = road_manager.load_road('PL', 'A', '1')
+    status = RoadStatus.new(road)
     status.validate
 
     assert(!status.issues.detect {|i| i.name == 'relation_disconnected'})
@@ -133,9 +129,8 @@ class IntegrationTests < Test::Unit::TestCase
       {'member_role' => '', 'way_id' => 102, 'node_id' => 5, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 5500}]
     end
 
-    input = RoadInput.new
-    road = road_manager.load_road('A', '1')
-    status = RoadStatus.new(input, road)
+    road = road_manager.load_road('PL', 'A', '1')
+    status = RoadStatus.new(road)
     status.validate
 
     assert(!status.has_issue_by_name?('road_disconnected'))
