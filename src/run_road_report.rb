@@ -11,6 +11,7 @@ require 'media_wiki'
 require 'pg'
 
 require 'config'
+require 'report_manager'
 require 'road_manager'
 require 'wiki'
 
@@ -24,16 +25,8 @@ TIMESTAMP_BEGIN = "<!-- OSMonitor TIMESTAMP -->"
 TIMESTAMP_END = "<!-- OSMonitor /TIMESTAMP -->"
 STATS_BEGIN = "<!-- OSMonitor STATS -->"
 STATS_END = "<!-- OSMonitor /STATS -->"
-OK_COLOR = "PaleGreen"
-ERROR_COLOR = "LightSalmon"
-WARNING_COLOR = "PaleGoldenrod"
 
 @overall_report = RoadReport.new
-@report_template = ERB.new(File.read("erb/road_report.erb"), nil, '<>')
-
-def self.render(file, status = nil, issue = nil)
-  return ERB.new(File.read("#{file}"), nil, '<>').result(binding)
-end
 
 def self.insert_stats(page_text, report)
   stats_text = ERB.new(File.read("erb/road_report_stats.erb")).result(binding())
@@ -52,35 +45,11 @@ def self.insert_data_timestamp(page_text, conn)
   timestamp
 end
 
-def self.generate_road_report(road_manager, country, refs)
-  report = RoadReport.new
-
-  @@log.debug "Got #{refs.size} road(s) to process"
-
-  refs.each_with_index do |ref, i|
-    ref_prefix, ref_number = Road.parse_ref(ref)
-    road_before = Time.now
-
-    @@log.debug("BEGIN road #{ref_prefix + ref_number} (#{i + 1} of #{refs.size})")
-
-    road = road_manager.load_road(country, ref_prefix, ref_number)
-    status = RoadStatus.new(road)
-    status.validate
-
-    report.add_status(status)
-    @overall_report.add_status(status)
-
-    @@log.debug("END road #{road.ref_prefix + road.ref_number} took #{Time.now - road_before} " +
-      "(comps = #{status.road.comps.map {|c| c.graph.num_vertices}.inspect})")
-  end
-
-  return @report_template.result(binding())
-end
-
 def self.run_report(input_page, output_page)
   report_start = Time.now
   conn = PGconn.open( :host => $config['host'], :dbname => $config['dbname'], :user => $config['user'], :password => $config['password'] )
   road_manager = RoadManager.new(conn)
+  report_manager = ReportManager.new(road_manager)
   mw = MediaWiki::Gateway.new('https://wiki.openstreetmap.org/w/api.php')
   page_text = mw.get(input_page)
   old_page_text = page_text.dup
@@ -91,11 +60,21 @@ def self.run_report(input_page, output_page)
     args = $3
     ending = $4
     country = args.scan(/country\=(\w+)/i)[0][0]
-    refs = args.scan(/refs=(.*)/i)[0][0]
+    refs = args.scan(/refs=(.*)/i)
+    ref_prefix = args.scan(/ref_prefix=(.*)/i)
     report_text = nil
 
-    if refs
-      report_text = generate_road_report(road_manager, country, refs.split(','))
+    if !refs.empty?
+      refs = refs[0][0]
+      report, report_text = report_manager.generate_road_report(country, refs.split(','))
+      @overall_report.add(report)
+    elsif !ref_prefix.empty?
+      ref_prefix = ref_prefix[0][0]
+      refs = []
+      IO.readlines("../data/road_refs/#{country}_#{ref_prefix}.txt").each {|ref| refs << "#{ref_prefix}#{ref.gsub(/\n/, '')}"}
+      puts refs.inspect
+      report, report_text = report_manager.generate_road_report(country, refs)
+      @overall_report.add(report)
     end
 
     page_text[all] = "#{beginning}#{report_text}#{ending}" if report_text

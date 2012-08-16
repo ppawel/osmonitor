@@ -68,7 +68,7 @@ class RoadStatus
     if !connected?
       add_error('road_disconnected')
     else
-      add_warning('wrong_length') if road.length and road.relation.distance and !has_proper_length
+      add_warning('wrong_length') if road.length and input_length and !has_proper_length
       add_error('not_navigable') if road.length.nil?#road.has_incomplete_paths?
     end
 
@@ -160,6 +160,10 @@ class RoadReport
 
   def add_status(status)
     statuses << status
+  end
+
+  def add(report)
+    @statuses += report.statuses
   end
 
   # Returns percent_green, percent_yellow, percent_red.

@@ -11,6 +11,10 @@
 
 <% report.statuses.each do |status| %>
 <%
+  OK_COLOR = "PaleGreen"
+  ERROR_COLOR = "LightSalmon"
+  WARNING_COLOR = "PaleGoldenrod"
+
   color = OK_COLOR
   color = WARNING_COLOR if status.get_issues(:WARNING).size > 0
   color = ERROR_COLOR if status.get_issues(:ERROR).size > 0
@@ -25,7 +29,7 @@
 <td>
 <ul>
 <% status.issues.each do |issue| %>
-<%= render("erb/issue_#{issue.name}.erb", status, issue) %>
+<%= render("issue_#{issue.name}.erb", status, issue) %>
 <% end %>
 </ul>
 </td>

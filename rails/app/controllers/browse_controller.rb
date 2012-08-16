@@ -1,14 +1,17 @@
 require 'config'
 require 'elogger'
 require 'core'
+require 'report_manager'
 require 'road_manager'
 
 class BrowseController < ApplicationController
   def road
     @conn = PGconn.open( :host => $config['host'], :dbname => $config['dbname'], :user => $config['user'], :password => $config['password'] )
     road_manager = OSMonitor::RoadManager.new(@conn)
-    ref_prefix, ref_number = Road.parse_ref(params[:ref])
-    @road = road_manager.load_road('PL', ref_prefix, ref_number)
+    report_manager = OSMonitor::ReportManager.new(road_manager, Rails.root + '../src/erb/')
+
+    @report, @report_text = report_manager.generate_road_report('PL', [params[:ref]])
+    @road = @report.statuses[0].road#road_manager.load_road('PL', ref_prefix, ref_number)
 
     @all_ways_wkt = []
     @mark_points_all = []

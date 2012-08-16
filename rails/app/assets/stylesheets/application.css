@@ -11,3 +11,34 @@
  *= require_self
  *= require_tree .
  */
+
+table.wikitable {
+margin: 1em 1em 1em 0;
+background: #F9F9F9;
+border: 1px #AAA solid;
+border-collapse: collapse;
+color: black;
+}
+
+table.wikitable th {
+padding: 4px;
+background-color: #E9E9E9;
+border-style: solid;
+border-width: 1px;
+border-color: #AAA;
+}
+
+.wikitable th, .wikitable td {
+border: 1px #AAA solid;
+padding: 0.2em;
+}
+
+.wikitable th {
+background: #F2F2F2;
+text-align: center;
+font-weight: bold;
+}
+
+small {
+font-size: smaller;
+}

@@ -85,6 +85,9 @@ h6 {
     height: 768px;
     border: 1px solid black;
 }
+
+.layersDiv { overflow-y: scroll; height:700px; width:400px}
+
 #tags {
     display: none;
 }
