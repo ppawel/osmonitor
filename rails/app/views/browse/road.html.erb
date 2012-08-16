@@ -69,6 +69,7 @@
 
         map.addLayer(component<%= comp_index %>roundtrip_forward_layer);
 
+        <% if roundtrip.backward_path %>
         component<%= comp_index %>roundtrip_backward_layer = new OpenLayers.Layer.Vector(
           '<span style="color: <%= color %>">&nbsp;&nbsp;&nbsp;Roundtrip (backward) (<%= "%.2f" % (roundtrip.length / 1000.0) %> km)</span>',
           {visibility: false, styleMap: new OpenLayers.StyleMap({'strokeWidth': 2, 'strokeColor': "${waycolor}"})});
@@ -86,7 +87,7 @@
         showNode(component<%= comp_index %>roundtrip_backward_layer, '<%= roundtrip.backward_path.to.point_wkt %>', '<%= asset_path "flag_finish.png" %>');
 
         map.addLayer(component<%= comp_index %>roundtrip_backward_layer);
-
+        <% end %>
         <% else %>
         <% comp.roundtrip.failed_paths.each_with_index do |path, path_index| %>
           <% color = 'red' %>

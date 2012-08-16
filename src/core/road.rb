@@ -65,6 +65,14 @@ class Road
     @comps.size
   end
 
+  def num_logical_comps
+    @comps.size - (@comps.select {|c| find_sister_component(c)}.size / 2)
+  end
+
+  def find_sister_component(c)
+    @comps.select {|component| c.length and component.length and c.oneway? and component.oneway? and (c.length - component.length).abs < 2222}
+  end
+
   def length
     return nil if !all_components_have_roundtrip?
     meters = comps.reduce(0) {|total, comp| comp.length ? total + comp.length : total}
@@ -78,7 +86,8 @@ class Road
   # Determines whether given way should be skipped during road graph creation.
   def skip_way?(way)
     # Ferry routes are an exception to accommodate roads in Poland :)
-    (!way.tags.has_key?('highway') and way.tags['route'] != 'ferry') or way.tags.has_key?('construction') or way.tags['highway'] == 'construction'
+    (!way.tags.has_key?('highway') and way.tags['route'] != 'ferry') or way.tags.has_key?('construction') or
+      way.tags['highway'] == 'construction' or way.tags['highway'] == 'proposed'
   end
 
   def create_graph(data)
@@ -216,6 +225,13 @@ class RoadComponent
     end_node = max_pair[0]
     furthest = max_pair[1]
 
+    if oneway?
+      @@log.debug " Oneway component, not trying to find roundtrip"
+      forward_path = RoadComponentPath.new(end_node, furthest, true, segments(end_node, furthest))
+      @roundtrip = RoadComponentRoundtrip.new(self, forward_path, nil)
+      return
+    end
+
     dist = dist(end_node, furthest)
 
     forward_path = RoadComponentPath.new(end_node, furthest, true, segments(end_node, furthest))
@@ -254,7 +270,7 @@ class RoadComponent
       break if backward_path
     end
 
-    @roundtrip = RoadComponentRoundtrip.new(forward_path, backward_path)
+    @roundtrip = RoadComponentRoundtrip.new(self, forward_path, backward_path)
 
     if backward_path.nil?
       # Backward path was not found - this means that there is a routing problem or the component is oneway.
@@ -333,6 +349,14 @@ class RoadComponent
     @roundtrip and @roundtrip.backward_path
   end
 
+  # Determines if this component is oneway - meaning that it is (mostly) composed of oneway ways.
+  def oneway?
+    segments = @graph.labels.values
+    all_count = segments.select {|s| s}.size
+    oneway_count = segments.select {|s| s and s.way.oneway?}.size
+    return oneway_count.to_f / all_count.to_f >= 0.9
+  end
+
   def wkt_points
     points = []
     @graph.labels.values.each do |segment|
@@ -378,22 +402,25 @@ end
 
 # Represents a roundtrip within a road component. Roundtrip is two paths - from A to B and back.
 class RoadComponentRoundtrip
+  attr_accessor :component
   attr_accessor :forward_path
   attr_accessor :backward_path
   attr_accessor :failed_paths
 
-  def initialize(forward_path, backward_path)
+  def initialize(component, forward_path, backward_path)
+    self.component = component
     self.forward_path = forward_path
     self.backward_path = backward_path
     self.failed_paths = []
   end
 
   def complete?
-    !@backward_path.nil?
+    @component.oneway? or !@backward_path.nil?
   end
 
   def length
     return nil if !complete?
+    return @forward_path.length if @component.oneway?
     (@forward_path.length + @backward_path.length) / 2.0
   end
 

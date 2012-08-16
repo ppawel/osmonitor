@@ -21,7 +21,7 @@ class RoadManager
 
     log_time " load_ways" do data = load_ways(road) end
     log_time " create_graph" do road.create_graph(data) end
-    log_time " calculate_roundtrips" do road.comps.each {|c| c.calculate_roundtrip} if road.num_comps == 1 end
+    log_time " calculate_roundtrips" do road.comps.each {|c| c.calculate_roundtrip} end
 
     return road
   end

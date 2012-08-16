@@ -257,6 +257,17 @@ class IntegrationTests < Test::Unit::TestCase
     assert(!@status.has_issue_by_name?('road_disconnected'))
     assert(!@status.has_issue_by_name?('not_navigable'))
   end
+
+  # This road has two oneway components.
+  def test_a18
+    instance_eval { setup_from_file.call('A', '18') }
+    @status.validate
+    assert_equal(true, @road.comps[0].oneway?)
+    assert_equal(true, @road.comps[1].oneway?)
+    assert_equal(2, @road.num_comps)
+    assert_equal(1, @road.num_logical_comps)
+    assert(!@status.has_issue_by_name?('not_navigable'))
+  end
 end
 
 end
