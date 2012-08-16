@@ -28,8 +28,13 @@ class ReportManager
       @@log.debug("BEGIN road #{ref_prefix + ref_number} (#{i + 1} of #{refs.size})")
 
       road = road_manager.load_road(country, ref_prefix, ref_number)
+
+      @@log.debug(" Road loaded! Validating...")
+
       status = RoadStatus.new(road)
       status.validate
+
+      @@log.debug(" Road validated!")
 
       report.add_status(status)
 
@@ -37,7 +42,13 @@ class ReportManager
         "(comps = #{status.road.comps.map {|c| c.graph.num_vertices}.inspect})")
     end
 
-    return report, @report_template.result(binding())
+    @@log.debug "Done processing roads, rendering the report..."
+
+    report_text = @report_template.result(binding())
+
+    @@log.debug "Done!"
+
+    return report, report_text
   end
 
   def render(file, status = nil, issue = nil)

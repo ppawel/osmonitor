@@ -44,7 +44,7 @@ class RoadStatus
   end
 
   def validate
-    if road.relation and road.relation.distance
+    if input_length
       add_info('osm_length')
     else
       # No input length = warning.

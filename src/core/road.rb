@@ -75,8 +75,10 @@ class Road
 
   def length
     return nil if !all_components_have_roundtrip?
-    meters = comps.reduce(0) {|total, comp| find_sister_component(comp).empty? ? total + comp.length : total}
-    meters_oneway = comps.reduce(0) {|total, comp| !find_sister_component(comp).empty? ? total + comp.length : total}
+    meters = 0
+    meters_oneway = 0
+    comps.each {|comp| meters += comp.length if find_sister_component(comp).empty?}
+    comps.each {|comp| meters_oneway += comp.length if !find_sister_component(comp).empty?}
     return (meters + meters_oneway / 2.0) / 1000.0 if meters
   end
 
@@ -110,7 +112,7 @@ class Road
       add_way_to_graph(@graph, way_rows)
     end
 
-    @comps = @graph.to_undirected.connected_components_nonrecursive.collect {|c| RoadComponent.new(self, c)}
+    @comps = @graph.to_undirected.connected_components_nonrecursive.collect {|c| RoadComponent.new(self, @graph.induced_subgraph(c.vertices))}
   end
 
   def add_way_to_graph(graph, way_rows)
@@ -167,6 +169,8 @@ class RoadComponent
 
   attr_accessor :road
   attr_accessor :graph
+  attr_accessor :undirected_graph
+  attr_accessor :oneway
   attr_accessor :end_nodes
   attr_accessor :end_node_dijkstras
   attr_accessor :roundtrip
@@ -174,38 +178,40 @@ class RoadComponent
   def initialize(road, graph)
     self.road = road
     self.graph = graph
+    self.undirected_graph = graph.to_undirected
     self.end_nodes = []
     self.end_node_dijkstras = {}
     self.roundtrip = nil
+    self.oneway = calculate_oneway
 
     calculate_end_nodes
   end
 
   # Calculates end nodes and puts them in the @end_nodes list.
   def calculate_end_nodes
-    @end_nodes = graph.vertices.select {|v| graph.out_degree(v) <= 1}
+    @end_nodes = @undirected_graph.vertices.select {|v| @undirected_graph.out_degree(v) <= 1}
     new_end_nodes = []
     max = -1
 
     @@log.debug " end nodes before expanding (#{end_nodes.size}): #{@end_nodes}"
 
     @end_nodes.each do |node|
-      it = RGL::DijkstraIterator.new(graph, node, nil)
+      it = RGL::DijkstraIterator.new(@graph, node, nil)
       it.go
       @end_node_dijkstras[node] = it
 
-      if max_dist(node)[1] > max
-        new_end_nodes = [node, max_dist(node)[0]]
+      if max_dist(node)[0]
+        new_end_nodes << max_dist(node)[0]
       end
     end
 
-    @@log.debug " new end nodes from expanding (#{new_end_nodes.size}): #{@new_end_nodes}"
+    @@log.debug " new end nodes from expanding (#{new_end_nodes.size}): #{new_end_nodes}"
 
     @end_nodes += new_end_nodes
     @end_nodes = @end_nodes.uniq
 
     @end_nodes.each do |node|
-      it = RGL::DijkstraIterator.new(road.graph, node, nil)
+      it = RGL::DijkstraIterator.new(@graph, node, nil)
       it.go
       @end_node_dijkstras[node] = it
     end
@@ -260,7 +266,7 @@ class RoadComponent
         #puts "tried #{node1}->#{node2}: #{roundtrip_dist} (dist = #{dist})"
 
         if !roundtrip_dist.nil? and roundtrip_dist > 0 and ((dist - roundtrip_dist).abs < 2222)
-          @@log.debug " Found backward path: #{node1}-#{node2} (dist = #{dist}, roundtrip_dist = #{roundtrip_dist})"
+         @@log.debug " Found backward path: #{node1}-#{node2} (dist = #{dist}, roundtrip_dist = #{roundtrip_dist})"
           backward_path = RoadComponentPath.new(node1, node2, true, segments(node1, node2))
         else
           # Target cannot be reached from source - so we do a BFS search to find the partial path (useful for displaying on the map).
@@ -355,11 +361,15 @@ class RoadComponent
   end
 
   # Determines if this component is oneway - meaning that it is (mostly) composed of oneway ways.
-  def oneway?
+  def calculate_oneway
     segments = @graph.labels.values
     all_count = segments.select {|s| s}.size
     oneway_count = segments.select {|s| s and s.way.oneway?}.size
     return oneway_count.to_f / all_count.to_f >= 0.9
+  end
+
+  def oneway?
+    @oneway
   end
 
   def wkt_points

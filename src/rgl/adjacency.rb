@@ -145,6 +145,21 @@ module RGL
       @labels[[u, v]]
     end
 
+    # Given an array of vertices, computes the induced subgraph.
+    #
+    # @param [Array(vertex)] v
+    # @return [Graph]
+    def induced_subgraph(v)
+      g = self.class.new
+      edges.each do |e|
+if (v.include?(e.source) and v.include?(e.target))
+        g.add_edge(e.source, e.target, e.label)
+        end
+      end
+      g.labels = @labels
+      return g
+    end
+
     protected
 
     def basic_add_edge (u, v, label = nil)
