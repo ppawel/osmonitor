@@ -75,8 +75,9 @@ class Road
 
   def length
     return nil if !all_components_have_roundtrip?
-    meters = comps.reduce(0) {|total, comp| comp.length ? total + comp.length : total}
-    return meters / 1000.0 if meters
+    meters = comps.reduce(0) {|total, comp| find_sister_component(comp).empty? ? total + comp.length : total}
+    meters_oneway = comps.reduce(0) {|total, comp| !find_sister_component(comp).empty? ? total + comp.length : total}
+    return (meters + meters_oneway / 2.0) / 1000.0 if meters
   end
 
   def all_components_have_roundtrip?
