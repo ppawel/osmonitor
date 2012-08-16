@@ -49,11 +49,11 @@ class IntegrationTests < Test::Unit::TestCase
     road_manager = RoadManager.new(nil)
 
     def road_manager.load_ways(road)
-      [{'member_role' => '', 'way_id' => 100, 'node_id' => 1, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55},
-      {'member_role' => '', 'way_id' => 100, 'node_id' => 2, 'way_tags' => {}, 'way_length' => 55},
-      {'member_role' => '', 'way_id' => 100, 'node_id' => 3, 'way_tags' => {}, 'way_length' => 55},
-      {'member_role' => '', 'way_id' => 100, 'node_id' => 4, 'way_tags' => {}, 'way_length' => 55},
-      {'member_role' => '', 'way_id' => 100, 'node_id' => 5, 'way_tags' => {}, 'way_length' => 55}]
+      [{'member_role' => '', 'way_id' => 100, 'node_id' => 1, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 5500},
+      {'member_role' => '', 'way_id' => 100, 'node_id' => 2, 'way_tags' => {}, 'node_dist_to_next' => 5500},
+      {'member_role' => '', 'way_id' => 100, 'node_id' => 3, 'way_tags' => {}, 'node_dist_to_next' => 5500},
+      {'member_role' => '', 'way_id' => 100, 'node_id' => 4, 'way_tags' => {}, 'node_dist_to_next' => 5500},
+      {'member_role' => '', 'way_id' => 100, 'node_id' => 5, 'way_tags' => {}, 'node_dist_to_next' => 5500}]
     end
 
     road = road_manager.load_road('PL', 'A', '1')
@@ -67,41 +67,43 @@ class IntegrationTests < Test::Unit::TestCase
     road_manager = RoadManager.new(nil)
 
     def road_manager.load_ways(road)
-      [{'member_role' => '', 'way_id' => 100, 'node_id' => 1, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55},
-      {'member_role' => '', 'way_id' => 100, 'node_id' => 2, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55},
-      {'member_role' => '', 'way_id' => 101, 'node_id' => 2, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55},
-      {'member_role' => '', 'way_id' => 101, 'node_id' => 3, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55},
-      {'member_role' => '', 'way_id' => 101, 'node_id' => 4, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55},
-      {'member_role' => '', 'way_id' => 102, 'node_id' => 6, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55},
-      {'member_role' => '', 'way_id' => 102, 'node_id' => 7, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55},
-      {'member_role' => '', 'way_id' => 102, 'node_id' => 8, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55},
-      {'member_role' => '', 'way_id' => 102, 'node_id' => 9, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55}]
+      [{'member_role' => '', 'way_id' => 100, 'node_id' => 1, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 95500},
+      {'member_role' => '', 'way_id' => 100, 'node_id' => 2, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 85500},
+      {'member_role' => '', 'way_id' => 101, 'node_id' => 2, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 75500},
+      {'member_role' => '', 'way_id' => 101, 'node_id' => 3, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 65500},
+      {'member_role' => '', 'way_id' => 101, 'node_id' => 4, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 55500},
+      {'member_role' => '', 'way_id' => 102, 'node_id' => 6, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 45500},
+      {'member_role' => '', 'way_id' => 102, 'node_id' => 7, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 35500},
+      {'member_role' => '', 'way_id' => 102, 'node_id' => 8, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 25500},
+      {'member_role' => '', 'way_id' => 102, 'node_id' => 9, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 15500}]
     end
 
     road = road_manager.load_road('PL', 'A', '1')
     status = RoadStatus.new(road)
     status.validate
-    assert(status.issues.detect {|i| i.name == 'road_disconnected'})
+    assert_equal(2, road.num_comps)
+    assert_equal(2, road.num_logical_comps)
+    assert(status.has_issue_by_name?('road_disconnected'))
   end
 
   def test_shortest_path
     road_manager = RoadManager.new(nil)
 
     def road_manager.load_ways(road)
-      [{'member_role' => '', 'way_id' => 100, 'node_id' => 1, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 100},
-      {'member_role' => '', 'way_id' => 100, 'node_id' => 2, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 100},
-      {'member_role' => '', 'way_id' => 101, 'node_id' => 2, 'way_tags' => {'highway' => 'primary', 'oneway' => 'yes'}, 'way_length' => 100},
-      {'member_role' => '', 'way_id' => 101, 'node_id' => 3, 'way_tags' => {'highway' => 'primary', 'oneway' => 'yes'}, 'way_length' => 100},
-      {'member_role' => '', 'way_id' => 101, 'node_id' => 4, 'way_tags' => {'highway' => 'primary', 'oneway' => 'yes'}, 'way_length' => 100},
-      {'member_role' => '', 'way_id' => 101, 'node_id' => 7, 'way_tags' => {'highway' => 'primary', 'oneway' => 'yes'}, 'way_length' => 100},
-      {'member_role' => '', 'way_id' => 102, 'node_id' => 7, 'way_tags' => {'highway' => 'primary', 'oneway' => 'yes'}, 'way_length' => 33},
-      {'member_role' => '', 'way_id' => 102, 'node_id' => 6, 'way_tags' => {'highway' => 'primary', 'oneway' => 'yes'}, 'way_length' => 33},
-      {'member_role' => '', 'way_id' => 102, 'node_id' => 5, 'way_tags' => {'highway' => 'primary', 'oneway' => 'yes'}, 'way_length' => 33},
-      {'member_role' => '', 'way_id' => 102, 'node_id' => 2, 'way_tags' => {'highway' => 'primary', 'oneway' => 'yes'}, 'way_length' => 33},
-      {'member_role' => '', 'way_id' => 103, 'node_id' => 7, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55},
-      {'member_role' => '', 'way_id' => 103, 'node_id' => 8, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 55},
-      {'member_role' => '', 'way_id' => 104, 'node_id' => 8, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 66},
-      {'member_role' => '', 'way_id' => 104, 'node_id' => 9, 'way_tags' => {'highway' => 'primary'}, 'way_length' => 66}]
+      [{'member_role' => '', 'way_id' => 100, 'node_id' => 1, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 100},
+      {'member_role' => '', 'way_id' => 100, 'node_id' => 2, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 100},
+      {'member_role' => '', 'way_id' => 101, 'node_id' => 2, 'way_tags' => {'highway' => 'primary', 'oneway' => 'yes'}, 'node_dist_to_next' => 100},
+      {'member_role' => '', 'way_id' => 101, 'node_id' => 3, 'way_tags' => {'highway' => 'primary', 'oneway' => 'yes'}, 'node_dist_to_next' => 100},
+      {'member_role' => '', 'way_id' => 101, 'node_id' => 4, 'way_tags' => {'highway' => 'primary', 'oneway' => 'yes'}, 'node_dist_to_next' => 100},
+      {'member_role' => '', 'way_id' => 101, 'node_id' => 7, 'way_tags' => {'highway' => 'primary', 'oneway' => 'yes'}, 'node_dist_to_next' => 100},
+      {'member_role' => '', 'way_id' => 102, 'node_id' => 7, 'way_tags' => {'highway' => 'primary', 'oneway' => 'yes'}, 'node_dist_to_next' => 33},
+      {'member_role' => '', 'way_id' => 102, 'node_id' => 6, 'way_tags' => {'highway' => 'primary', 'oneway' => 'yes'}, 'node_dist_to_next' => 33},
+      {'member_role' => '', 'way_id' => 102, 'node_id' => 5, 'way_tags' => {'highway' => 'primary', 'oneway' => 'yes'}, 'node_dist_to_next' => 33},
+      {'member_role' => '', 'way_id' => 102, 'node_id' => 2, 'way_tags' => {'highway' => 'primary', 'oneway' => 'yes'}, 'node_dist_to_next' => 33},
+      {'member_role' => '', 'way_id' => 103, 'node_id' => 7, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 5500},
+      {'member_role' => '', 'way_id' => 103, 'node_id' => 8, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 5500},
+      {'member_role' => '', 'way_id' => 104, 'node_id' => 8, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 66},
+      {'member_role' => '', 'way_id' => 104, 'node_id' => 9, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 66}]
     end
 
     road = road_manager.load_road('PL', 'A', '1')
@@ -267,6 +269,7 @@ class IntegrationTests < Test::Unit::TestCase
     assert_equal(2, @road.num_comps)
     assert_equal(1, @road.num_logical_comps)
     assert(!@status.has_issue_by_name?('not_navigable'))
+    #assert_equal(7, @road.length.to_i)
   end
 end
 

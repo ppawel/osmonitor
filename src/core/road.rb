@@ -66,7 +66,7 @@ class Road
   end
 
   def num_logical_comps
-    @comps.size - (@comps.select {|c| find_sister_component(c)}.size / 2)
+    @comps.size - (@comps.select {|c| !find_sister_component(c).empty?}.size / 2)
   end
 
   def find_sister_component(c)
@@ -186,6 +186,8 @@ class RoadComponent
     new_end_nodes = []
     max = -1
 
+    @@log.debug " end nodes before expanding (#{end_nodes.size}): #{@end_nodes}"
+
     @end_nodes.each do |node|
       it = RGL::DijkstraIterator.new(graph, node, nil)
       it.go
@@ -196,6 +198,8 @@ class RoadComponent
       end
     end
 
+    @@log.debug " new end nodes from expanding (#{new_end_nodes.size}): #{@new_end_nodes}"
+
     @end_nodes += new_end_nodes
     @end_nodes = @end_nodes.uniq
 
@@ -205,7 +209,7 @@ class RoadComponent
       @end_node_dijkstras[node] = it
     end
 
-    @@log.debug " end nodes = #{@end_nodes}"
+    @@log.debug " final end nodes (#{end_nodes.size}): #{@end_nodes}"
   end
 
   # Attemtps to calculate a roundtrip between the beginning and end of the road component. Beginning and end are defined
@@ -346,7 +350,7 @@ class RoadComponent
   end
 
   def has_complete_roundtrip?
-    @roundtrip and @roundtrip.backward_path
+    @roundtrip and @roundtrip.complete?
   end
 
   # Determines if this component is oneway - meaning that it is (mostly) composed of oneway ways.
