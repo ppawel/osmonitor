@@ -96,7 +96,7 @@ class RoadManager
   FROM way_nodes wn
   INNER JOIN relation_members rm ON (rm.member_id = way_id)
   INNER JOIN ways w ON (w.id = wn.way_id)
-  WHERE rm.relation_id = #{road.relation.id}"
+  WHERE rm.relation_id = #{road.relation.id} AND #{get_sql_with_exceptions}"
   end
 
   def get_sql_for_ref_ways(road)
@@ -115,8 +115,13 @@ class RoadManager
   FROM way_nodes wn
   INNER JOIN ways w ON (w.id = wn.way_id)
   WHERE #{eval($sql_where_by_road_type_ways[road.ref_prefix], binding())} AND
-  (NOT w.tags ?| ARRAY['aerialway', 'aeroway', 'building', 'construction', 'railway', 'waterway']) AND
+  #{get_sql_with_exceptions} AND
   (SELECT ST_Contains(OSM_GetConfigGeomValue('boundary_PL'), w.linestring)) = True"
+  end
+
+  def get_sql_with_exceptions
+    "(NOT w.tags ?| ARRAY['aerialway', 'aeroway', 'building', 'construction', 'railway', 'waterway']) AND
+    (w.tags -> 'highway' != 'cycleway')"
   end
 
   def get_node_xy(node_id)
