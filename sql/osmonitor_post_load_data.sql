@@ -44,11 +44,12 @@ FOR way IN ref LOOP
 		ways w
 	SET refs = 
 		(CASE
+			WHEN NOT tags ?| ARRAY['ref'] THEN ARRAY[]::text[]
 			WHEN position(',' in tags -> 'ref') > 0 THEN string_to_array(REPLACE(tags -> 'ref', ' ', ''), ',')
 			WHEN position(';' in tags -> 'ref') > 0 THEN string_to_array(REPLACE(tags -> 'ref', ' ', ''), ';')
 			ELSE ARRAY[REPLACE(tags-> 'ref', ' ', '')]
 		END)
-	WHERE tags ? 'ref' AND w.id = way.id;
+	WHERE w.id = way.id;
 
 	raise notice '   Done update 3';
 END LOOP;
