@@ -9,6 +9,16 @@ CREATE TABLE config_options (
   date_value timestamp without time zone
 );
 
+DROP TABLE IF EXISTS report_statuses;
+
+CREATE TABLE report_statuses (
+  road_ref text NOT NULL,
+  country text NOT NULL,
+  cached_date timestamp without time zone NOT NULL,
+  status bytea,
+  PRIMARY KEY(road_ref, country)
+);
+
 ---- DATA
 
 -- Boundary for Poland

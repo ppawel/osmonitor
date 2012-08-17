@@ -10,7 +10,7 @@ class BrowseController < ApplicationController
     road_manager = OSMonitor::RoadManager.new(@conn)
     report_manager = OSMonitor::ReportManager.new(road_manager, Rails.root + '../src/erb/')
 
-    @report, @report_text = report_manager.generate_road_report('PL', [params[:ref]])
+    @report, @report_text = report_manager.generate_road_report('PL', [params[:ref]], true)
     @road = @report.statuses[0].road#road_manager.load_road('PL', ref_prefix, ref_number)
 
     @all_ways_wkt = []
