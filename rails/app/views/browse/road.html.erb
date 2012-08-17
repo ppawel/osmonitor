@@ -16,7 +16,9 @@
       });
 
       map.addControl(new OpenLayers.Control.MousePosition());
-      map.addControl(new OpenLayers.Control.LayerSwitcher());
+      layer_switcher = new OpenLayers.Control.LayerSwitcher()
+      map.addControl(layer_switcher);
+      layer_switcher.maximizeControl();
       map.addControl(new OpenLayers.Control.Permalink(null, 'http://www.openstreetmap.org/', {}));
 
       all_ways_layer = new OpenLayers.Layer.Vector("Road (all ways + end nodes)",
