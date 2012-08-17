@@ -81,9 +81,17 @@ h6 {
  * Map Examples Specific
  */
 .smallmap {
-    width: 1024px;
+margin: 0px auto;
+  display: inline-block;
+
+    width: 75%;
     height: 768px;
     border: 1px solid black;
+}
+
+#content {
+  width: 100%;
+  text-align: center;
 }
 
 .layersDiv { overflow-y: scroll; height:700px; width:400px}
