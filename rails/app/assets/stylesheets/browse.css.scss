@@ -19,9 +19,10 @@ a img {border:none;}
 /**
  * Basic Typography
  */
-body {
+html, body {
     font-family: "Lucida Grande", Verdana, Geneva, Lucida, Arial, Helvetica, sans-serif;
     font-size: 80%;
+    height: 100%;
     color: #222;
     background: #fff;
     margin: 1em 1.5em;
@@ -81,16 +82,16 @@ h6 {
  * Map Examples Specific
  */
 .smallmap {
-margin: 0px auto;
+  margin: 0px auto;
   display: inline-block;
-
-    width: 75%;
-    height: 768px;
-    border: 1px solid black;
+  width: 80%;
+  height: 80%;
+  border: 1px solid black;
 }
 
 #content {
   width: 100%;
+  height: 100%;
   text-align: center;
 }
 
@@ -151,7 +152,4 @@ margin: 0px auto;
     #docs {
         font-size: 12px;
     }
-}
-body {
-    -webkit-text-size-adjust: none;
 }
