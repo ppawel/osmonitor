@@ -9,7 +9,7 @@ class Relation
   end
 
   def distance
-    @tags['distance'].to_f if @tags['distance']
+    @tags['distance'].gsub(/,/, '.').to_f if @tags['distance']
   end
 end
 
