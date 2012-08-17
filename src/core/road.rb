@@ -192,7 +192,7 @@ class RoadComponent
     @end_nodes = @undirected_graph.vertices.select {|v| @undirected_graph.out_degree(v) <= 1}
     new_end_nodes = []
     max = -1
-
+=begin
     @@log.debug " end nodes before expanding (#{end_nodes.size}): #{@end_nodes}"
 
     @end_nodes.each do |node|
@@ -209,7 +209,7 @@ class RoadComponent
 
     @end_nodes += new_end_nodes
     @end_nodes = @end_nodes.uniq
-
+=end
     @end_nodes.each do |node|
       it = RGL::DijkstraIterator.new(@graph, node, nil)
       it.go
@@ -362,6 +362,7 @@ class RoadComponent
 
   # Determines if this component is oneway - meaning that it is (mostly) composed of oneway ways.
   def calculate_oneway
+    return false if !@graph.acyclic?
     segments = @graph.labels.values
     all_count = segments.select {|s| s}.size
     oneway_count = segments.select {|s| s and s.way.oneway?}.size
