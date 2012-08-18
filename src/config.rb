@@ -1,7 +1,7 @@
 require 'config_sensitive'
 
-def get_relation_network(prefix)
-  return $road_type_network_tag[prefix]
+def get_relation_network(country, ref_prefix)
+  return $road_type_network_tag[country][ref_prefix]
 end
 
 def create_overpass_url(ways)
