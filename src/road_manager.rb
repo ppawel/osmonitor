@@ -77,7 +77,7 @@ class RoadManager
     node_dist_to_next
   FROM (#{from_sql}) AS query
   ORDER BY way_id, node_sequence_id, relation_sequence_id NULLS LAST, relation_id NULLS LAST"
-puts sql
+#puts sql
     result = @conn.query(sql).collect do |row|
       # This simply translates "tags" columns to Ruby hashes.
       process_tags(row, 'way_tags')

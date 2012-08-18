@@ -15,7 +15,7 @@ require 'rgl/bidirectional'
 
 class Road
   def self.parse_ref(ref)
-    ref.scan(/([^\d\.]+)(\d+)/)
+    ref.scan(/([^\d\.]+)(.+)/)
     return $1, $2
   end
 
