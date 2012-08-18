@@ -13,7 +13,7 @@ class RoadManager
   end
 
   def load_road(country, ref_prefix, ref_number)
-    road = Road.new(ref_prefix, ref_number)
+    road = Road.new(country, ref_prefix, ref_number)
 
     log_time " fill_road_relation" do fill_road_relation(road) end
 
@@ -41,12 +41,12 @@ class RoadManager
 
   def fill_road_relation(road)
     sql = "
-  SELECT *, OSM_IsMostlyCoveredBy('boundary_PL', r.id) AS covered
+  SELECT *, OSM_IsMostlyCoveredBy('boundary_#{road.country}', r.id) AS covered
   FROM relations r
   WHERE
     r.tags -> 'type' = 'route' AND
     r.tags -> 'route' = 'road' AND
-    #{eval($sql_where_by_road_type_relations[road.ref_prefix], binding())}
+    #{eval($sql_where_by_road_type_relations[road.country][road.ref_prefix], binding())}
   ORDER BY covered DESC, r.id"
 
     result = @conn.query(sql).collect {|row| process_tags(row)}
@@ -77,7 +77,7 @@ class RoadManager
     node_dist_to_next
   FROM (#{from_sql}) AS query
   ORDER BY way_id, node_sequence_id, relation_sequence_id NULLS LAST, relation_id NULLS LAST"
-#puts sql
+puts sql
     result = @conn.query(sql).collect do |row|
       # This simply translates "tags" columns to Ruby hashes.
       process_tags(row, 'way_tags')
@@ -122,9 +122,9 @@ class RoadManager
     wn.dist_to_next AS node_dist_to_next
   FROM way_nodes wn
   INNER JOIN ways w ON (w.id = wn.way_id)
-  WHERE #{eval($sql_where_by_road_type_ways[road.ref_prefix], binding())} AND
+  WHERE #{eval($sql_where_by_road_type_ways[road.country][road.ref_prefix], binding())} AND
   #{get_sql_with_exceptions} AND
-  (SELECT ST_Contains(OSM_GetConfigGeomValue('boundary_PL'), w.linestring)) = True"
+  (SELECT ST_Contains(OSM_GetConfigGeomValue('boundary_#{road.country}'), w.linestring)) = True"
   end
 
   def get_sql_with_exceptions

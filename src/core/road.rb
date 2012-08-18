@@ -15,10 +15,11 @@ require 'rgl/bidirectional'
 
 class Road
   def self.parse_ref(ref)
-    ref.scan(/([^\d]+)(\d+)/)
+    ref.scan(/([^\d\.]+)(\d+)/)
     return $1, $2
   end
 
+  attr_accessor :country
   attr_accessor :ref_prefix
   attr_accessor :ref_number
   attr_accessor :relation
@@ -28,7 +29,8 @@ class Road
   attr_accessor :graph
   attr_accessor :comps
 
-  def initialize(ref_prefix, ref_number)
+  def initialize(country, ref_prefix, ref_number)
+    self.country = country
     self.ref_prefix = ref_prefix
     self.ref_number = ref_number
     self.nodes = {}

@@ -139,7 +139,8 @@ class RoadStatus
 
   # Finds ways without "ref" tag or with wrong tag value.
   def ways_with_wrong_ref
-    return road.ways.values.select {|way| !way.tags.has_key?('ref') or !road.get_refs(way).include?(eval($road_type_ref_tag[road.ref_prefix], binding()))}
+    return road.ways.values.select {|way| !way.tags.has_key?('ref') or
+      !road.get_refs(way).include?(eval($road_type_ref_tag[road.country][road.ref_prefix], binding()))}
   end
 end
 
