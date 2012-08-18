@@ -313,6 +313,15 @@ class IntegrationTests < Test::Unit::TestCase
     assert(!@status.has_issue_by_name?('not_navigable'))
     assert_equal(0, @road.length.to_i)
   end
+
+  def test_dw100
+    instance_eval { setup_from_file.call('DW', '100') }
+    @status.validate
+    assert_equal(1, @road.num_comps)
+    assert_equal(1, @road.num_logical_comps)
+    assert(!@status.has_issue_by_name?('not_navigable'))
+    assert_equal(0, @road.length.to_i)
+  end
 end
 
 end

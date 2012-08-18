@@ -188,7 +188,7 @@ class RoadComponent
   # Calculates end nodes and puts them in the @end_nodes list.
   def calculate_end_nodes
     @end_nodes = @undirected_graph.vertices.select {|v| @undirected_graph.out_degree(v) <= 1}
-    new_end_nodes = []
+=begin    new_end_nodes = []
     max = -1
 
     @@log.debug " end nodes before expanding (#{end_nodes.size}): #{@end_nodes}"
@@ -198,14 +198,22 @@ class RoadComponent
       it.go
       @end_node_dijkstras[node] = it
 
-      if max_dist(node)[0]
-        new_end_nodes << max_dist(node)[0]
+      max_node = max_dist(node)[0]
+
+      if max_node
+        at_roundabout = true
+        @graph.each_adjacent(max_node) do |v|
+          label = @undirected_graph.get_label(max_node, v)
+          puts label.way.tags if label
+        end
+        new_end_nodes << max_node
       end
     end
 
     @@log.debug " new end nodes from expanding (#{new_end_nodes.size}): #{new_end_nodes}"
 
     @end_nodes += new_end_nodes
+=end
     @end_nodes = @end_nodes.uniq
 
     @end_nodes.each do |node|
