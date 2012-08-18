@@ -11,7 +11,7 @@ def create_overpass_url(ways)
 end
 
 def create_osmonitor_url(road)
-  "http://geowebhost.pl/osmonitor/browse/road/#{road.ref_prefix + road.ref_number.to_s}"
+  "http://geowebhost.pl/osmonitor/browse/road/#{road.country}/#{road.ref_prefix + road.ref_number.to_s}"
 end
 
 $sql_where_by_road_type_ways = {

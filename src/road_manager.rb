@@ -13,6 +13,8 @@ class RoadManager
   end
 
   def load_road(country, ref_prefix, ref_number)
+    return nil if !country or !ref_prefix or !ref_number
+
     road = Road.new(country, ref_prefix, ref_number)
 
     log_time " fill_road_relation" do fill_road_relation(road) end

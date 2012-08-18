@@ -1,5 +1,5 @@
 OsmonitorRails::Application.routes.draw do
-  get "browse/road/:ref" => 'browse#road'
+  match "browse/road/:country/:ref" => 'browse#road'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

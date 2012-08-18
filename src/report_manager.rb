@@ -25,12 +25,15 @@ class ReportManager
     @@log.debug "Got #{refs.size} road(s) to process"
 
     refs.each_with_index do |ref, i|
-      road = nil
-      status = nil
       ref_prefix, ref_number = Road.parse_ref(ref)
+      next if !ref_prefix or !ref_number
+
       road_before = Time.now
 
-      @@log.debug("BEGIN road #{ref_prefix + ref_number} (#{i + 1} of #{refs.size})")
+      @@log.debug("BEGIN road #{country} / #{ref_prefix + ref_number} (#{i + 1} of #{refs.size})")
+
+      road = nil
+      status = nil
 
       if use_cache
         status = status_from_cache(country, ref)
@@ -54,7 +57,7 @@ class ReportManager
 
       report.add_status(status)
 
-      @@log.debug("END road #{road.ref_prefix + road.ref_number} took #{Time.now - road_before} " +
+      @@log.debug("END road #{country} / #{road.ref_prefix + road.ref_number} took #{Time.now - road_before} " +
         "(comps = #{status.road.comps.map {|c| c.graph.num_vertices}.inspect})")
     end
 
@@ -70,14 +73,14 @@ class ReportManager
   # Inserts given report status into the cache table.
   def cache_status(country, status)
     dump = PGconn.escape_bytea(Marshal.dump(status))
-    @conn.query("DELETE FROM report_statuses WHERE road_ref = '#{status.road.ref_prefix}#{status.road.ref_number}'")
+    @conn.query("DELETE FROM report_statuses WHERE country = '#{country}' AND road_ref = '#{status.road.ref_prefix}#{status.road.ref_number}'")
     @conn.query("INSERT INTO report_statuses (road_ref, country, cached_date, status) VALUES
       ('#{status.road.ref_prefix}#{status.road.ref_number}', '#{country}', NOW(), '#{dump}')")
   end
 
   # Retrieves report status from the cache table.
   def status_from_cache(country, ref)
-    result = @conn.query("SELECT status FROM report_statuses WHERE road_ref = '#{ref}'")
+    result = @conn.query("SELECT status FROM report_statuses WHERE country = '#{country}' AND road_ref = '#{ref}'")
 
     if result.ntuples == 1
       status = Marshal.restore(PGconn.unescape_bytea(result.getvalue(0, 0)))
