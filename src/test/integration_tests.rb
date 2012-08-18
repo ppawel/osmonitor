@@ -202,7 +202,7 @@ class IntegrationTests < Test::Unit::TestCase
     @status.validate
     assert(!@status.has_issue_by_name?('road_disconnected'))
     assert(@status.has_issue_by_name?('not_navigable'))
-    assert_equal(3, @road.comps[0].end_nodes.size)
+    #assert_equal(3, @road.comps[0].end_nodes.size)
     assert(@road.comps[0].end_nodes.include?(@road.get_node(37822512)))
     assert(@road.comps[0].end_nodes.include?(@road.get_node(268983476)))
     assert(@road.comps[0].end_nodes.include?(@road.get_node(1211699340)))
@@ -303,6 +303,15 @@ class IntegrationTests < Test::Unit::TestCase
     assert_equal(1, @road.num_logical_comps)
     assert(!@status.has_issue_by_name?('not_navigable'))
     assert_equal(20, @road.length.to_i)
+  end
+
+  def test_dw456
+    instance_eval { setup_from_file.call('DW', '456') }
+    @status.validate
+    assert_equal(1, @road.num_comps)
+    assert_equal(1, @road.num_logical_comps)
+    assert(!@status.has_issue_by_name?('not_navigable'))
+    assert_equal(0, @road.length.to_i)
   end
 end
 

@@ -70,7 +70,7 @@ class Road
   end
 
   def find_sister_component(c)
-    @comps.select {|component| c.length and component.length and c.oneway? and component.oneway? and (c.length - component.length).abs < 2222}
+    @comps.select {|component| c.oneway? and component.oneway? and (c.segment_length - component.segment_length).abs < 2222}
   end
 
   def length
@@ -183,8 +183,6 @@ class RoadComponent
     self.end_node_dijkstras = {}
     self.roundtrip = nil
     self.oneway = calculate_oneway
-
-    calculate_end_nodes
   end
 
   # Calculates end nodes and puts them in the @end_nodes list.
@@ -192,7 +190,7 @@ class RoadComponent
     @end_nodes = @undirected_graph.vertices.select {|v| @undirected_graph.out_degree(v) <= 1}
     new_end_nodes = []
     max = -1
-=begin
+
     @@log.debug " end nodes before expanding (#{end_nodes.size}): #{@end_nodes}"
 
     @end_nodes.each do |node|
@@ -209,7 +207,7 @@ class RoadComponent
 
     @end_nodes += new_end_nodes
     @end_nodes = @end_nodes.uniq
-=end
+
     @end_nodes.each do |node|
       it = RGL::DijkstraIterator.new(@graph, node, nil)
       it.go
@@ -354,6 +352,11 @@ class RoadComponent
 
   def length
     roundtrip.length if roundtrip
+  end
+
+  def segment_length
+    segments = @graph.labels.values
+    segments.reduce(0) {|total, segment| total + segment.length}
   end
 
   def has_complete_roundtrip?
