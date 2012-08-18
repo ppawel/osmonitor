@@ -109,7 +109,7 @@ class RoadStatus
   end
 
   def get_proper_network
-    return get_relation_network(road.ref_prefix)
+    return get_relation_network(road.country, road.ref_prefix)
   end
 
   def has_proper_network
