@@ -15,11 +15,13 @@
           'externalProjection': new OpenLayers.Projection('EPSG:4326')
       });
 
+      map.addControl(new OpenLayers.Control.ScaleLine());
       map.addControl(new OpenLayers.Control.MousePosition());
+      map.addControl(new OpenLayers.Control.Permalink(null, 'http://www.openstreetmap.org/', {}));
+
       layer_switcher = new OpenLayers.Control.LayerSwitcher()
       map.addControl(layer_switcher);
       layer_switcher.maximizeControl();
-      map.addControl(new OpenLayers.Control.Permalink(null, 'http://www.openstreetmap.org/', {}));
 
       all_ways_layer = new OpenLayers.Layer.Vector("Road (all ways + end nodes)",
         {visibility: true, styleMap: new OpenLayers.StyleMap({'strokeWidth': 4, 'strokeColor': "black", strokeOpacity: 1})});
