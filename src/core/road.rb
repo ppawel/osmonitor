@@ -37,6 +37,10 @@ class Road
     self.comps = []
   end
 
+  def empty?
+    @graph.empty?
+  end
+
   # Returns a list of strings representing the "ref" tag. This is a list because sometimes this tag contains many values, e.g. "34; S1".
   def get_refs(way)
     return [] if !way.tags.has_key?('ref')

@@ -11,15 +11,16 @@
 
 <% report.statuses.each do |status| %>
 <%
-  OK_COLOR = "PaleGreen"
-  ERROR_COLOR = "LightSalmon"
-  WARNING_COLOR = "PaleGoldenrod"
-
-  color = OK_COLOR
-  color = WARNING_COLOR if status.get_issues(:WARNING).size > 0
-  color = ERROR_COLOR if status.get_issues(:ERROR).size > 0
+  color = nil
+  color = 'PaleGreen' if status.green?
+  color = 'PaleGoldenrod' if status.get_issues(:WARNING).size > 0
+  color = 'LightSalmon' if status.get_issues(:ERROR).size > 0
 %>
+<% if color %>
 <tr style="background-color:<%= color %>">
+<% else %>
+<tr>
+<% end %>
 <td style="text-align: center">
 {{<%= country %>-<%= status.road.ref_prefix %>|<%= status.road.ref_number %>}}
 </td>

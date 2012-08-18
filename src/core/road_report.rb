@@ -1,10 +1,12 @@
 class RoadStatus
   attr_accessor :road
   attr_accessor :issues
+  attr_accessor :noreport
 
   def initialize(road)
     self.road = road
     self.issues = []
+    self.noreport = false
   end
 
   def add_error(name, data = {})
@@ -44,6 +46,12 @@ class RoadStatus
   end
 
   def validate
+    if road.empty? or (road.relation and !road.relation.tags['osmonitor:noreport'].nil?)
+      @noreport = true
+      add_info('noreport')
+      return
+    end
+
     if input_length
       add_info('osm_length')
     else
@@ -84,7 +92,7 @@ class RoadStatus
   end
 
   def green?
-    return (get_issues(:ERROR).empty? and get_issues(:WARNING).empty?)
+    get_issues(:ERROR).empty? and get_issues(:WARNING).empty? and !@noreport
   end
 
   def length_diff
@@ -168,7 +176,7 @@ class RoadReport
 
   # Returns percent_green, percent_yellow, percent_red.
   def get_percentages
-    green = statuses.select {|status| status.get_issues(:WARNING).size == 0 and status.get_issues(:ERROR).size == 0}.size
+    green = statuses.select {|status| status.green?}.size
     yellow = statuses.select {|status| status.get_issues(:WARNING).size > 0 and status.get_issues(:ERROR).size == 0}.size
     red = statuses.select {|status| status.get_issues(:ERROR).size > 0}.size
     return (green / statuses.size.to_f * 100).to_i, (yellow / statuses.size.to_f * 100).to_i, (red / statuses.size.to_f * 100).to_i
