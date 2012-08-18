@@ -96,7 +96,7 @@ class RoadManager
   FROM way_nodes wn
   INNER JOIN relation_members rm ON (rm.member_id = way_id)
   INNER JOIN ways w ON (w.id = wn.way_id)
-  WHERE rm.relation_id = #{road.relation.id} AND #{get_sql_with_exceptions}"
+  WHERE rm.relation_id = #{road.relation.id}"
   end
 
   def get_sql_for_ref_ways(road)
@@ -120,7 +120,8 @@ class RoadManager
   end
 
   def get_sql_with_exceptions
-    "(NOT w.tags ?| ARRAY['aerialway', 'aeroway', 'building', 'construction', 'railway', 'waterway']) AND
+    "(NOT w.tags ?| ARRAY['aerialway', 'aeroway', 'building', 'construction', 'waterway']) AND
+    ((w.tags -> 'railway') IS NULL OR (w.tags -> 'highway') IS NOT NULL) AND
     ((w.tags -> 'highway') IS NULL OR w.tags -> 'highway' != 'cycleway')"
   end
 
