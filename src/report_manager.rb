@@ -60,7 +60,7 @@ class ReportManager
 
     @@log.debug "Done processing roads, rendering the report..."
 
-    report_text = @report_template.result(binding())
+    report_text = @report_template.result(binding()).force_encoding('UTF-8')
 
     @@log.debug "Done!"
 
