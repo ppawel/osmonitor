@@ -326,6 +326,16 @@ class IntegrationTests < Test::Unit::TestCase
     assert(!@status.has_issue_by_name?('not_navigable'))
     assert_equal(0, @road.length.to_i)
   end
+
+  # https://github.com/ppawel/osmonitor/issues/18
+  def test_dk50
+    instance_eval { setup_from_file.call('DK', '50') }
+    @status.validate
+    assert_equal(1, @road.num_comps)
+    assert_equal(1, @road.num_logical_comps)
+    assert(!@status.has_issue_by_name?('not_navigable'))
+    assert_equal(0, @road.length.to_i)
+  end
 end
 
 end

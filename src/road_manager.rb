@@ -141,8 +141,8 @@ class RoadManager
   end
 
   # Useful in tests and data_for_road.rb test script.
-  def get_road_data(ref_prefix, ref_number)
-    road = Road.new(ref_prefix, ref_number)
+  def get_road_data(country, ref_prefix, ref_number)
+    road = Road.new(country, ref_prefix, ref_number)
     fill_road_relation(road)
     return load_ways(road)
   end
