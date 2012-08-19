@@ -23,7 +23,7 @@ class BrowseController < ApplicationController
     @mark_points_all = []
 
     log_time " wkt" do
-      @all_ways_wkt = @road.ways.values.reduce('') {|s, w| s + w.geom + ','}[0..-2]
+      @all_ways_wkt = @road.ways.values.reduce('') {|s, w| w.geom ? s + w.geom + ',' : s}[0..-2]
       @mark_points_all = @road.comps.collect {|c| c.end_nodes}.flatten.collect {|node| node.point_wkt}
     end
   end
