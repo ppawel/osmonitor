@@ -156,7 +156,7 @@ if (v.include?(e.source) and v.include?(e.target))
         g.add_edge(e.source, e.target, e.label)
         end
       end
-      g.labels = @labels
+      g.labels = @labels.select {|edge, label| v.include?(edge[0]) and v.include?(edge[1])}
       return g
     end
 

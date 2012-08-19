@@ -214,7 +214,11 @@ class IntegrationTests < Test::Unit::TestCase
     @status.validate
     assert(!@road.comps[0].oneway?)
     assert(!@road.comps[1].oneway?)
+    assert_equal(2, @road.num_comps)
+    assert_equal(2, @road.num_logical_comps)
     assert(@status.has_issue_by_name?('road_disconnected'))
+    assert(@road.comps[0].wkt_points)
+    assert(@road.comps[1].wkt_points)
   end
 
   # This road has some ways without the highway tag - these should be ignored, let's test for that.
