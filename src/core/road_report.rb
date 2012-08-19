@@ -30,7 +30,7 @@ class RoadStatus
   end
 
   def connected?
-    road.num_logical_comps == 1
+    road.num_logical_comps == road.correct_num_comps
   end
 
   def too_many_end_nodes

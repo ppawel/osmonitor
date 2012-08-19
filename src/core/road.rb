@@ -75,6 +75,11 @@ class Road
     @comps.size - (@comps.select {|c| !find_sister_component(c).empty?}.size / 2)
   end
 
+  def correct_num_comps
+    return @relation.tags['osmonitor:road_components'].to_i if @relation and @relation.tags['osmonitor:road_components']
+    1
+  end
+
   def find_sister_component(c)
     @comps.select {|component| c.oneway? and component.oneway? and (c.segment_length - component.segment_length).abs < 2222}
   end

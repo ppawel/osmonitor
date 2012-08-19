@@ -27,9 +27,9 @@ class RoadManager
 
     # Calculating stuff is expensive so first check if road has correct components (this is cheap).
 
-    @@log.debug " logical_comps = #{road.num_logical_comps}, should be 1"
+    @@log.debug " logical_comps = #{road.num_logical_comps}, should be #{road.correct_num_comps}"
 
-    if road.num_logical_comps == 1
+    if road.num_logical_comps == road.correct_num_comps
       log_time " calculate_roundtrips" do road.comps.each {|c| c.calculate_roundtrip} end
     end
 
