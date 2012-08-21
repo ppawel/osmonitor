@@ -5,8 +5,8 @@ AUTH_FILE=$ROOT_DIR/authFile
 
 . $AUTH_FILE
 
-JAVACMD_OPTIONS=-Djava.io.tmpdir=/var/tmp
+JAVACMD_OPTIONS="-Djava.io.tmpdir=/var/tmp -server"
 export JAVACMD_OPTIONS
 
 cd $ROOT_DIR/data
-osmosis -v 3 --read-pbf $1.osm.pbf --write-pgsql authFile=$AUTH_FILE
+osmosis -v 3 --read-pbf $1.osm.pbf --log-progress --write-pgsql authFile=$AUTH_FILE

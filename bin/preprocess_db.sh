@@ -7,4 +7,4 @@ AUTH_FILE=$ROOT_DIR/authFile
 
 cd $ROOT_DIR/sql
 
-psql -1 -c 'SELECT OSM_Preprocess()' -U $user $database
+psql -1 -c 'SELECT OSM_PreprocessUsingCursor()' -U $user $database
