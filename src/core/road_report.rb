@@ -46,7 +46,7 @@ class RoadStatus
   end
 
   def validate
-    if road.empty? or (road.relation and !road.relation.tags['osmonitor:noreport'].nil?)
+    if road.relation and !road.relation.tags['osmonitor:noreport'].nil?
       @noreport = true
       add_info('noreport')
       return
