@@ -14,6 +14,8 @@ require 'rgl/bidirectional'
 @rgeo_factory = ::RGeo::Geographic.spherical_factory()
 
 class Road
+  include OSMonitorLogger
+
   def self.parse_ref(ref)
     ref.scan(/^([^\d\.]+)(.*)$/)
     return $1, $2
@@ -67,6 +69,18 @@ class Road
     way
   end
 
+  def num_all_ways
+    @ways.size
+  end
+
+  def num_ref_ways
+    @ways.select {|id, w| w.tags.has_key?('ref')}.size
+  end
+
+  def num_relation_ways
+    @ways.select {|id, w| w.relation}.size
+  end
+
   def num_comps
     @comps.size
   end
@@ -90,6 +104,14 @@ class Road
     meters_oneway = 0
     comps.each {|comp| meters += comp.length if find_sister_component(comp).empty?}
     comps.each {|comp| meters_oneway += comp.length if !find_sister_component(comp).empty?}
+    return (meters + meters_oneway / 2.0) / 1000.0 if meters
+  end
+
+  def approx_length
+    meters = 0
+    meters_oneway = 0
+    comps.each {|comp| meters += comp.length if comp.length and find_sister_component(comp).empty?}
+    comps.each {|comp| meters_oneway += comp.length if comp.length and !find_sister_component(comp).empty?}
     return (meters + meters_oneway / 2.0) / 1000.0 if meters
   end
 
@@ -175,7 +197,7 @@ class Road
   def create_way(row)
     way = Way.new(row['way_id'].to_i, row['member_role'], row['way_tags'])
     way.geom = row['way_geom'] if row['way_geom']
-    way.in_relation = !row['relation_id'].nil?
+    way.relation = @relation
     way
   end
 end

@@ -29,9 +29,9 @@ class RoadManager
 
     @@log.debug " logical_comps = #{road.num_logical_comps}, should be #{road.correct_num_comps}"
 
-    if road.num_logical_comps == road.correct_num_comps
+    #if road.num_logical_comps == road.correct_num_comps
       log_time " calculate_roundtrips" do road.comps.each {|c| c.calculate_roundtrip} end
-    end
+    #end
 
     return road
   end

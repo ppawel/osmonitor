@@ -47,7 +47,6 @@ class Way
   attr_accessor :geom
   attr_accessor :relation
   attr_accessor :segments
-  attr_accessor :in_relation
 
   def initialize(id, member_role, tags)
     self.id = id
@@ -66,6 +65,10 @@ class Way
     return true if tags['oneway'] and ['yes', 'true', '1'].include?(tags['oneway'].downcase)
     return true if tags['junction'] == 'roundabout'
     return false
+  end
+
+  def in_relation?
+    !@relation.nil?
   end
 
   def length

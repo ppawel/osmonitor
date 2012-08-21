@@ -22,7 +22,7 @@ class ReportManager
   def generate_road_report(country, refs, use_cache = false)
     report = RoadReport.new
 
-    @@log.debug "Got #{refs.size} road(s) to process"
+    @@log.debug "Got #{refs.size} road(s) to process: #{refs}"
 
     refs.each_with_index do |ref, i|
       ref_prefix, ref_number = Road.parse_ref(ref)

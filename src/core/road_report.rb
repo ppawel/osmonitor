@@ -59,7 +59,7 @@ class RoadStatus
       add_warning('osm_length')
     end
 
-    add_info('way_stats') if !percent_with_lanes.nan? and !percent_with_maxspeed.nan?
+    #add_info('way_stats') if !percent_with_lanes.nan? and !percent_with_maxspeed.nan?
 
     add_error('no_relation') if !road.relation
     add_error('has_many_covered_relations') if road.relation and has_many_covered_relations
