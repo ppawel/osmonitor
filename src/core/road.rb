@@ -15,7 +15,7 @@ require 'rgl/bidirectional'
 
 class Road
   def self.parse_ref(ref)
-    ref.scan(/([^\d\.]+)(.+)/)
+    ref.scan(/^([^\d\.]+)(.*)$/)
     return $1, $2
   end
 
@@ -110,6 +110,8 @@ class Road
     prev_way_id = nil
     i = 0
 
+    before = Time.now
+
     while data[i] do
       relation_sequence_id = data[i]['relation_sequence_id']
       way_id = data[i]['way_id'].to_i
@@ -123,7 +125,11 @@ class Road
       add_way_to_graph(@graph, way_rows)
     end
 
+    @@log.debug "  building took #{Time.now - before}"
+
+    before = Time.now
     @comps = @graph.to_undirected.connected_components_nonrecursive.collect {|c| RoadComponent.new(self, @graph.induced_subgraph(c.vertices))}
+    @@log.debug "  componentization took #{Time.now - before}"
   end
 
   def add_way_to_graph(graph, way_rows)
