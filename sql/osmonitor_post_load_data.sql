@@ -7,7 +7,7 @@ ALTER TABLE way_nodes ADD COLUMN dist_to_next double precision;
 -- Way "ref" tag values are put in this column because matching ref against hstore string values like "A1; S3" is slow.
 ALTER TABLE ways ADD COLUMN refs text[];
 
-DROP FUNCTION OSM_PreprocessUsingCursor();
+DROP FUNCTION IF EXISTS OSM_PreprocessUsingCursor();
 
 -- Preprocesses some stuff so Ruby does not have to work so hard on reports.
 CREATE FUNCTION OSM_PreprocessUsingCursor() RETURNS void AS $$
