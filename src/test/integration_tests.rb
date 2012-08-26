@@ -49,18 +49,40 @@ class IntegrationTests < Test::Unit::TestCase
     road_manager = RoadManager.new(nil)
 
     def road_manager.load_ways(road)
-      [{'member_role' => '', 'way_id' => 100, 'node_id' => 1, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 5500},
-      {'member_role' => '', 'way_id' => 100, 'node_id' => 2, 'way_tags' => {}, 'node_dist_to_next' => 5500},
-      {'member_role' => '', 'way_id' => 100, 'node_id' => 3, 'way_tags' => {}, 'node_dist_to_next' => 5500},
-      {'member_role' => '', 'way_id' => 100, 'node_id' => 4, 'way_tags' => {}, 'node_dist_to_next' => 5500},
-      {'member_role' => '', 'way_id' => 100, 'node_id' => 5, 'way_tags' => {}, 'node_dist_to_next' => 5500}]
+      [{'member_role' => '', 'way_id' => 100, 'node_id' => 1, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 1000},
+      {'member_role' => '', 'way_id' => 100, 'node_id' => 2, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 1000},
+      {'member_role' => '', 'way_id' => 101, 'node_id' => 2, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 1000},
+      {'member_role' => '', 'way_id' => 101, 'node_id' => 3, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 1000},
+      {'member_role' => '', 'way_id' => 101, 'node_id' => 4, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 1000}]
     end
 
     road = road_manager.load_road('PL', 'A', '1')
     status = RoadStatus.new(road)
     status.validate
     assert(status.issues.size > 0)
-    assert(!status.issues.detect {|i| i.name == 'relation_disconnected'})
+    assert(!status.has_issue_by_name?('road_disconnected'))
+    assert_equal(3, road.length.to_i)
+  end
+
+  # This road has ways directed like this ---><--- - but they are two way so it's OK.
+  def test_simple_road_ways_misdirected
+    road_manager = RoadManager.new(nil)
+
+    def road_manager.load_ways(road)
+      [{'member_role' => '', 'way_id' => 100, 'node_id' => 1, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 1000},
+      {'member_role' => '', 'way_id' => 100, 'node_id' => 2, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 1000},
+      {'member_role' => '', 'way_id' => 101, 'node_id' => 4, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 1000},
+      {'member_role' => '', 'way_id' => 101, 'node_id' => 3, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 1000},
+      {'member_role' => '', 'way_id' => 101, 'node_id' => 2, 'way_tags' => {'highway' => 'primary'}, 'node_dist_to_next' => 1000}]
+    end
+
+    road = road_manager.load_road('PL', 'A', '1')
+    status = RoadStatus.new(road)
+    status.validate
+    assert(status.issues.size > 0)
+    assert(!status.has_issue_by_name?('road_disconnected'))
+    puts road.comps[0].graph
+    assert_equal(3, road.length.to_i)
   end
 
   def test_disconnected_relation
@@ -303,10 +325,10 @@ class IntegrationTests < Test::Unit::TestCase
   def test_a4
     instance_eval { setup_from_file.call('A', '4') }
     @status.validate
-    assert_equal(1, @road.num_comps)
+    assert_equal(2, @road.num_comps)
     assert_equal(1, @road.num_logical_comps)
     assert(!@status.has_issue_by_name?('not_navigable'))
-    assert_equal(20, @road.length.to_i)
+    assert_equal(443, @road.length.to_i)
   end
 
   def test_dw456
@@ -328,13 +350,32 @@ class IntegrationTests < Test::Unit::TestCase
   end
 
   # https://github.com/ppawel/osmonitor/issues/18
+  # Roundabout is actually below the road.
   def test_dk50
     instance_eval { setup_from_file.call('DK', '50') }
     @status.validate
+    assert_equal(2, @road.num_comps)
+    assert_equal(2, @road.num_logical_comps)
+    assert(@status.has_issue_by_name?('road_disconnected'))
+  end
+
+  def test_d5
+    instance_eval { setup_from_file.call('D', '5') }
+    @status.validate
+    assert_equal(true, @road.comps[0].oneway?)
+    assert_equal(true, @road.comps[1].oneway?)
     assert_equal(1, @road.num_comps)
     assert_equal(1, @road.num_logical_comps)
     assert(!@status.has_issue_by_name?('not_navigable'))
     assert_equal(0, @road.length.to_i)
+  end
+
+  def test_dk98
+    instance_eval { setup_from_file.call('DK', '98') }
+    @status.validate
+    assert_equal(1, @road.num_comps)
+    assert_equal(1, @road.num_logical_comps)
+    assert(!@status.has_issue_by_name?('road_disconnected'))
   end
 end
 

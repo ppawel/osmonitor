@@ -132,8 +132,6 @@ class Road
     prev_way_id = nil
     i = 0
 
-    before = Time.now
-
     while data[i] do
       relation_sequence_id = data[i]['relation_sequence_id']
       way_id = data[i]['way_id'].to_i
@@ -146,12 +144,14 @@ class Road
 
       add_way_to_graph(@graph, way_rows)
     end
+  end
 
-    @@log.debug "  building took #{Time.now - before}"
-
-    before = Time.now
-    @comps = @graph.to_undirected.connected_components_nonrecursive.collect {|c| RoadComponent.new(self, @graph.induced_subgraph(c.vertices))}
-    @@log.debug "  componentization took #{Time.now - before}"
+  def calculate_components
+    @graph.to_undirected.connected_components_nonrecursive.each do |comp|
+      # Use Set here because include? method is much faster on Set than Array.
+      induced = @graph.induced_subgraph(Set.new(comp.vertices))
+      @comps << RoadComponent.new(self, induced)
+    end
   end
 
   def add_way_to_graph(graph, way_rows)
@@ -227,32 +227,28 @@ class RoadComponent
   # Calculates end nodes and puts them in the @end_nodes list.
   def calculate_end_nodes
     @end_nodes = @undirected_graph.vertices.select {|v| @undirected_graph.out_degree(v) <= 1}
-=begin    new_end_nodes = []
-    max = -1
+    new_end_nodes = []
+    max = nil
 
     @@log.debug " end nodes before expanding (#{end_nodes.size}): #{@end_nodes}"
 
     @end_nodes.each do |node|
-      it = RGL::DijkstraIterator.new(@graph, node, nil)
+      it = RGL::DijkstraIterator.new(@undirected_graph, node, nil)
       it.go
       @end_node_dijkstras[node] = it
 
-      max_node = max_dist(node)[0]
+      max_node = max_dist(node)
 
-      if max_node
-        at_roundabout = true
-        @graph.each_adjacent(max_node) do |v|
-          label = @undirected_graph.get_label(max_node, v)
-          puts label.way.tags if label
-        end
-        new_end_nodes << max_node
+      if max.nil? or max_node[1] > max[1]
+        max = max_node
       end
+
+      new_end_nodes << max_node[0] if max_node
     end
 
     @@log.debug " new end nodes from expanding (#{new_end_nodes.size}): #{new_end_nodes}"
 
     @end_nodes += new_end_nodes
-=end
     @end_nodes = @end_nodes.uniq
 
     @end_nodes.each do |node|
@@ -294,21 +290,21 @@ class RoadComponent
     backward_path = nil
     failed_paths = []
 
-    closest_to_furthest = closest_end_nodes(furthest, max * 0.5)
-    closest_to_end_node = closest_end_nodes(end_node, max * 0.5)
+    closest_to_furthest = closest_end_nodes(furthest)
+    closest_to_end_node = closest_end_nodes(end_node)
 
     @@log.debug " Trying to find roundtrip from #{end_node} (furthest = #{furthest}, closest_to_furthest = #{closest_to_furthest}, closest_to_end_node = #{closest_to_end_node})"
 
     roundtrip_dist = nil
 
-    closest_to_furthest.each do |node1|
+    @end_nodes.each do |node1|
       next if node1 == end_node
 
-      closest_to_end_node.each do |node2|
+      @end_nodes.each do |node2|
         next if node1 == node2
 
         roundtrip_dist = dist(node1, node2)
-        #puts "tried #{node1}->#{node2}: #{roundtrip_dist} (dist = #{dist})"
+        puts "tried #{node1}->#{node2}: #{roundtrip_dist} (dist = #{dist})"
 
         if !roundtrip_dist.nil? and roundtrip_dist > 0 and ((dist - roundtrip_dist).abs < 2222)
          @@log.debug " Found backward path: #{node1}-#{node2} (dist = #{dist}, roundtrip_dist = #{roundtrip_dist})"

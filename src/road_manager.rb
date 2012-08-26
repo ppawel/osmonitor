@@ -23,6 +23,7 @@ class RoadManager
 
     log_time " load_ways" do data = load_ways(road) end
     log_time " create_graph" do road.create_graph(data) end
+    log_time " calculate_components" do road.calculate_components end
     log_time " calculate_end_nodes" do road.comps.each {|c| c.calculate_end_nodes} end
 
     # Calculating stuff is expensive so first check if road has correct components (this is cheap).
