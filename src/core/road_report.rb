@@ -113,7 +113,7 @@ class RoadStatus
   end
 
   def has_proper_network
-    return get_network == get_proper_network
+    get_proper_network.nil? or (get_network == get_proper_network)
   end
 
   def has_many_relations
