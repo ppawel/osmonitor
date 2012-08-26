@@ -27,8 +27,14 @@ $sql_where_by_road_type_ways = {
   },
 
   'RS' => {
-    'M' => '"(w.refs @> ARRAY[\'#{road.ref_prefix + road.ref_number}\'])"',
-    'R' => '"(w.refs @> ARRAY[replace(\'#{road.ref_prefix + road.ref_number}\', \'.\', \'-\')] OR w.refs @> ARRAY[replace(\'#{road.ref_prefix + road.ref_number}\', \'-\', \'.\')])"'
+    'M' => '"(w.refs @> ARRAY[\'#{road.ref_prefix + road.ref_number}\'] OR w.refs @> ARRAY[\'#{road.ref_number}\'])"',
+    'R' => '"(w.refs @> ARRAY[replace(\'#{road.ref_prefix + road.ref_number}\', \'.\', \'-\')] OR w.refs @> ARRAY[replace(\'#{road.ref_prefix + road.ref_number}\', \'-\', \'.\')] OR
+      w.refs @> ARRAY[replace(\'#{road.ref_number}\', \'.\', \'-\')] OR w.refs @> ARRAY[replace(\'#{road.ref_number}\', \'-\', \'.\')])"'
+  },
+
+  'CZ' => {
+    'D' => '"(w.refs @> ARRAY[\'#{road.ref_prefix + road.ref_number}\'])"',
+    'R' => '"(w.refs @> ARRAY[\'#{road.ref_prefix + road.ref_number}\'])"'
   }
 }
 
@@ -47,7 +53,12 @@ $sql_where_by_road_type_relations = {
   },
 
   'RS' => {
-    'M' => '"(r.tags @>  \'\"ref\"=>\"#{road.ref_prefix + road.ref_number}\"\')"',
+    'M' => '"(r.tags @>  \'\"ref\"=>\"#{road.ref_prefix + road.ref_number}\"\' OR r.tags @>  \'\"ref\"=>\"#{road.ref_number}\"\')"',
+    'R' => '"(r.tags @>  \'\"ref\"=>\"#{road.ref_prefix + road.ref_number}\"\' OR r.tags @>  \'\"ref\"=>\"#{road.ref_number}\"\')"'
+  },
+
+  'CZ' => {
+    'D' => '"(r.tags @>  \'\"ref\"=>\"#{road.ref_prefix + road.ref_number}\"\')"',
     'R' => '"(r.tags @>  \'\"ref\"=>\"#{road.ref_prefix + road.ref_number}\"\')"'
   }
 }
@@ -65,6 +76,11 @@ $road_type_network_tag = {
   'RS' => {
     'M' => "srb:motorways",
     'R' => "srb:regional"
+  },
+
+  'CZ' => {
+    'D' => nil,
+    'R' => nil
   }
 
 }
@@ -81,6 +97,11 @@ $road_type_ref_tag = {
 
   'RS' => {
     'M' => '"#{ref_prefix}#{ref_number}"',
+    'R' => '"#{ref_prefix}#{ref_number}"'
+  },
+
+  'CZ' => {
+    'D' => '"#{ref_prefix}#{ref_number}"',
     'R' => '"#{ref_prefix}#{ref_number}"'
   }
 
