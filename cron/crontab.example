@@ -1,0 +1,2 @@
+# Run replication every minute (for minutely diffs this makes sense).
+* * * * * /bin/bash /home/ppawel/osmonitor/cron/run_replication.sh
