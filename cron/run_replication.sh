@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Add osmosis executable to the PATH.
+export PATH=/home/ppawel/osmosis/bin:$PATH
+
 # Makes sure we exit if flock fails.
 set -e
 
