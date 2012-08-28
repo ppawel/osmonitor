@@ -5,4 +5,4 @@ export PATH=/home/ppawel/.rvm/bin:$PATH
 
 cd /home/ppawel/osmonitor/src
 
-ruby run_road_report.rb $1 &> $2 &
+ruby run_road_report.rb $1 &> $2
