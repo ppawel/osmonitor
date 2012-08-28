@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Add Ruby executable to the PATH.
+export PATH=/home/ppawel/.rvm/bin:$PATH
+
 cd /home/ppawel/osmonitor/src
 
 ruby run_road_report.rb "OSMonitor/Poland_Major_Roads" &> ~/log/report_poland_major_roads.log &
