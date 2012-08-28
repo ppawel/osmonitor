@@ -1,4 +1,8 @@
-require 'config_sensitive'
+# Environment specific stuff (URL's etc).
+require 'config/environment'
+
+# Sensitive stuff (passwords etc).
+require 'config/sensitive'
 
 def get_relation_network(country, ref_prefix)
   return $road_type_network_tag[country][ref_prefix]
@@ -8,10 +12,6 @@ def create_overpass_url(ways)
   s = ''
   ways.each {|w| s += "way(#{w.id});"}
   "http://www.overpass-api.de/api/convert?data=(#{s});(._;node(w));out;&target=openlayers"
-end
-
-def create_osmonitor_url(road)
-  "http://localhost:3000/browse/road/#{road.country}/#{road.ref_prefix + road.ref_number.to_s}"
 end
 
 $sql_where_by_road_type_ways = {
@@ -27,6 +27,7 @@ $sql_where_by_road_type_ways = {
   },
 
   'RS' => {
+    'E' => '"(w.refs @> ARRAY[\'#{road.ref_prefix + road.ref_number}\'] OR w.refs @> ARRAY[\'#{road.ref_number}\'])"',
     'M' => '"(w.refs @> ARRAY[\'#{road.ref_prefix + road.ref_number}\'] OR w.refs @> ARRAY[\'#{road.ref_number}\'])"',
     'R' => '"(w.refs @> ARRAY[replace(\'#{road.ref_prefix + road.ref_number}\', \'.\', \'-\')] OR w.refs @> ARRAY[replace(\'#{road.ref_prefix + road.ref_number}\', \'-\', \'.\')] OR
       w.refs @> ARRAY[replace(\'#{road.ref_number}\', \'.\', \'-\')] OR w.refs @> ARRAY[replace(\'#{road.ref_number}\', \'-\', \'.\')])"'
@@ -53,6 +54,7 @@ $sql_where_by_road_type_relations = {
   },
 
   'RS' => {
+    'E' => '"(r.tags @>  \'\"ref\"=>\"#{road.ref_prefix + road.ref_number}\"\' OR r.tags @>  \'\"ref\"=>\"#{road.ref_number}\"\')"',
     'M' => '"(r.tags @>  \'\"ref\"=>\"#{road.ref_prefix + road.ref_number}\"\' OR r.tags @>  \'\"ref\"=>\"#{road.ref_number}\"\')"',
     'R' => '"(r.tags @>  \'\"ref\"=>\"#{road.ref_prefix + road.ref_number}\"\' OR r.tags @>  \'\"ref\"=>\"#{road.ref_number}\"\')"'
   },
@@ -74,8 +76,8 @@ $road_type_network_tag = {
   },
 
   'RS' => {
-    'M' => "srb:motorways",
-    'R' => "srb:regional"
+    'M' => "RS:national",
+    'R' => "RS:regional"
   },
 
   'CZ' => {
@@ -96,6 +98,7 @@ $road_type_ref_tag = {
   },
 
   'RS' => {
+    'E' => '"#{ref_prefix}#{ref_number}"',
     'M' => '"#{ref_prefix}#{ref_number}"',
     'R' => '"#{ref_prefix}#{ref_number}"'
   },
