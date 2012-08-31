@@ -72,7 +72,6 @@ def self.run_report(input_page, output_page)
       ref_prefix = ref_prefix[0][0]
       refs = []
       IO.readlines("../data/road_refs/#{country}_#{ref_prefix}.txt").each {|ref| refs << "#{ref_prefix}#{ref.gsub(/\n/, '')}"}
-      puts refs.inspect
       report, report_text = report_manager.generate_road_report(country, refs)
       @overall_report.add(report)
     end
