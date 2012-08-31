@@ -127,7 +127,7 @@ class RoadManager
   INNER JOIN ways w ON (w.id = wn.way_id)
   WHERE #{eval($sql_where_by_road_type_ways[road.country][road.ref_prefix], binding())} AND
   #{get_sql_with_exceptions} AND
-  (SELECT ST_Contains(OSM_GetConfigGeomValue('boundary_#{road.country}'), w.linestring)) = True"
+  (ST_NumPoints(w.linestring) <= 1 OR (SELECT ST_Contains(OSM_GetConfigGeomValue('boundary_#{road.country}'), w.linestring)) = True)"
   end
 
   def get_sql_with_exceptions
