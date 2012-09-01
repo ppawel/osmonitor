@@ -51,7 +51,7 @@ class RoadManager
     r.tags -> 'route' = 'road' AND
     #{eval($sql_where_by_road_type_relations[road.country][road.ref_prefix], binding())}
   ORDER BY covered DESC, r.id"
-
+puts sql
     result = @conn.query(sql).collect {|row| process_tags(row)}
     road.relation = Relation.new(result[0]['id'].to_i, result[0]['tags']) if result.size > 0 and result[0]['covered'] == 't'
     road.other_relations = result[1..-1].select {|r| r['covered'] == 't'} if result.size > 1
@@ -127,7 +127,8 @@ class RoadManager
   INNER JOIN ways w ON (w.id = wn.way_id)
   WHERE #{eval($sql_where_by_road_type_ways[road.country][road.ref_prefix], binding())} AND
   #{get_sql_with_exceptions} AND
-  (ST_NumPoints(w.linestring) <= 1 OR (SELECT ST_Contains(OSM_GetConfigGeomValue('boundary_#{road.country}'), w.linestring)) = True)"
+  ST_NumPoints(w.linestring) > 1 AND
+  (SELECT ST_Contains(OSM_GetConfigGeomValue('boundary_#{road.country}'), w.linestring)) = True"
   end
 
   def get_sql_with_exceptions
