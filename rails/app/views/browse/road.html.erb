@@ -1,4 +1,12 @@
 <script type="text/javascript">
+  function refreshReport() {
+    var new_location = window.location.toString();
+    if (new_location.indexOf("use_cache") == -1) {
+      new_location = window.location.toString() + "?use_cache=false";
+    }
+    window.location.assign(new_location);
+  }
+
   var map, vectors, formats, wkt;
 
   function init(){
@@ -164,6 +172,7 @@
 <div id="content">
 <div id="map" class="smallmap"></div>
 <br />
+<button name="use_cache" onclick="refreshReport()">refresh report</button>
 <br>
 <%= @report_text.html_safe %>
 <br>

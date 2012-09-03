@@ -7,10 +7,11 @@ require 'road_manager'
 class BrowseController < ApplicationController
   def road
     @conn = PGconn.open( :host => $config['host'], :dbname => $config['dbname'], :user => $config['user'], :password => $config['password'] )
+    use_cache = params[:use_cache] != 'false'
     road_manager = OSMonitor::RoadManager.new(@conn)
     report_manager = OSMonitor::ReportManager.new(road_manager, Rails.root + '../src/erb/')
 
-    @report, @report_text = report_manager.generate_road_report(params[:country], [params[:ref]], true)
+    @report, @report_text = report_manager.generate_road_report(params[:country], [params[:ref]], use_cache)
 
     if @report.statuses.empty?
       render :file => "#{Rails.root}/public/404.html", :status => :not_found
