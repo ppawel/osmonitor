@@ -27,3 +27,9 @@ CREATE INDEX idx_ways_refs
   ON ways
   USING gin
   (refs);
+
+DROP INDEX IF EXISTS idx_ways_timestamp;
+CREATE INDEX idx_ways_timestamp
+  ON ways
+  USING btree
+  (tstamp );
