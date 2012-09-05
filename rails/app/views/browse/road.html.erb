@@ -54,6 +54,11 @@
             )));
         <% end %>
 
+        <% if comp.start_point and comp.end_point %>
+        showPoint(all_ways_layer, '<%= comp.start_point %>', 'green');
+        showPoint(all_ways_layer, '<%= comp.end_point %>', 'red');
+        <% end %>
+
         map.addLayer(component<%= comp_index %>_layer);
 
         <% if !comp.roundtrip.nil? %>
@@ -135,6 +140,17 @@
     vector_layer.addFeatures(new OpenLayers.Feature.Vector(
             OpenLayers.Geometry.fromWKT(point_wkt).transform(new OpenLayers.Projection("EPSG:4326"), map.baseLayer.projection),
             {}, {externalGraphic: image_url, graphicHeight: 24, graphicWidth: 24}));
+  }
+
+  function showPoint(vector_layer, point_wkt, color) {
+    vector_layer.addFeatures(new OpenLayers.Feature.Vector(
+            OpenLayers.Geometry.Polygon.createRegularPolygon(
+            OpenLayers.Geometry.fromWKT(point_wkt).transform(new OpenLayers.Projection("EPSG:4326"), map.baseLayer.projection),
+            100,
+            20,
+            0
+            ),
+            {}, {strokeOpacity: 0.25, fillOpacity: 0.25, fillColor: color}));
   }
 
   function showWays(layer, features, waycolor, zoom) {

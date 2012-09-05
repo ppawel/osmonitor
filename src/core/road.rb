@@ -213,6 +213,8 @@ class RoadComponent
   attr_accessor :end_nodes
   attr_accessor :end_node_dijkstras
   attr_accessor :roundtrip
+  attr_accessor :start_point
+  attr_accessor :end_point
 
   def initialize(road, graph)
     self.road = road
@@ -427,6 +429,12 @@ class RoadComponent
       points << segment.to_node.point_wkt
     end
     points
+  end
+
+  def geom
+    ways = @graph.labels.values.collect {|segment| segment.way}.uniq
+    wkt = ways.reduce('') {|total, way| total + way.geom.gsub('LINESTRING', '') + ', '}
+    "MULTILINESTRING(#{wkt[0..-3]})"
   end
 end
 

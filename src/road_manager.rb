@@ -24,9 +24,8 @@ class RoadManager
     log_time " load_ways" do data = load_ways(road) end
     log_time " create_graph" do road.create_graph(data) end
     log_time " calculate_components" do road.calculate_components end
+    log_time " load_start_nodes" do road.comps.each {|c| load_start_nodes(c)} end
     log_time " calculate_end_nodes" do road.comps.each {|c| c.calculate_end_nodes} end
-
-    # Calculating stuff is expensive so first check if road has correct components (this is cheap).
 
     @@log.debug " logical_comps = #{road.num_logical_comps}, should be #{road.correct_num_comps}"
 
@@ -51,20 +50,14 @@ class RoadManager
     r.tags -> 'route' = 'road' AND
     #{eval($sql_where_by_road_type_relations[road.country][road.ref_prefix], binding())}
   ORDER BY covered DESC, r.id"
-puts sql
+#puts sql
     result = @conn.query(sql).collect {|row| process_tags(row)}
     road.relation = Relation.new(result[0]['id'].to_i, result[0]['tags']) if result.size > 0 and result[0]['covered'] == 't'
     road.other_relations = result[1..-1].select {|r| r['covered'] == 't'} if result.size > 1
   end
 
   def load_ways(road)
-    from_sql = ''
-
-    if road.relation
-      from_sql = "(#{get_sql_for_relation_ways(road)}) UNION (#{get_sql_for_ref_ways(road)})"
-    else
-      from_sql = "(#{get_sql_for_ref_ways(road)})"
-    end
+    from_sql = get_from_clause(road)
 
     sql =
 "SELECT DISTINCT ON (way_id, node_sequence_id)
@@ -87,9 +80,57 @@ puts sql
       process_tags(row, 'node_tags')
     end
 
-    #@log.debug("   load_road_graph: query took #{Time.now - before}")
-
     return result
+  end
+
+  def load_start_nodes(comp)
+    from_sql = get_from_clause(comp.road)
+puts comp.geom
+
+#puts @conn.query("SELECT ST_AsText(ST_LineMerge(ST_GeomFromText('#{comp.geom}')))").getvalue(0, 0).inspect
+
+@conn.query "DROP TABLE IF EXISTS comp_geom"
+@conn.query "CREATE TEMPORARY TABLE comp_geom AS SELECT OSM_SimplifyRoad(ST_GeomFromText('#{comp.geom}')) AS g"
+
+=begin
+
+puts " ------------------------- 0"
+@conn.query("DROP TABLE IF EXISTS start_point")
+@conn.query("CREATE TABLE start_point AS SELECT OSM_GetRoadStartPoint(ST_GeomFromText('#{comp.geom}')) AS pt")
+puts " ------------------------- 1"
+@conn.query("DROP TABLE IF EXISTS end_point")
+@conn.query("CREATE TABLE end_point AS SELECT OSM_GetRoadEndPoint(ST_GeomFromText('#{comp.geom}')) AS pt")
+puts " ------------------------- 2"
+
+
+sql =
+"
+SELECT DISTINCT node_id
+  FROM (#{from_sql}) AS q, start_point, end_point
+  WHERE ST_Point_Inside_Circle(node_geom, ST_X(start_point.pt), ST_Y(start_point.pt), 0.0004)
+OR ST_Point_Inside_Circle(node_geom, ST_X(end_point.pt), ST_Y(end_point.pt), 0.0004)
+  "
+#  puts sql
+
+comp.start_point = @conn.query("SELECT ST_AsText(ST_StartPoint(geom)) FROM comp_geom").getvalue(0, 0)
+comp.end_point = @conn.query("SELECT ST_AsText(ST_EndPoint(geom)) FROM comp_geom").getvalue(0, 0)
+=end
+
+comp.start_point = @conn.query("SELECT ST_AsText(ST_StartPoint(g.g)) FROM (SELECT g FROM comp_geom) AS g").getvalue(0, 0)
+comp.end_point = @conn.query("SELECT ST_AsText(ST_EndPoint(g.g)) FROM (SELECT g FROM comp_geom) AS g").getvalue(0, 0)
+
+#puts @conn.query("SELECT ST_AsText(OSM_SimplifyRoad(OSM_SimplifyRoad(ST_GeomFromText('#{comp.geom}'))))").getvalue(0, 0)
+
+@@log.debug "start_point = #{comp.start_point}, end_point = #{comp.end_point}"
+#@conn.query("DROP TABLE start_point")
+  end
+
+  def get_from_clause(road)
+    if !road.relation
+      return "(#{get_sql_for_relation_ways(road)}) UNION (#{get_sql_for_ref_ways(road)})"
+    else
+      return "(#{get_sql_for_ref_ways(road)})"
+    end
   end
 
   def get_sql_for_relation_ways(road)

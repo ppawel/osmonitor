@@ -58,16 +58,32 @@ DROP FUNCTION IF EXISTS OSM_IsMostlyCoveredBy(text, bigint);
 -- Checks if ways of a relation are "mostly covered" by given boundary geometry.
 -- param 1 - option_key from table config_options
 -- param 2 - relation id
-CREATE FUNCTION OSM_IsMostlyCoveredBy(text, bigint) RETURNS boolean AS $$
+CREATE FUNCTION OSM_IsMostlyCoveredBy(text, bigint) RETURNS boolean IMMUTABLE AS $$
 	SELECT (SELECT COUNT(*)
 		FROM (SELECT ST_Contains((SELECT geom_value FROM config_options WHERE option_key = $1), linestring) AS is
 			FROM relation_members rm
 			INNER JOIN ways w ON (w.id = rm.member_id)
-			WHERE rm.relation_id = $2 AND member_type = 'W') AS covered WHERE covered.is)::float * 100
+			WHERE rm.relation_id = $2 AND member_type = 'W'
+				AND ST_NumPoints(w.linestring) > 1) AS covered WHERE covered.is)::float * 100
 		  > (SELECT COUNT(*)
 		FROM relation_members rm
 		INNER JOIN ways w ON (w.id = rm.member_id)
-		WHERE rm.relation_id = $2 AND member_type = 'W')::float * 33
+		WHERE rm.relation_id = $2 AND member_type = 'W'
+			AND ST_NumPoints(w.linestring) > 1)::float * 33
+$$ LANGUAGE SQL;
+
+DROP FUNCTION IF EXISTS OSM_GetRoadStartPoint(geometry);
+
+CREATE FUNCTION OSM_GetRoadStartPoint(geometry) RETURNS geometry AS $$
+	SELECT ST_StartPoint(line.x)
+	FROM (SELECT ST_Line_Substring(ST_ExteriorRing(ST_Buffer($1, 0.000005)), 0.5, 1.0) AS x) AS line
+$$ LANGUAGE SQL;
+
+DROP FUNCTION IF EXISTS OSM_GetRoadEndPoint(geometry);
+
+CREATE FUNCTION OSM_GetRoadEndPoint(geometry) RETURNS geometry AS $$
+	SELECT ST_EndPoint(line.x)
+	FROM (SELECT ST_Line_Substring(ST_ExteriorRing(ST_Buffer($1, 0.000005)), 0.5, 1.0) AS x) AS line
 $$ LANGUAGE SQL;
 
 DROP FUNCTION IF EXISTS OSM_GetConfigGeomValue(text);
