@@ -35,7 +35,7 @@ $sql_where_by_road_type_ways = {
 
   'CZ' => {
     'D' => '"(w.refs @> ARRAY[\'#{road.ref_prefix + road.ref_number}\'])"',
-    'R' => '"(w.refs @> ARRAY[\'#{road.ref_prefix + road.ref_number}\'] OR w.refs @> ARRAY[\'#{road.ref_number}\'])"'
+    'R' => '"(w.refs @> ARRAY[\'#{road.ref_prefix + road.ref_number}\'])"'
   }
 }
 
@@ -61,7 +61,7 @@ $sql_where_by_road_type_relations = {
 
   'CZ' => {
     'D' => '"(r.tags @>  \'\"ref\"=>\"#{road.ref_prefix + road.ref_number}\"\')"',
-    'R' => '"(r.tags @>  \'\"ref\"=>\"#{road.ref_prefix + road.ref_number}\"\' OR r.tags @>  \'\"ref\"=>\"#{road.ref_number}\"\')"'
+    'R' => '"(r.tags @>  \'\"ref\"=>\"#{road.ref_prefix + road.ref_number}\"\')"'
   }
 }
 
