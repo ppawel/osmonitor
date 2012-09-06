@@ -87,4 +87,57 @@ module RGL
       path
     end
   end
+
+  module Graph
+    attr_accessor :dijkstras
+
+    def max_dist(node)
+      calculate_dijkstra([node])
+      @dijkstras[node].dist.max_by {|node, dist| dist}
+    end
+
+    def dist(node1, node2)
+      calculate_dijkstra([node1, node2])
+      @dijkstras[node1].dist[node2]
+    end
+
+    def path(from, to)
+      calculate_dijkstra([from, to])
+      @dijkstras[from].to(to)
+    end
+
+    def furthest(nodes, node_from)
+      calculate_dijkstra(nodes + [node_from])
+      nodes.max_by {|node_to| @dijkstras[node_from].dist[node_to] ? @dijkstras[node_from].dist[node_to] : -1}
+    end
+
+    # Returns a pair of nodes (and the distance between them) that are furthest apart.
+    def furthest_pair_of_nodes(nodes)
+      max = -1
+      max_pair = nil
+
+      nodes.each do |node|
+        furthest = furthest(nodes, node)
+        dist = dist(node, furthest)
+
+        if dist > max
+          max = dist
+          max_pair = node, furthest
+        end
+      end
+
+      max_pair
+    end
+
+    def calculate_dijkstra(nodes)
+      @dijkstras = {} if !@dijkstras
+
+      nodes.each do |node|
+        next if @dijkstras.has_key?(node)
+        it = RGL::DijkstraIterator.new(self, node, nil)
+        it.go
+        @dijkstras[node] = it
+      end
+    end
+  end
 end

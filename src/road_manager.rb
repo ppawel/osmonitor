@@ -24,15 +24,15 @@ class RoadManager
     log_time " load_ways" do data = load_ways(road) end
     log_time " create_graph" do road.create_graph(data) end
     log_time " calculate_components" do road.calculate_components end
-    log_time " calculate_end_nodes" do road.comps.each {|c| c.calculate_end_nodes} end
 
     # Calculating stuff is expensive so first check if road has correct components (this is cheap).
 
     @@log.debug " logical_comps = #{road.num_logical_comps}, should be #{road.correct_num_comps}"
 
-    #if road.num_logical_comps == road.correct_num_comps
+    if road.num_logical_comps == road.correct_num_comps
+      log_time " calculate_beginning_and_end" do road.comps.each {|c| c.calculate_beginning_and_end} end
       log_time " calculate_roundtrips" do road.comps.each {|c| c.calculate_roundtrip} end
-    #end
+    end
 
     return road
   end
@@ -51,7 +51,7 @@ class RoadManager
     r.tags -> 'route' = 'road' AND
     #{eval($sql_where_by_road_type_relations[road.country][road.ref_prefix], binding())}
   ORDER BY covered DESC, r.id"
-puts sql
+#puts sql
     result = @conn.query(sql).collect {|row| process_tags(row)}
     road.relation = Relation.new(result[0]['id'].to_i, result[0]['tags']) if result.size > 0 and result[0]['covered'] == 't'
     road.other_relations = result[1..-1].select {|r| r['covered'] == 't'} if result.size > 1
@@ -101,11 +101,12 @@ puts sql
     wn.way_id AS way_id,
     w.tags AS way_tags,
     ST_AsText(w.linestring) AS way_geom,
-    ST_AsText(wn.node_geom) AS node_geom,
+    ST_AsText(n.geom) AS node_geom,
     wn.node_id AS node_id,
     wn.dist_to_next AS node_dist_to_next
   FROM way_nodes wn
   INNER JOIN relation_members rm ON (rm.member_id = way_id)
+  INNER JOIN nodes n ON (n.id = wn.node_id)
   INNER JOIN ways w ON (w.id = wn.way_id)
   WHERE rm.relation_id = #{road.relation.id}"
   end
@@ -120,10 +121,11 @@ puts sql
     wn.way_id AS way_id,
     w.tags AS way_tags,
     ST_AsText(w.linestring) AS way_geom,
-    ST_AsText(wn.node_geom) AS node_geom,
+    ST_AsText(n.geom) AS node_geom,
     wn.node_id AS node_id,
     wn.dist_to_next AS node_dist_to_next
   FROM way_nodes wn
+  INNER JOIN nodes n ON (n.id = wn.node_id)
   INNER JOIN ways w ON (w.id = wn.way_id)
   WHERE #{eval($sql_where_by_road_type_ways[road.country][road.ref_prefix], binding())} AND
   #{get_sql_with_exceptions} AND

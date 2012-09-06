@@ -11,7 +11,14 @@ require 'rgl/base'
 require 'rgl/paths'
 require 'rgl/bidirectional'
 
-@rgeo_factory = ::RGeo::Geographic.spherical_factory()
+$rgeo_factory = ::RGeo::Geographic.spherical_factory()
+
+def distance_between(node1, node2)
+  return nil if !node1.point_wkt or !node2.point_wkt
+  point1 = $rgeo_factory.parse_wkt(node1.point_wkt)
+  point2 = $rgeo_factory.parse_wkt(node2.point_wkt)
+  point1.distance(point2)
+end
 
 class Road
   include OSMonitorLogger
@@ -110,8 +117,8 @@ class Road
   def approx_length
     meters = 0
     meters_oneway = 0
-    comps.each {|comp| meters += comp.length if comp.length and find_sister_component(comp).empty?}
-    comps.each {|comp| meters_oneway += comp.length if comp.length and !find_sister_component(comp).empty?}
+    comps.each {|comp| meters += comp.segment_length if find_sister_component(comp).empty?}
+    comps.each {|comp| meters_oneway += comp.segment_length if !find_sister_component(comp).empty?}
     return (meters + meters_oneway / 2.0) / 1000.0 if meters
   end
 
@@ -210,196 +217,122 @@ class RoadComponent
   attr_accessor :graph
   attr_accessor :undirected_graph
   attr_accessor :oneway
+  attr_accessor :beginning_nodes
   attr_accessor :end_nodes
-  attr_accessor :end_node_dijkstras
+  attr_accessor :exit_nodes
   attr_accessor :roundtrip
 
   def initialize(road, graph)
     self.road = road
     self.graph = graph
-    self.undirected_graph = graph.to_undirected
+    self.beginning_nodes = []
     self.end_nodes = []
-    self.end_node_dijkstras = {}
     self.roundtrip = nil
     self.oneway = calculate_oneway
+
+    undirected_graph = graph.to_undirected
+    self.exit_nodes = undirected_graph.vertices.select {|v| undirected_graph.out_degree(v) <= 1}
   end
 
-  # Calculates end nodes and puts them in the @end_nodes list.
-  def calculate_end_nodes
-    @end_nodes = @undirected_graph.vertices.select {|v| @undirected_graph.out_degree(v) <= 1}
-    new_end_nodes = []
-    max = nil
+  def length
+    @roundtrip.length if @roundtrip
+  end
 
-    @@log.debug " end nodes before expanding (#{end_nodes.size}): #{@end_nodes}"
+  def segment_length
+    @graph.labels.values.uniq.reduce(0) {|total, segment| total + segment.length}
+  end
 
-    @end_nodes.each do |node|
-      it = RGL::DijkstraIterator.new(@undirected_graph, node, nil)
-      it.go
-      @end_node_dijkstras[node] = it
+  # Calculates beginning and end of this road component.
+  def calculate_beginning_and_end
+    candidate_nodes = @exit_nodes.clone
+    expanded_graph = expand_candidates(candidate_nodes)
+    max_pair = expanded_graph.furthest_pair_of_nodes(candidate_nodes)
 
-      max_node = max_dist(node)
+    @@log.debug " candidate_nodes = #{candidate_nodes}, max_pair = #{max_pair}"
 
-      if max.nil? or max_node[1] > max[1]
-        max = max_node
+    if max_pair
+      @beginning_nodes = [max_pair[0]] + closest_nodes(candidate_nodes, max_pair[0])
+      @beginning_nodes = @beginning_nodes.uniq
+
+      @end_nodes = [max_pair[1]] + closest_nodes(candidate_nodes, max_pair[1])
+      @end_nodes = @end_nodes.uniq
+    end
+
+    @@log.debug " beginning_nodes = #{@beginning_nodes}, end_nodes = #{end_nodes}"
+  end
+
+  def expand_candidates(nodes)
+    result = []
+    expanded_graph = @graph.to_undirected
+
+    nodes.each do |node|
+      closest = closest_nodes(nodes, node)
+      closest.each do |close_node|
+        expanded_graph.add_edge(node, close_node, WaySegment.new(nil, node, close_node, distance_between(node, close_node)))
       end
-
-      new_end_nodes << max_node[0] if max_node
     end
 
-    @@log.debug " new end nodes from expanding (#{new_end_nodes.size}): #{new_end_nodes}"
-
-    @end_nodes += new_end_nodes
-    @end_nodes = @end_nodes.uniq
-
-    @end_nodes.each do |node|
-      it = RGL::DijkstraIterator.new(@graph, node, nil)
-      it.go
-      @end_node_dijkstras[node] = it
+    nodes.clone.each do |node|
+      max_node, dist = expanded_graph.max_dist(node)
+      nodes << max_node if max_node
     end
 
-    @@log.debug " final end nodes (#{end_nodes.size}): #{@end_nodes}"
+    nodes.uniq!
+    expanded_graph
   end
 
-  # Attemtps to calculate a roundtrip between the beginning and end of the road component. Beginning and end are defined
-  # by furthest end nodes. In order to find the roundtrip, two paths (forward and backward) need to be found (unless the road
-  # component is oneway then one path is enough) between furthest end nodes. In the process, end nodes closest to the beginning
-  # and end one are tried to account for trunk links, multiple oneway end nodes in close proximity etc.
-  def calculate_roundtrip
-    max_pair, max = furthest_pair_of_end_nodes
+  def find_path(from_nodes, to_nodes)
+    failed = nil
 
-    @@log.debug " max_pair = #{max_pair}, max = #{max}"
+    from_nodes.each do |node1|
+      to_nodes.each do |node2|
+        dist = @graph.dist(node1, node2)
 
-    if !max_pair
-      @@log.debug " Unable to found a pair of end nodes?"
-      return
-    end
-
-    end_node = max_pair[0]
-    furthest = max_pair[1]
-
-    if oneway?
-      @@log.debug " Oneway component, not trying to find roundtrip"
-      forward_path = RoadComponentPath.new(end_node, furthest, true, segments(end_node, furthest))
-      @roundtrip = RoadComponentRoundtrip.new(self, forward_path, nil)
-      return
-    end
-
-    dist = dist(end_node, furthest)
-
-    forward_path = RoadComponentPath.new(end_node, furthest, true, segments(end_node, furthest))
-    backward_path = nil
-    failed_paths = []
-
-    closest_to_furthest = closest_end_nodes(furthest)
-    closest_to_end_node = closest_end_nodes(end_node)
-
-    @@log.debug " Trying to find roundtrip from #{end_node} (furthest = #{furthest}, closest_to_furthest = #{closest_to_furthest}, closest_to_end_node = #{closest_to_end_node})"
-
-    roundtrip_dist = nil
-
-    @end_nodes.each do |node1|
-      next if node1 == end_node
-
-      @end_nodes.each do |node2|
-        next if node1 == node2
-
-        roundtrip_dist = dist(node1, node2)
-        puts "tried #{node1}->#{node2}: #{roundtrip_dist} (dist = #{dist})"
-
-        if !roundtrip_dist.nil? and roundtrip_dist > 0 and ((dist - roundtrip_dist).abs < 2222)
-         @@log.debug " Found backward path: #{node1}-#{node2} (dist = #{dist}, roundtrip_dist = #{roundtrip_dist})"
-          backward_path = RoadComponentPath.new(node1, node2, true, segments(node1, node2))
+        if dist
+          return RoadComponentPath.new(node1, node2, true, segments(@graph.path(node1, node2)))
         else
-          # Target cannot be reached from source - so we do a BFS search to find the partial path (useful for displaying on the map).
-          path = calculate_failed_path(node1, node2)
-          @@log.debug " Failed path: #{node1}-#{node2} (path = #{path})"
-          failed_paths << path if path
+          failed = calculate_failed_path(node1, node2)
         end
-
-        break if backward_path
       end
-
-      break if backward_path
     end
+
+    failed
+  end
+
+  def calculate_roundtrip
+    forward_path = find_path(@beginning_nodes, @end_nodes)
+    backward_path = find_path(@end_nodes, @beginning_nodes)
 
     @roundtrip = RoadComponentRoundtrip.new(self, forward_path, backward_path)
+    @roundtrip.failed_paths << forward_path if forward_path and !forward_path.complete
+    @roundtrip.failed_paths << backward_path if backward_path and !backward_path.complete
 
-    if backward_path.nil?
-      # Backward path was not found - this means that there is a routing problem or the component is oneway.
-      @roundtrip.failed_paths = failed_paths
-    end
+    @@log.debug " roundtrip = #{roundtrip}"
   end
 
   def calculate_failed_path(node1, node2)
     it = RGL::PathIterator.new(road.graph, node1, node2)
     it.set_to_end
 
-    if !it.path.empty?
-      segments = []
-      it.path.each_cons(2) {|n1, n2| segments << @graph.get_label(n1, n2)}
-      return RoadComponentPath.new(node1, node2, false, segments.select {|s| s})
-    end
+    segments = []
+    it.path.each_cons(2) {|n1, n2| segments << @graph.get_label(n1, n2)}
+    RoadComponentPath.new(node1, node2, false, segments.select {|s| s})
   end
 
-  def segments(end_node, some_node)
-    path = @end_node_dijkstras[end_node].to(some_node)
+  def segments(path)
     segments = []
-    #puts "path = #{path.inspect}"
-    #puts road.graph
     path.each_cons(2) {|node1, node2| segments << road.graph.get_label(node1, node2) if road.graph.get_label(node1, node2)}
     segments
   end
 
-  def max_dist(end_node)
-    @end_node_dijkstras[end_node].dist.max_by {|end_node, dist| dist}
-  end
-
-  def dist(end_node, some_node)
-    @end_node_dijkstras[end_node].dist[some_node]
-  end
-
-  # Returns an end node that is the furthest away from given end node.
-  def furthest(end_node)
-    @end_nodes.max_by {|end_node2| @end_node_dijkstras[end_node].dist[end_node2] ? @end_node_dijkstras[end_node].dist[end_node2] : -1}
-  end
-
-  # Returns a list of end nodes that are within max_dist to given end node.
-  def closest_end_nodes(target_end_node, max_dist = 2 << 64)
-    closest = []  
-    @end_node_dijkstras.each do |end_node, it|
-      dist = dist(end_node, target_end_node)
-      dist_reverse = dist(target_end_node, end_node)
-      closest << end_node if !dist.nil? and dist < max_dist
-      closest << end_node if !dist_reverse.nil? and dist_reverse < max_dist
+  # Returns a list of nodes that are within max_dist of given node.
+  def closest_nodes(nodes, node_from, max_dist = 2 << 64)
+    closest = []
+    nodes.each do |node_to|
+      d = distance_between(node_from, node_to)
+      closest << node_to if d and d < [segment_length * 0.05, 2222].min
     end
     closest.uniq
-  end
-
-  # Returns a pair of end nodes (and the distance between them) that are furthest apart.
-  def furthest_pair_of_end_nodes
-    max = -1
-    max_pair = nil
-
-    @end_nodes.each do |end_node|
-      furthest = furthest(end_node)
-      dist = dist(end_node, furthest)
-
-      if dist > max
-        max = dist
-        max_pair = end_node, furthest
-      end
-    end
-
-    return max_pair, max
-  end
-
-  def length
-    roundtrip.length if roundtrip
-  end
-
-  def segment_length
-    segments = @graph.labels.values
-    segments.reduce(0) {|total, segment| total + segment.length}
   end
 
   def has_complete_roundtrip?
@@ -477,12 +410,16 @@ class RoadComponentRoundtrip
   end
 
   def complete?
-    @component.oneway? or !@backward_path.nil?
+    # If the road component is oneway - only one path is needed in the roundtrip.
+    return ((@forward_path and @forward_path.complete) or (@backward_path and @backward_path.complete)) if @component.oneway?
+    # Otherwise both paths are needed.
+    @forward_path and @forward_path.complete and @backward_path and @backward_path.complete
   end
 
   def length
     return nil if !complete?
-    return @forward_path.length if @component.oneway?
+    return @forward_path.length if @forward_path and @forward_path.complete and @component.oneway?
+    return @backward_path.length if @backward_path and @backward_path.complete and @component.oneway?
     (@forward_path.length + @backward_path.length) / 2.0
   end
 
