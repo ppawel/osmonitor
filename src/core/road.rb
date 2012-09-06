@@ -256,14 +256,38 @@ class RoadComponent
 
   # Calculates beginning and end of this road component.
   def calculate_beginning_and_end
-    candidate_nodes = @exit_nodes.clone + closest_nodes(@graph.vertices, @exit_nodes[0], 333)
+    if @exit_nodes.empty?
+      @@log.debug " No exit nodes?!"
+      return
+    end
+
+    candidate_nodes = @exit_nodes.clone
     distance_graph = prepare_distance_graph(candidate_nodes)
-
     find_beginning_and_end(distance_graph, candidate_nodes)
+    calculate_roundtrip
 
-    if !found_beginning_and_end?
+    if !found_beginning_and_end? or !@roundtrip.complete?
+      @@log.debug " ...again..."
+      candidate_nodes = @exit_nodes.clone
+      expand_candidates(distance_graph, candidate_nodes)
+      distance_graph = prepare_distance_graph(candidate_nodes)
+      find_beginning_and_end(distance_graph, candidate_nodes)
+      calculate_roundtrip
+    end
+
+    if !found_beginning_and_end? or !@roundtrip.complete?
+      @@log.debug " ...trying again..."
+      candidate_nodes = @exit_nodes.clone + closest_nodes(@graph.vertices, @exit_nodes[0], 333)
+      distance_graph = prepare_distance_graph(candidate_nodes)
+      find_beginning_and_end(distance_graph, candidate_nodes)
+      calculate_roundtrip
+    end
+
+    if !found_beginning_and_end? or !@roundtrip.complete?
+      @@log.debug " ...and again..."
       expand_candidates(distance_graph, candidate_nodes)
       find_beginning_and_end(distance_graph, candidate_nodes)
+      calculate_roundtrip
     end
 
     @@log.debug " beginning_nodes = #{@beginning_nodes}, end_nodes = #{end_nodes}"
@@ -277,7 +301,7 @@ class RoadComponent
     if max_pair
       @beginning_nodes = [max_pair[0]] + closest_nodes(candidate_nodes, max_pair[0])
       @beginning_nodes = @beginning_nodes.uniq
-      @end_nodes = [max_pair[1]] + closest_nodes(candidate_nodes, max_pair[1])
+      @end_nodes = [max_pair[1]] + closest_nodes(candidate_nodes, max_pair[1]) - @beginning_nodes
       @end_nodes = @end_nodes.uniq
     end
   end
@@ -287,10 +311,10 @@ class RoadComponent
 
     candidate_nodes.each do |node|
       closest = closest_nodes(candidate_nodes, node)
-      puts "closest(#{node}) = #{closest}"
+      #puts "closest(#{node}) = #{closest}"
       closest.each do |close_node|
         next if node == close_node
-        @@log.debug "  adding edge #{node}-#{close_node} (dist = #{distance_between(node, close_node)})"
+        #@@log.debug "  adding edge #{node}-#{close_node} (dist = #{distance_between(node, close_node)})"
         distance_graph.add_edge(node, close_node, WaySegment.new(nil, node, close_node, 0))
       end
     end
@@ -303,7 +327,7 @@ class RoadComponent
 
     nodes.clone.each do |node|
       max_node, dist = distance_graph.max_dist(node)
-      puts "max_dist(#{node}) = #{max_node}, #{dist}"
+      #puts "max_dist(#{node}) = #{max_node}, #{dist}"
       nodes << max_node if max_node
     end
 
