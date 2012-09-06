@@ -101,6 +101,11 @@ class Road
     1
   end
 
+  def last_update
+    last_updated_way = ways.values.max_by {|way| way.last_update.timestamp}
+    last_updated_way.last_update if last_updated_way
+  end
+
   def find_sister_component(c)
     @comps.select {|component| c.oneway? and component.oneway? and (c.segment_length - component.segment_length).abs < 2222}
   end
@@ -203,6 +208,8 @@ class Road
 
   def create_way(row)
     way = Way.new(row['way_id'].to_i, row['member_role'], row['way_tags'])
+    way.last_update = Changeset.new(row['way_last_update_user_id'].to_i, row['way_last_update_user_name'],
+      row['way_last_update_timestamp'], row['way_last_update_changeset_id'])
     way.geom = row['way_geom'] if row['way_geom']
     way.relation = @relation
     way

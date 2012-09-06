@@ -44,17 +44,28 @@ class RoadManager
 
   def fill_road_relation(road)
     sql = "
-  SELECT *, OSM_IsMostlyCoveredBy('boundary_#{road.country}', r.id) AS covered
+  SELECT
+    r.id AS relation_id,
+    r.tags AS relation_tags,
+    user_id AS last_update_user_id,
+    u.name AS last_update_user_name,
+    tstamp AS last_update_timestamp,
+    OSM_IsMostlyCoveredBy('boundary_#{road.country}', r.id) AS covered
   FROM relations r
+  LEFT JOIN users u ON (u.id = r.user_id)
   WHERE
     r.tags -> 'type' = 'route' AND
     r.tags -> 'route' = 'road' AND
     #{eval($sql_where_by_road_type_relations[road.country][road.ref_prefix], binding())}
   ORDER BY covered DESC, r.id"
 #puts sql
-    result = @conn.query(sql).collect {|row| process_tags(row)}
-    road.relation = Relation.new(result[0]['id'].to_i, result[0]['tags']) if result.size > 0 and result[0]['covered'] == 't'
+    result = @conn.query(sql).collect {|row| process_tags(row, 'relation_tags')}
+    road.relation = create_relation(result[0]) if result.size > 0 and result[0]['covered'] == 't'
     road.other_relations = result[1..-1].select {|r| r['covered'] == 't'} if result.size > 1
+  end
+
+  def create_relation(row)
+    Relation.new(row['relation_id'].to_i, row['relation_tags'])
   end
 
   def load_ways(road)
@@ -68,6 +79,10 @@ class RoadManager
 
     sql =
 "SELECT DISTINCT ON (way_id, node_sequence_id)
+    way_last_update_user_id,
+    way_last_update_user_name,
+    way_last_update_timestamp,
+    way_last_update_changeset_id,
     relation_id,
     member_role,
     relation_sequence_id,
@@ -94,6 +109,10 @@ class RoadManager
 
   def get_sql_for_relation_ways(road)
 "SELECT
+    way_user.id AS way_last_update_user_id,
+    way_user.name AS way_last_update_user_name,
+    w.tstamp AS way_last_update_timestamp,
+    w.changeset_id AS way_last_update_changeset_id,
     rm.relation_id AS relation_id,
     rm.member_role AS member_role,
     rm.sequence_id AS relation_sequence_id,
@@ -108,12 +127,17 @@ class RoadManager
   INNER JOIN relation_members rm ON (rm.member_id = way_id)
   INNER JOIN nodes n ON (n.id = wn.node_id)
   INNER JOIN ways w ON (w.id = wn.way_id)
+  LEFT JOIN users way_user ON (way_user.id = w.user_id)
   WHERE rm.relation_id = #{road.relation.id}"
   end
 
   def get_sql_for_ref_ways(road)
     # Need to cast because of http://archives.postgresql.org/pgsql-bugs/2010-12/msg00153.php
 "SELECT
+    way_user.id AS way_last_update_user_id,
+    way_user.name AS way_last_update_user_name,
+    w.tstamp AS way_last_update_timestamp,
+    w.changeset_id AS way_last_update_changeset_id,
     NULL::bigint AS relation_id,
     NULL::text AS member_role,
     NULL::bigint AS relation_sequence_id,
@@ -127,6 +151,7 @@ class RoadManager
   FROM way_nodes wn
   INNER JOIN nodes n ON (n.id = wn.node_id)
   INNER JOIN ways w ON (w.id = wn.way_id)
+  LEFT JOIN users way_user ON (way_user.id = w.user_id)
   WHERE #{eval($sql_where_by_road_type_ways[road.country][road.ref_prefix], binding())} AND
   #{get_sql_with_exceptions} AND
   ST_NumPoints(w.linestring) > 1 AND

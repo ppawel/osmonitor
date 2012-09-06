@@ -1,7 +1,23 @@
+# Holds data for an update (edit) operation on some OSM entity.
+class Changeset
+  attr_accessor :user_id
+  attr_accessor :user_name
+  attr_accessor :changeset_id
+  attr_accessor :timestamp
+
+  def initialize(user_id, user_name, timestamp, changeset_id)
+    self.user_id = user_id
+    self.user_name = user_name
+    self.changeset_id = changeset_id
+    self.timestamp = timestamp
+  end
+end
+
 # Represents an OSM relation.
 class Relation
   attr_accessor :id
   attr_accessor :tags
+  attr_accessor :last_update
 
   def initialize(id, tags)
     self.id = id
@@ -47,6 +63,7 @@ class Way
   attr_accessor :geom
   attr_accessor :relation
   attr_accessor :segments
+  attr_accessor :last_update
 
   def initialize(id, member_role, tags)
     self.id = id
