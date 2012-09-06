@@ -125,7 +125,7 @@ class RoadStatus
   end
 
   def has_many_covered_relations
-    return  road.other_relations.select {|x| x['covered'] == 't'}.size > 0
+    !road.other_relations.empty?
   end
 
   def percent_with_lanes

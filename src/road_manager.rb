@@ -61,7 +61,13 @@ class RoadManager
 #puts sql
     result = @conn.query(sql).collect {|row| process_tags(row, 'relation_tags')}
     road.relation = create_relation(result[0]) if result.size > 0 and result[0]['covered'] == 't'
-    road.other_relations = result[1..-1].select {|r| r['covered'] == 't'} if result.size > 1
+
+    if result.size > 1
+      result[1..-1].each do |row|
+        next if row['covered'] != 't'
+        road.other_relations << create_relation(row)
+      end
+    end
   end
 
   def create_relation(row)
