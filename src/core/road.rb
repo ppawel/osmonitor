@@ -261,34 +261,39 @@ class RoadComponent
       return
     end
 
+    roundtrips = []
+
     candidate_nodes = @exit_nodes.clone
     distance_graph = prepare_distance_graph(candidate_nodes)
     find_beginning_and_end(distance_graph, candidate_nodes)
-    calculate_roundtrip
+    roundtrips << calculate_roundtrip
 
-    if !found_beginning_and_end? or !@roundtrip.complete?
+    #if !found_beginning_and_end? or !@roundtrip.complete?
       @@log.debug " ...again..."
       candidate_nodes = @exit_nodes.clone
       expand_candidates(distance_graph, candidate_nodes)
       distance_graph = prepare_distance_graph(candidate_nodes)
       find_beginning_and_end(distance_graph, candidate_nodes)
-      calculate_roundtrip
-    end
+      roundtrips << calculate_roundtrip
+    #end
 
-    if !found_beginning_and_end? or !@roundtrip.complete?
+    #if !found_beginning_and_end? or !@roundtrip.complete?
       @@log.debug " ...trying again..."
       candidate_nodes = @exit_nodes.clone + closest_nodes(@graph.vertices, @exit_nodes[0], 333)
       distance_graph = prepare_distance_graph(candidate_nodes)
       find_beginning_and_end(distance_graph, candidate_nodes)
-      calculate_roundtrip
-    end
+      roundtrips << calculate_roundtrip
+    #end
 
-    if !found_beginning_and_end? or !@roundtrip.complete?
+    #if !found_beginning_and_end? or !@roundtrip.complete?
       @@log.debug " ...and again..."
       expand_candidates(distance_graph, candidate_nodes)
       find_beginning_and_end(distance_graph, candidate_nodes)
-      calculate_roundtrip
-    end
+      roundtrips << calculate_roundtrip
+    #end
+
+    @roundtrip = roundtrips.select {|r| r.complete?}.max_by {|r| r.length}
+    @roundtrip = roundtrips[0] if !@roundtrip
 
     @@log.debug " beginning_nodes = #{@beginning_nodes}, end_nodes = #{end_nodes}"
   end
@@ -356,11 +361,13 @@ class RoadComponent
     forward_path = find_path(@beginning_nodes, @end_nodes)
     backward_path = find_path(@end_nodes, @beginning_nodes)
 
-    @roundtrip = RoadComponentRoundtrip.new(self, forward_path, backward_path)
-    @roundtrip.failed_paths << forward_path if forward_path and !forward_path.complete
-    @roundtrip.failed_paths << backward_path if backward_path and !backward_path.complete
+    result = RoadComponentRoundtrip.new(self, forward_path, backward_path)
+    result.failed_paths << forward_path if forward_path and !forward_path.complete
+    result.failed_paths << backward_path if backward_path and !backward_path.complete
 
-    @@log.debug " roundtrip = #{roundtrip}"
+    @@log.debug " roundtrip = #{result}"
+
+    result
   end
 
   def calculate_failed_path(node1, node2)
