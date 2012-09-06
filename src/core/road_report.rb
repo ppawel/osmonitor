@@ -45,6 +45,10 @@ class RoadStatus
     road.relation.distance if road.relation
   end
 
+  def found_beginning_and_end?
+    road.comps.detect {|comp| !comp.found_beginning_and_end?}.nil?
+  end
+
   def validate
     if road.relation and !road.relation.tags['osmonitor:noreport'].nil?
       @noreport = true
@@ -62,19 +66,22 @@ class RoadStatus
     add_info('last_update')
 
     add_error('no_relation') if !road.relation
-    add_error('empty') if road.empty?
     add_error('has_many_covered_relations') if road.relation and has_many_covered_relations
 
     if !ways_without_highway_tag.empty?
       add_error('has_ways_without_highway_tag', {:ways => ways_without_highway_tag})
     end
 
-    # First of all, if the road relation does not have a proper number of components - skip reporting other stuff.
-    if !connected? and !road.empty?
-      add_error('road_disconnected')
-    elsif !road.empty?
-      add_warning('wrong_length') if road.length and input_length and !has_proper_length
-      add_error('not_navigable') if road.length.nil?#road.has_incomplete_paths?
+    if road.empty?
+      add_error('empty')
+    else
+      if !connected?
+        add_error('road_disconnected')
+      else
+        add_error('no_beginning_and_end') if !found_beginning_and_end?
+        add_warning('wrong_length') if road.length and input_length and !has_proper_length
+        add_error('not_navigable') if found_beginning_and_end? and road.length.nil?#road.has_incomplete_paths?
+      end
     end
 
     add_warning('wrong_network') if road.relation and !has_proper_network

@@ -93,6 +93,7 @@ module RGL
 
     def max_dist(node)
       calculate_dijkstra([node])
+      #puts @dijkstras[node].dist
       @dijkstras[node].dist.max_by {|node, dist| dist}
     end
 
@@ -118,6 +119,8 @@ module RGL
 
       nodes.each do |node|
         furthest = furthest(nodes, node)
+        next if furthest == node
+
         dist = dist(node, furthest)
 
         if dist > max

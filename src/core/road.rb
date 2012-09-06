@@ -250,43 +250,64 @@ class RoadComponent
     @graph.labels.values.uniq.reduce(0) {|total, segment| total + segment.length}
   end
 
+  def found_beginning_and_end?
+    !@beginning_nodes.empty? and !@end_nodes.empty?
+  end
+
   # Calculates beginning and end of this road component.
   def calculate_beginning_and_end
-    candidate_nodes = @exit_nodes.clone
-    expanded_graph = expand_candidates(candidate_nodes)
-    max_pair = expanded_graph.furthest_pair_of_nodes(candidate_nodes)
+    candidate_nodes = @exit_nodes.clone + closest_nodes(@graph.vertices, @exit_nodes[0], 333)
+    distance_graph = prepare_distance_graph(candidate_nodes)
 
-    @@log.debug " candidate_nodes = #{candidate_nodes}, max_pair = #{max_pair}"
+    find_beginning_and_end(distance_graph, candidate_nodes)
 
-    if max_pair
-      @beginning_nodes = [max_pair[0]] + closest_nodes(candidate_nodes, max_pair[0])
-      @beginning_nodes = @beginning_nodes.uniq
-
-      @end_nodes = [max_pair[1]] + closest_nodes(candidate_nodes, max_pair[1])
-      @end_nodes = @end_nodes.uniq
+    if !found_beginning_and_end?
+      expand_candidates(distance_graph, candidate_nodes)
+      find_beginning_and_end(distance_graph, candidate_nodes)
     end
 
     @@log.debug " beginning_nodes = #{@beginning_nodes}, end_nodes = #{end_nodes}"
   end
 
-  def expand_candidates(nodes)
-    result = []
-    expanded_graph = @graph.to_undirected
+  def find_beginning_and_end(distance_graph, candidate_nodes)
+    max_pair = distance_graph.furthest_pair_of_nodes(candidate_nodes)
 
-    nodes.each do |node|
-      closest = closest_nodes(nodes, node)
+    @@log.debug " exit_nodes = #{exit_nodes}, candidate_nodes = #{candidate_nodes}, max_pair = #{max_pair}"
+
+    if max_pair
+      @beginning_nodes = [max_pair[0]] + closest_nodes(candidate_nodes, max_pair[0])
+      @beginning_nodes = @beginning_nodes.uniq
+      @end_nodes = [max_pair[1]] + closest_nodes(candidate_nodes, max_pair[1])
+      @end_nodes = @end_nodes.uniq
+    end
+  end
+
+  def prepare_distance_graph(candidate_nodes)
+    distance_graph = @graph.to_undirected
+
+    candidate_nodes.each do |node|
+      closest = closest_nodes(candidate_nodes, node)
+      puts "closest(#{node}) = #{closest}"
       closest.each do |close_node|
-        expanded_graph.add_edge(node, close_node, WaySegment.new(nil, node, close_node, distance_between(node, close_node)))
+        next if node == close_node
+        @@log.debug "  adding edge #{node}-#{close_node} (dist = #{distance_between(node, close_node)})"
+        distance_graph.add_edge(node, close_node, WaySegment.new(nil, node, close_node, 0))
       end
     end
 
+    distance_graph
+  end
+
+  def expand_candidates(distance_graph, nodes)
+    result = []
+
     nodes.clone.each do |node|
-      max_node, dist = expanded_graph.max_dist(node)
+      max_node, dist = distance_graph.max_dist(node)
+      puts "max_dist(#{node}) = #{max_node}, #{dist}"
       nodes << max_node if max_node
     end
 
     nodes.uniq!
-    expanded_graph
   end
 
   def find_path(from_nodes, to_nodes)
@@ -334,11 +355,12 @@ class RoadComponent
   end
 
   # Returns a list of nodes that are within max_dist of given node.
-  def closest_nodes(nodes, node_from, max_dist = 2 << 64)
+  def closest_nodes(nodes, node_from, max_dist = nil)
+    max_dist = [segment_length * 0.05, 2222].min if !max_dist
     closest = []
     nodes.each do |node_to|
       d = distance_between(node_from, node_to)
-      closest << node_to if d and d < [segment_length * 0.05, 2222].min
+      closest << node_to if d and d <= max_dist
     end
     closest.uniq
   end
