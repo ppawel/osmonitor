@@ -45,6 +45,10 @@
           }
         );
 
+        <% comp.exit_nodes.each do |node| %>
+        showPoint(component<%= comp_index %>_layer, '<%= node.point_wkt %>', 'brown');
+        <% end %>
+
         <% comp.wkt_points.each_slice(2) do |point_from, point_to| %>
           component<%= comp_index %>_layer.addFeatures(new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(new Array(
             OpenLayers.Geometry.fromWKT('<%= point_from %>'),
@@ -59,7 +63,7 @@
         <% if !comp.roundtrip.nil? %>
         <%
           roundtrip = comp.roundtrip
-          color = roundtrip.forward_path.complete ? 'green' : 'red'
+          color = roundtrip.complete? ? 'green' : 'red'
         %>
 
         <% if comp.roundtrip.complete? %>
@@ -135,6 +139,14 @@
     vector_layer.addFeatures(new OpenLayers.Feature.Vector(
             OpenLayers.Geometry.fromWKT(point_wkt).transform(new OpenLayers.Projection("EPSG:4326"), map.baseLayer.projection),
             {}, {externalGraphic: image_url, graphicHeight: 24, graphicWidth: 24}));
+  }
+
+  function showPoint(vector_layer, point_wkt, color) {
+    vector_layer.addFeatures(new OpenLayers.Feature.Vector(
+            //OpenLayers.Geometry.Polygon.createRegularPolygon(
+            OpenLayers.Geometry.fromWKT(point_wkt).transform(new OpenLayers.Projection("EPSG:4326"), map.baseLayer.projection),
+            //100, 20, 0),
+            {}, {pointRadius: 6, strokeOpacity: 0.5, fillOpacity: 0.5, fillColor: color}));
   }
 
   function showWays(layer, features, waycolor, zoom) {
