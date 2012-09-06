@@ -1,5 +1,5 @@
 <li> <small>
-<% if status.road.length %>OSM length: <b><%= '%.2f' % status.road.length %></b> km / <% else %>OSM length (approx): <b><%= '%.2f' % status.road.approx_length %></b> km / <% end %>
+<% if status.road.length %>OSM length: <b><%= '%.2f' % status.road.length %></b> km / <% elsif status.road.approx_length %>OSM length (approx): <b><%= '%.2f' % status.road.approx_length %></b> km / <% end %>
 <% if status.road.relation and !status.input_length %>
 no input length ([[OSMonitor#Tags|how to add it?]])
 <% end %>

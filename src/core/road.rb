@@ -111,7 +111,7 @@ class Road
   end
 
   def length
-    return nil if !all_components_have_roundtrip?
+    return nil if !all_components_have_roundtrip? or empty?
     meters = 0
     meters_oneway = 0
     comps.each {|comp| meters += comp.length if find_sister_component(comp).empty?}
@@ -120,6 +120,7 @@ class Road
   end
 
   def approx_length
+    return nil if empty?
     meters = 0
     meters_oneway = 0
     comps.each {|comp| meters += comp.segment_length if find_sister_component(comp).empty?}

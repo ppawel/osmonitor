@@ -59,23 +59,20 @@ class RoadStatus
       add_warning('osm_length')
     end
 
-    #add_info('way_stats') if !percent_with_lanes.nan? and !percent_with_maxspeed.nan?
+    add_info('last_update')
 
     add_error('no_relation') if !road.relation
+    add_error('empty') if road.empty?
     add_error('has_many_covered_relations') if road.relation and has_many_covered_relations
 
     if !ways_without_highway_tag.empty?
       add_error('has_ways_without_highway_tag', {:ways => ways_without_highway_tag})
     end
 
-    #if !too_many_end_nodes.empty? or !too_few_end_nodes.empty?
-    #  add_warning('end_nodes', {:too_many => too_many_end_nodes, :too_few => too_few_end_nodes})
-    #end
-
     # First of all, if the road relation does not have a proper number of components - skip reporting other stuff.
-    if !connected?
+    if !connected? and !road.empty?
       add_error('road_disconnected')
-    else
+    elsif !road.empty?
       add_warning('wrong_length') if road.length and input_length and !has_proper_length
       add_error('not_navigable') if road.length.nil?#road.has_incomplete_paths?
     end
