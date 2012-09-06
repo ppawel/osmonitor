@@ -47,7 +47,7 @@ end
 
 def self.run_report(input_page, output_page)
   report_start = Time.now
-  conn = PGconn.open( :host => $config['host'], :dbname => $config['dbname'], :user => $config['user'], :password => $config['password'] )
+  conn = PGconn.open(:host => $config['host'], :port => $config['port'], :dbname => $config['dbname'], :user => $config['user'], :password => $config['password'])
   road_manager = RoadManager.new(conn)
   report_manager = ReportManager.new(road_manager)
   mw = MediaWiki::Gateway.new('https://wiki.openstreetmap.org/w/api.php')

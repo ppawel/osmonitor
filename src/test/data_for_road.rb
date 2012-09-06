@@ -16,7 +16,7 @@ if ARGV.size != 3
   exit
 end
 
-conn = PGconn.open( :host => $config['host'], :dbname => $config['dbname'], :user => $config['user'], :password => $config['password'] )
+conn = PGconn.open(:host => $config['host'], :port => $config['port'], :dbname => $config['dbname'], :user => $config['user'], :password => $config['password'])
 road_manager = OSMonitor::RoadManager.new(conn)
 road_data = road_manager.get_road_data(ARGV[0], ARGV[1], ARGV[2])
 

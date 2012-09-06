@@ -6,7 +6,7 @@ require 'road_manager'
 
 class BrowseController < ApplicationController
   def road
-    @conn = PGconn.open( :host => $config['host'], :dbname => $config['dbname'], :user => $config['user'], :password => $config['password'] )
+    @conn = PGconn.open(:host => $config['host'], :port => $config['port'], :dbname => $config['dbname'], :user => $config['user'], :password => $config['password'])
     use_cache = params[:use_cache] != 'false'
     road_manager = OSMonitor::RoadManager.new(@conn)
     report_manager = OSMonitor::ReportManager.new(road_manager, Rails.root + '../src/erb/')
@@ -26,6 +26,7 @@ class BrowseController < ApplicationController
     log_time " wkt" do
       @all_ways_wkt = @road.ways.values.reduce('') {|s, w| w.geom ? s + w.geom + ',' : s}[0..-2]
       @mark_points_all = @road.comps.collect {|c| c.end_nodes}.flatten.collect {|node| node.point_wkt}
+      @mark_points_all += @road.comps.collect {|c| c.beginning_nodes}.flatten.collect {|node| node.point_wkt}
     end
   end
 end
