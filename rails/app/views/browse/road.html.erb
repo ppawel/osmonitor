@@ -60,15 +60,12 @@
 
         map.addLayer(component<%= comp_index %>_layer);
 
-        <% if !comp.roundtrip.nil? %>
         <%
           roundtrip = comp.roundtrip
-          color = roundtrip.complete? ? 'green' : 'red'
         %>
 
-        <% if comp.roundtrip.complete? %>
-
-        <% if roundtrip.forward_path %>
+        <% if roundtrip.forward_path.complete %>
+        <% color = roundtrip.forward_path.complete ? 'green' : 'red' %>
         component<%= comp_index %>roundtrip_forward_layer = new OpenLayers.Layer.Vector(
           '<span style="color: <%= color %>">&nbsp;&nbsp;&nbsp;Roundtrip (forward) (<%= "%.2f" % (roundtrip.forward_path.length / 1000.0) %> km)</span>',
           {visibility: false, styleMap: new OpenLayers.StyleMap({'strokeWidth': 2, 'strokeColor': "${waycolor}"})});
@@ -89,6 +86,7 @@
         <% end %>
 
         <% if roundtrip.backward_path %>
+        <% color = roundtrip.backward_path.complete ? 'green' : 'red' %>
         component<%= comp_index %>roundtrip_backward_layer = new OpenLayers.Layer.Vector(
           '<span style="color: <%= color %>">&nbsp;&nbsp;&nbsp;Roundtrip (backward) (<%= "%.2f" % (roundtrip.backward_path.length / 1000.0) %> km)</span>',
           {visibility: false, styleMap: new OpenLayers.StyleMap({'strokeWidth': 2, 'strokeColor': "${waycolor}"})});
@@ -107,7 +105,7 @@
 
         map.addLayer(component<%= comp_index %>roundtrip_backward_layer);
         <% end %>
-        <% else %>
+/*
         <% comp.roundtrip.failed_paths.each_with_index do |path, path_index| %>
           <% color = 'red' %>
 
@@ -128,9 +126,7 @@
           showNode(component<%= comp_index %>failed_path<%= path_index %>_layer, '<%= path.to.point_wkt %>', '<%= asset_path "flag_finish.png" %>');
 
           map.addLayer(component<%= comp_index %>failed_path<%= path_index %>_layer);
-        <% end %>
-        <% end %>
-        <% end %>
+        <% end %>*/
       <% end %>
 
       <% @mark_points_all.each do |p| %>

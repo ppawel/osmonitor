@@ -270,8 +270,8 @@ class RoadComponent
 
     roundtrips << find_roundtrip(Array.new(@exit_nodes))
     roundtrips << find_roundtrip(Array.new(@exit_nodes), true)
-    roundtrips << find_roundtrip(Array.new(@exit_nodes) + closest_nodes(@graph.vertices, @exit_nodes[0], 333))
-    roundtrips << find_roundtrip(Array.new(@exit_nodes) + closest_nodes(@graph.vertices, @exit_nodes[0], 333), true)
+    roundtrips << find_roundtrip(Array.new(@exit_nodes) + closest_nodes_to_all(@graph.vertices, @exit_nodes, 333))
+    roundtrips << find_roundtrip(Array.new(@exit_nodes) + closest_nodes_to_all(@graph.vertices, @exit_nodes, 333), true)
 
     @@log.debug " roundtrips = #{roundtrips}"
     @roundtrip = select_best_roundtrip(roundtrips)
@@ -345,7 +345,8 @@ class RoadComponent
         if dist
           return RoadComponentPath.new(node1, node2, true, segments(@graph.path(node1, node2)))
         else
-          failed = calculate_failed_path(node1, node2)
+          new_failed = calculate_failed_path(node1, node2)
+          failed = new_failed if !failed or new_failed.length > failed.length
         end
       end
     end
@@ -386,6 +387,15 @@ class RoadComponent
     nodes.each do |node_to|
       d = distance_between(node_from, node_to)
       closest << node_to if d and d <= max_dist
+    end
+    closest.uniq
+  end
+
+  # Returns a list of nodes that are within max_dist of given nodes.
+  def closest_nodes_to_all(nodes, nodes_from, max_dist = nil)
+    closest = []
+    nodes.each do |node_to|
+      closest += closest_nodes(nodes_from, node_to, max_dist)
     end
     closest.uniq
   end
@@ -483,6 +493,6 @@ class RoadComponentRoundtrip
   end
 
   def to_s
-    "RoadComponentRoundtrip(complete = #{complete?}, length = #{length})"
+    "RoadComponentRoundtrip(complete = #{complete?.inspect}, length = #{length.inspect}, forward = #{forward_path}, backward = #{backward_path})"
   end
 end
