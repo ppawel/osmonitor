@@ -8,14 +8,14 @@ module OSMonitor
 
 include OSMonitorLogger
 
-REPORT_BEGIN = "<!-- OSMonitor ROADREPORT -->"
-REPORT_END = "<!-- OSMonitor /ROADREPORT -->"
+REPORT_BEGIN = "<!-- OSMonitor CYCLEWAYREPORT -->"
+REPORT_END = "<!-- OSMonitor /CYCLEWAYREPORT -->"
 TIMESTAMP_BEGIN = "<!-- OSMonitor TIMESTAMP -->"
 TIMESTAMP_END = "<!-- OSMonitor /TIMESTAMP -->"
 STATS_BEGIN = "<!-- OSMonitor STATS -->"
 STATS_END = "<!-- OSMonitor /STATS -->"
 
-@overall_report = RoadReport.new
+@overall_report = CYCLEWAYREPORT.new
 
 def self.insert_stats(page_text, report)
   stats_text = ERB.new(File.read("erb/road_report_stats.erb")).result(binding())
@@ -43,7 +43,7 @@ def self.run_report(input_page, output_page)
   page_text = mw.get(input_page)
   old_page_text = page_text.dup
 
-  old_page_text.scan(/((<\!\-\- OSMonitor ROADREPORT (.*?) \-\->).*?(#{Regexp.escape(REPORT_END)}))/mi) do |match|
+  old_page_text.scan(/((<\!\-\- OSMonitor CYCLEWAYREPORT (.*?) \-\->).*?(#{Regexp.escape(REPORT_END)}))/mi) do |match|
     all = match[0]
     beginning = $2
     args = $3
