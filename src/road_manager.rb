@@ -25,16 +25,11 @@ class RoadManager
     log_time " create_graph" do road.create_graph(data) end
     log_time " calculate_components" do road.calculate_components end
 
-    # Calculating stuff is expensive so first check if road has correct components (this is cheap).
+    @@log.debug " comps = #{road.num_comps}, logical_comps = #{road.num_logical_comps}, should be #{road.correct_num_comps}"
 
-    @@log.debug " logical_comps = #{road.num_logical_comps}, should be #{road.correct_num_comps}"
+    log_time " calculate" do road.comps.each {|c| c.calculate} end
 
-#    if road.num_logical_comps == road.correct_num_comps
-      log_time " calculate_beginning_and_end" do road.comps.each {|c| c.calculate_beginning_and_end} end
-      #log_time " calculate_roundtrips" do road.comps.each {|c| c.calculate_roundtrip} end
-#    end
-
-    return road
+    road
   end
 
   def process_tags(row, field_name = 'tags')

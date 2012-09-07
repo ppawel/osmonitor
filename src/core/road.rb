@@ -223,23 +223,28 @@ class RoadComponent
 
   attr_accessor :road
   attr_accessor :graph
-  attr_accessor :undirected_graph
   attr_accessor :oneway
-  attr_accessor :beginning_nodes
-  attr_accessor :end_nodes
   attr_accessor :exit_nodes
   attr_accessor :roundtrip
 
   def initialize(road, graph)
     self.road = road
     self.graph = graph
-    self.beginning_nodes = []
-    self.end_nodes = []
     self.roundtrip = nil
     self.oneway = calculate_oneway
 
     undirected_graph = graph.to_undirected
     self.exit_nodes = undirected_graph.vertices.select {|v| undirected_graph.out_degree(v) <= 1}
+  end
+
+  def beginning_nodes
+    return [] if !@roundtrip
+    @roundtrip.beginning_nodes
+  end
+
+  def end_nodes
+    return [] if !@roundtrip
+    @roundtrip.end_nodes
   end
 
   def length
@@ -251,11 +256,11 @@ class RoadComponent
   end
 
   def found_beginning_and_end?
-    !@beginning_nodes.empty? and !@end_nodes.empty?
+    !self.beginning_nodes.empty? and !self.end_nodes.empty?
   end
 
-  # Calculates beginning and end of this road component.
-  def calculate_beginning_and_end
+  # Calculates beginning and end of this road component and tries to find a roundtrip.
+  def calculate
     if @exit_nodes.empty?
       @@log.debug " No exit nodes?!"
       return
@@ -263,52 +268,46 @@ class RoadComponent
 
     roundtrips = []
 
-    candidate_nodes = @exit_nodes.clone
-    distance_graph = prepare_distance_graph(candidate_nodes)
-    find_beginning_and_end(distance_graph, candidate_nodes)
-    roundtrips << calculate_roundtrip
+    roundtrips << find_roundtrip(Array.new(@exit_nodes))
+    roundtrips << find_roundtrip(Array.new(@exit_nodes), true)
+    roundtrips << find_roundtrip(Array.new(@exit_nodes) + closest_nodes(@graph.vertices, @exit_nodes[0], 333))
+    roundtrips << find_roundtrip(Array.new(@exit_nodes) + closest_nodes(@graph.vertices, @exit_nodes[0], 333), true)
 
-    #if !found_beginning_and_end? or !@roundtrip.complete?
-      @@log.debug " ...again..."
-      candidate_nodes = @exit_nodes.clone
-      expand_candidates(distance_graph, candidate_nodes)
-      distance_graph = prepare_distance_graph(candidate_nodes)
-      find_beginning_and_end(distance_graph, candidate_nodes)
-      roundtrips << calculate_roundtrip
-    #end
+    @@log.debug " roundtrips = #{roundtrips}"
+    @roundtrip = select_best_roundtrip(roundtrips)
+    @@log.debug " best_roundtrip = #{@roundtrip}"
+  end
 
-    #if !found_beginning_and_end? or !@roundtrip.complete?
-      @@log.debug " ...trying again..."
-      candidate_nodes = @exit_nodes.clone + closest_nodes(@graph.vertices, @exit_nodes[0], 333)
-      distance_graph = prepare_distance_graph(candidate_nodes)
-      find_beginning_and_end(distance_graph, candidate_nodes)
-      roundtrips << calculate_roundtrip
-    #end
+  def select_best_roundtrip(roundtrips)
+    result = roundtrips[0]
+    roundtrips.each do |r|
+      result = r if r.complete? and (result.length.nil? or r.length > result.length)
+    end
+    result
+  end
 
-    #if !found_beginning_and_end? or !@roundtrip.complete?
-      @@log.debug " ...and again..."
-      expand_candidates(distance_graph, candidate_nodes)
-      find_beginning_and_end(distance_graph, candidate_nodes)
-      roundtrips << calculate_roundtrip
-    #end
-
-    @roundtrip = roundtrips.select {|r| r.complete?}.max_by {|r| r.length}
-    @roundtrip = roundtrips[0] if !@roundtrip
-
-    @@log.debug " beginning_nodes = #{@beginning_nodes}, end_nodes = #{end_nodes}"
+  def find_roundtrip(nodes, expand = false)
+    distance_graph = prepare_distance_graph(nodes)
+    expand_candidates(distance_graph, nodes) if expand
+    beginning, ends = find_beginning_and_end(distance_graph, nodes)
+    calculate_roundtrip(beginning, ends)
   end
 
   def find_beginning_and_end(distance_graph, candidate_nodes)
+    beginning = []
+    ends = []
     max_pair = distance_graph.furthest_pair_of_nodes(candidate_nodes)
 
-    @@log.debug " exit_nodes = #{exit_nodes}, candidate_nodes = #{candidate_nodes}, max_pair = #{max_pair}"
+    @@log.debug " max_pair = #{max_pair}"
 
     if max_pair
-      @beginning_nodes = [max_pair[0]] + closest_nodes(candidate_nodes, max_pair[0])
-      @beginning_nodes = @beginning_nodes.uniq
-      @end_nodes = [max_pair[1]] + closest_nodes(candidate_nodes, max_pair[1]) - @beginning_nodes
-      @end_nodes = @end_nodes.uniq
+      beginning = [max_pair[0]] + closest_nodes(candidate_nodes, max_pair[0])
+      beginning.uniq!
+      ends = [max_pair[1]] + closest_nodes(candidate_nodes, max_pair[1]) - beginning
+      ends.uniq!
     end
+
+    return beginning, ends
   end
 
   def prepare_distance_graph(candidate_nodes)
@@ -328,14 +327,11 @@ class RoadComponent
   end
 
   def expand_candidates(distance_graph, nodes)
-    result = []
-
     nodes.clone.each do |node|
       max_node, dist = distance_graph.max_dist(node)
       #puts "max_dist(#{node}) = #{max_node}, #{dist}"
       nodes << max_node if max_node
     end
-
     nodes.uniq!
   end
 
@@ -357,15 +353,13 @@ class RoadComponent
     failed
   end
 
-  def calculate_roundtrip
-    forward_path = find_path(@beginning_nodes, @end_nodes)
-    backward_path = find_path(@end_nodes, @beginning_nodes)
+  def calculate_roundtrip(beginning, ends)
+    forward_path = find_path(beginning, ends)
+    backward_path = find_path(ends, beginning)
 
-    result = RoadComponentRoundtrip.new(self, forward_path, backward_path)
+    result = RoadComponentRoundtrip.new(self, beginning, ends, forward_path, backward_path)
     result.failed_paths << forward_path if forward_path and !forward_path.complete
     result.failed_paths << backward_path if backward_path and !backward_path.complete
-
-    @@log.debug " roundtrip = #{result}"
 
     result
   end
@@ -459,12 +453,16 @@ end
 # Represents a roundtrip within a road component. Roundtrip is two paths - from A to B and back.
 class RoadComponentRoundtrip
   attr_accessor :component
+  attr_accessor :beginning_nodes
+  attr_accessor :end_nodes
   attr_accessor :forward_path
   attr_accessor :backward_path
   attr_accessor :failed_paths
 
-  def initialize(component, forward_path, backward_path)
+  def initialize(component, beginning_nodes, end_nodes, forward_path, backward_path)
     self.component = component
+    self.beginning_nodes = beginning_nodes
+    self.end_nodes = end_nodes
     self.forward_path = forward_path
     self.backward_path = backward_path
     self.failed_paths = []
@@ -485,6 +483,6 @@ class RoadComponentRoundtrip
   end
 
   def to_s
-    "RoadComponentRoundtrip(#{forward_path}, #{backward_path})"
+    "RoadComponentRoundtrip(complete = #{complete?}, length = #{length})"
   end
 end
