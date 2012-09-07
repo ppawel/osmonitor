@@ -1,0 +1,1 @@
+<% if status.road.last_update %><li> <small>last update: <%= status.road.last_update.timestamp %> by {{OSM user|<%= status.road.last_update.user_name %>}} (changeset {{changeset|<%= status.road.last_update.changeset_id %>|tools=no}})</small><% end %>

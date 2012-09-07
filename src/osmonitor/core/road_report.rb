@@ -181,6 +181,7 @@ class RoadReport
 
   # Returns percent_green, percent_yellow, percent_red.
   def get_percentages
+    return 0, 0, 0 if statuses.size == 0
     green = statuses.select {|status| status.green?}.size
     yellow = statuses.select {|status| status.get_issues(:WARNING).size > 0 and status.get_issues(:ERROR).size == 0}.size
     red = statuses.select {|status| status.get_issues(:ERROR).size > 0}.size

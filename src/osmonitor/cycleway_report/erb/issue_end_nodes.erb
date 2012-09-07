@@ -1,0 +1,6 @@
+<% if !issue.data[:too_few].empty? %>
+<li> <small>some components have too few end nodes (<% issue.data[:too_few].each {|end_nodes| %><%= end_nodes.size %>, <% } %>)</small>
+<% end %>
+<% if !issue.data[:too_many].empty? %>
+<li> <small>some components have too many end nodes (<% issue.data[:too_many].each {|end_nodes| %><%= end_nodes.size %>, <% } %>)</small>
+<% end %>
