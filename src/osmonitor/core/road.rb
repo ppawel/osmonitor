@@ -259,11 +259,12 @@ class RoadComponent
     end
 
     roundtrips = []
+    closest_to_all = closest_nodes_to_all(@graph.vertices, @exit_nodes, 333)[0..5]
 
     roundtrips << find_roundtrip(Array.new(@exit_nodes))
     roundtrips << find_roundtrip(Array.new(@exit_nodes), true)
-    roundtrips << find_roundtrip(Array.new(@exit_nodes) + closest_nodes_to_all(@graph.vertices, @exit_nodes, 333))
-    roundtrips << find_roundtrip(Array.new(@exit_nodes) + closest_nodes_to_all(@graph.vertices, @exit_nodes, 333), true)
+    roundtrips << find_roundtrip(Array.new(@exit_nodes) + closest_to_all)
+    roundtrips << find_roundtrip(Array.new(@exit_nodes) + closest_to_all, true)
 
     @@log.debug " roundtrips = #{roundtrips}"
     @roundtrip = select_best_roundtrip(roundtrips)
