@@ -42,9 +42,10 @@ class RoadManager
   SELECT
     r.id AS relation_id,
     r.tags AS relation_tags,
-    user_id AS last_update_user_id,
+    r.user_id AS last_update_user_id,
     u.name AS last_update_user_name,
-    tstamp AS last_update_timestamp,
+    r.tstamp AS last_update_timestamp,
+    r.changeset_id AS last_update_changeset_id,
     OSM_IsMostlyCoveredBy('boundary_#{road.country}', r.id) AS covered
   FROM relations r
   LEFT JOIN users u ON (u.id = r.user_id)
@@ -66,7 +67,10 @@ class RoadManager
   end
 
   def create_relation(row)
-    Relation.new(row['relation_id'].to_i, row['relation_tags'])
+    relation = Relation.new(row['relation_id'].to_i, row['relation_tags'])
+    relation.last_update = Changeset.new(row['last_update_user_id'].to_i, row['last_update_user_name'],
+      row['last_update_timestamp'], row['last_update_changeset_id'])
+    relation
   end
 
   def load_ways(road)
