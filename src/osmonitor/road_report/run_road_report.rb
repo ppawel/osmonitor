@@ -1,19 +1,8 @@
-#!/usr/bin/ruby
+$:.unshift File.absolute_path(File.dirname(__FILE__) + '/../../')
+$:.unshift File.absolute_path(File.dirname(__FILE__) + '/../../../')
 
-$:.unshift File.dirname(__FILE__)
-
-require 'elogger'
-require 'core'
-
-require 'net/http'
+require 'osmonitor'
 require 'erb'
-require 'media_wiki'
-require 'pg'
-
-require 'config'
-require 'report_manager'
-require 'road_manager'
-require 'wiki'
 
 module OSMonitor
 

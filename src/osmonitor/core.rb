@@ -17,7 +17,10 @@ class Array
     end
 end
 
-require 'core/logging'
-require 'core/osm'
-require 'core/road'
-require 'core/road_report'
+require 'osmonitor/core/elogger'
+require 'osmonitor/core/logging'
+require 'osmonitor/core/osm'
+require 'osmonitor/core/rgl'
+require 'osmonitor/core/road'
+require 'osmonitor/core/road_report'
+require 'osmonitor/core/wiki'

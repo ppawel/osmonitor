@@ -1,15 +1,7 @@
-require 'config'
-require 'core/logging'
-require 'core/osm'
 require 'rgeo'
-require 'rgl/adjacency'
-require 'rgl/implicit'
-require 'rgl/connected_components'
-require 'rgl/dot'
-require 'rgl/topsort'
-require 'rgl/base'
-require 'rgl/paths'
-require 'rgl/bidirectional'
+
+require 'config'
+require 'osmonitor/core'
 
 $rgeo_factory = ::RGeo::Geographic.spherical_factory()
 

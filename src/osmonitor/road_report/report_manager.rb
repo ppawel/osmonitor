@@ -1,4 +1,4 @@
-require 'core'
+require 'osmonitor/core'
 require 'erb'
 require 'pg'
 
