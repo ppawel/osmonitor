@@ -160,7 +160,7 @@ class RoadManager
   end
 
   def get_sql_with_exceptions
-    "(NOT w.tags ?| ARRAY['aerialway', 'aeroway', 'building', 'construction', 'waterway']) AND
+    "(NOT w.tags ?| ARRAY['aerialway', 'aeroway', 'building', 'waterway']) AND
     ((w.tags -> 'railway') IS NULL OR (w.tags -> 'highway') IS NOT NULL) AND
     ((w.tags -> 'highway') IS NULL OR w.tags -> 'highway' != 'cycleway')"
   end
