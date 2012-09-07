@@ -298,8 +298,6 @@ class RoadComponent
     ends = []
     max_pair = distance_graph.furthest_pair_of_nodes(candidate_nodes)
 
-    @@log.debug " max_pair = #{max_pair}"
-
     if max_pair
       beginning = [max_pair[0]] + closest_nodes(candidate_nodes, max_pair[0])
       beginning.uniq!
@@ -394,8 +392,8 @@ class RoadComponent
   # Returns a list of nodes that are within max_dist of given nodes.
   def closest_nodes_to_all(nodes, nodes_from, max_dist = nil)
     closest = []
-    nodes.each do |node_to|
-      closest += closest_nodes(nodes_from, node_to, max_dist)
+    nodes_from.each do |node_from|
+      closest += closest_nodes(nodes, node_from, max_dist)
     end
     closest.uniq
   end
