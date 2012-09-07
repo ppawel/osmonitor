@@ -381,7 +381,7 @@ class RoadComponent
 
   # Returns a list of nodes that are within max_dist of given node.
   def closest_nodes(nodes, node_from, max_dist = nil)
-    max_dist = [segment_length * 0.05, 2222].min if !max_dist
+    max_dist = [segment_length * 0.10, 2222].min if !max_dist
     closest = []
     nodes.each do |node_to|
       d = distance_between(node_from, node_to)
