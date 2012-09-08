@@ -1,2 +1,7 @@
-# Run replication every minute (for minutely diffs this makes sense).
-* * * * * /bin/bash /home/ppawel/osmonitor/cron/run_replication.sh
+# m h  dom mon dow   command
+#0 7,9,11,13,15,17,19,21,23 * * * /bin/bash /home/ppawel/osmonitor/cron/run_replication.sh
+#*/5 * * * * /bin/bash /home/ppawel/osmonitor/cron/run_replication.sh
+#0 8,10,12,14,16,18,20,22,0 * * * /bin/bash /home/ppawel/osmonitor/cron/run_road_report.sh "OSMonitor/Poland_Major_Roads" /home/ppawel/log/report_poland_major.log
+#15 8,10,12,14,16,18,20,22,0 * * * /bin/bash /home/ppawel/osmonitor/cron/run_road_report.sh "OSMonitor/Poland_Regional_Roads" /home/ppawel/log/report_poland_regional.log
+#30 8 * * * /bin/bash /home/ppawel/osmonitor/cron/run_road_report.sh "OSMonitor/Serbia_Major_Roads" /home/ppawel/log/report_serbia_major.log
+#45 8 * * * /bin/bash /home/ppawel/osmonitor/cron/run_road_report.sh "OSMonitor/Serbia_Regional_Roads" /home/ppawel/log/report_serbia_regional.log

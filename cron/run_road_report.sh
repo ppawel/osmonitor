@@ -8,4 +8,4 @@ export LANG="en_US.utf8"
 
 cd /home/ppawel/osmonitor/src
 
-ruby run_road_report.rb $1 &> $2
+ruby run_wiki_reports.rb $1 &> $2
