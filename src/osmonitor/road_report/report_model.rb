@@ -45,7 +45,8 @@ class RoadStatus
   end
 
   def input_length
-    road.relation.distance if road.relation
+    return road.relation.distance if road.relation.distance
+    return road.input['distance'].to_f if road.input.has_key?('distance')
   end
 
   def found_beginning_and_end?
@@ -103,11 +104,11 @@ class RoadStatus
   end
 
   def length_diff
-    return (road.length - road.relation.distance).abs.to_i
+    return (road.length - input_length).abs.to_i
   end
 
   def has_proper_length
-    return nil if !road.relation or !road.length or !road.relation.distance
+    return nil if !road.length or !input_length
     return length_diff < 2
   end
 

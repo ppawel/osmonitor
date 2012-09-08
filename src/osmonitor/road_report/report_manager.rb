@@ -34,9 +34,8 @@ class ReportManager
 
     input.each_with_index do |row, i|
       road_before = Time.now
-      ref_prefix, ref_number = Road.parse_ref(row['ref'])
 
-      @@log.debug("BEGIN road #{country} / #{ref_prefix + ref_number} (#{i + 1} of #{input.size})")
+      @@log.debug("BEGIN road #{country} / #{row['ref']} (#{i + 1} of #{input.size})")
 
       road = nil
       status = nil
@@ -47,7 +46,7 @@ class ReportManager
       end
 
       if !status or !road
-        road = road_manager.load_road(country, ref_prefix, ref_number)
+        road = road_manager.load_road(country, row)
 
         @@log.debug(" Road loaded! Validating...")
 
@@ -63,7 +62,7 @@ class ReportManager
 
       report.add_status(status)
 
-      @@log.debug("END road #{country} / #{road.ref_prefix + road.ref_number} took #{Time.now - road_before} " +
+      @@log.debug("END road #{country} / #{row['ref']} took #{Time.now - road_before} " +
         "(comps = #{status.road.comps.map {|c| c.graph.num_vertices}.inspect})")
     end
 

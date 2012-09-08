@@ -12,7 +12,7 @@ class InputManager
   protected
 
   def load_cycleways(report_request)
-    result = to_hash_array(CSV.read("#{get_data_path}/cycleways/#{report_request.country}.csv", {:headers => true}))
+    to_hash_array(CSV.read("#{get_data_path}/cycleways/#{report_request.country}.csv", {:headers => true}))
   end
 
   def load_roads(report_request)
@@ -29,7 +29,7 @@ class InputManager
   end
 
   def to_hash_array(result)
-    return result if not result.class == 'CSV::Table'
+    return result if result.class.to_s != 'CSV::Table'
     Array.new(result.collect {|row| row.to_hash})
   end
 
