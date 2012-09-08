@@ -3,6 +3,9 @@ require 'rgeo'
 require 'config'
 require 'osmonitor/core'
 
+module OSMonitor
+module RoadReport
+
 $rgeo_factory = ::RGeo::Geographic.spherical_factory()
 
 def distance_between(node1, node2)
@@ -16,7 +19,7 @@ class Road
   include OSMonitorLogger
 
   def self.parse_ref(ref)
-    ref.scan(/^([^\d\.]+)(.*)$/)
+    ref.scan(/^([^\d\.]*)(.*)$/)
     return $1, $2
   end
 
@@ -487,4 +490,7 @@ class RoadComponentRoundtrip
   def to_s
     "RoadComponentRoundtrip(complete = #{complete?.inspect}, length = #{length.inspect}, forward = #{forward_path}, backward = #{backward_path})"
   end
+end
+
+end
 end

@@ -3,6 +3,7 @@ require 'erb'
 require 'pg'
 
 module OSMonitor
+module RoadReport
 
 class ReportManager
   include OSMonitorLogger
@@ -19,18 +20,16 @@ class ReportManager
     self.report_template = ERB.new(File.read("#{erb_path}road_report.erb"), nil, '<>')
   end
 
-  def generate_road_report(country, refs, use_cache = false)
+  def generate_report(country, input, use_cache = false)
     report = RoadReport.new
 
-    @@log.debug "Got #{refs.size} road(s) to process: #{refs}"
+    @@log.debug "Got input (size = #{input.size})"
 
-    refs.each_with_index do |ref, i|
-      ref_prefix, ref_number = Road.parse_ref(ref)
-      next if !ref_prefix or !ref_number
-
+    input.each_with_index do |row, i|
       road_before = Time.now
+      ref_prefix, ref_number = Road.parse_ref(row['ref'])
 
-      @@log.debug("BEGIN road #{country} / #{ref_prefix + ref_number} (#{i + 1} of #{refs.size})")
+      @@log.debug("BEGIN road #{country} / #{ref_prefix + ref_number} (#{i + 1} of #{input.size})")
 
       road = nil
       status = nil
@@ -93,4 +92,5 @@ class ReportManager
   end
 end
 
+end
 end

@@ -2,15 +2,18 @@ $:.unshift File.absolute_path(File.dirname(__FILE__) + '/../../')
 $:.unshift File.absolute_path(File.dirname(__FILE__) + '/../../../')
 
 require 'osmonitor'
+require 'csv'
 require 'erb'
 
 module OSMonitor
+module CyclewayReport
 
 include OSMonitorLogger
 
 @overall_report = RoadReport.new
 
-def read_input
+def self.read_input
+  CSV.read("../../../data/cycleways/CR_test.csv", {:headers => true})
 end
 
 def self.render_stats(report)
@@ -40,14 +43,9 @@ def self.run_report(input_page, output_page)
     ref_prefix = segment.params['ref_prefix']
     report_text = nil
 
-    if !refs.empty?
-      report, report_text = report_manager.generate_road_report(country, refs)
-      @overall_report.add(report)
-    elsif !ref_prefix.empty?
-      IO.readlines("../data/road_refs/#{country}_#{ref_prefix}.txt").each {|ref| refs << "#{ref_prefix}#{ref.gsub(/\n/, '')}"}
-      report, report_text = report_manager.generate_road_report(country, refs)
-      @overall_report.add(report)
-    end
+    input = read_input
+    report, report_text = report_manager.generate_report(country, input)
+    @overall_report.add(report)
 
     wiki_manager.replace_segment(page, segment, report_text)
   end
@@ -73,6 +71,7 @@ def self.run_report(input_page, output_page)
 end
 
 end
+end
 
 if ARGV.size == 0
   puts "Usage: road_report.rb <input page> <output page>"
@@ -84,4 +83,4 @@ else
   output_page = ARGV[1]
 end
 
-OSMonitor.run_report(input_page, output_page)
+OSMonitor::CyclewayReport::run_report(input_page, output_page)

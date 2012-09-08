@@ -1,3 +1,6 @@
+module OSMonitor
+module CyclewayReport
+
 class RoadStatus
   attr_accessor :road
   attr_accessor :issues
@@ -164,36 +167,8 @@ class RoadIssue
   end
 end
 
-class RoadReport
-  attr_accessor :statuses
+class RoadReport < OSMonitor::RoadReport::RoadReport
+end
 
-  def initialize
-    self.statuses = []
-  end
-
-  def add_status(status)
-    statuses << status
-  end
-
-  def add(report)
-    @statuses += report.statuses
-  end
-
-  # Returns percent_green, percent_yellow, percent_red.
-  def get_percentages
-    return 0, 0, 0 if statuses.size == 0
-    green = statuses.select {|status| status.green?}.size
-    yellow = statuses.select {|status| status.get_issues(:WARNING).size > 0 and status.get_issues(:ERROR).size == 0}.size
-    red = statuses.select {|status| status.get_issues(:ERROR).size > 0}.size
-    return (green / statuses.size.to_f * 100).to_i, (yellow / statuses.size.to_f * 100).to_i, (red / statuses.size.to_f * 100).to_i
-  end
-
-  # Returns length statistics (in km): total_input_length, green_length, green_length_percent.
-  def get_length_stats
-    total_input_length = statuses.reduce(0) {|total, status| status.input_length.nil? ? total : (total + status.input_length)}
-    green_length = statuses.inject(0) {|total, status| status.green? ? total + status.road.length : total}
-    green_length_percent = 0
-    green_length_percent = green_length / total_input_length * 100 if total_input_length > 0
-    return total_input_length, green_length, green_length_percent
-  end
+end
 end

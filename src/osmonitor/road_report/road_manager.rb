@@ -1,6 +1,7 @@
 require 'config'
 
 module OSMonitor
+module RoadReport
 
 class RoadManager
   include OSMonitorLogger
@@ -182,4 +183,5 @@ class RoadManager
   end
 end
 
+end
 end
