@@ -45,7 +45,7 @@ class RoadStatus
   end
 
   def input_length
-    return road.relation.distance if road.relation.distance
+    return road.relation.distance if road.relation and road.relation.distance
     return road.input['distance'].to_f if road.input.has_key?('distance')
   end
 
