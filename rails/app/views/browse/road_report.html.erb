@@ -64,7 +64,7 @@
           roundtrip = comp.roundtrip
         %>
 
-        <% if roundtrip.forward_path.complete %>
+        <% if roundtrip.forward_path %>
         <% color = roundtrip.forward_path.complete ? 'green' : 'red' %>
         component<%= comp_index %>roundtrip_forward_layer = new OpenLayers.Layer.Vector(
           '<span style="color: <%= color %>">&nbsp;&nbsp;&nbsp;Roundtrip (forward) (<%= "%.2f" % (roundtrip.forward_path.length / 1000.0) %> km)</span>',
