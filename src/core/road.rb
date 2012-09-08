@@ -103,7 +103,8 @@ class Road
 
   def last_update
     last_updated_way = ways.values.max_by {|way| way.last_update.timestamp}
-    [last_updated_way, @relation].max_by {|item| item.nil? ? '1111-11-11 11:11' : item.last_update.timestamp}.last_update
+    last_updated_item = [last_updated_way, @relation].max_by {|item| item.nil? ? '1111-11-11 11:11' : item.last_update.timestamp}
+    return last_updated_item.last_update if last_updated_item
   end
 
   def find_sister_component(c)
