@@ -1,5 +1,6 @@
 OsmonitorRails::Application.routes.draw do
-  match "browse/road/:country/:ref" => 'browse#road', :constraints => { :ref => /.*/ }
+  match "browse/road_report/:country/:ref" => 'browse#road_report', :constraints => { :ref => /.*/ }
+  match "browse/cycleway_report/:country/:ref" => 'browse#cycleway_report', :constraints => { :ref => /.*/ }
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

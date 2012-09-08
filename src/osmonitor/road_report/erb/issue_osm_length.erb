@@ -6,4 +6,4 @@ no input length ([[OSMonitor#Tags|how to add it?]])
 <% if status.input_length %>
 input length: <i><%= '%.2f' % status.input_length %></i> km
 <% end %>
-[<%= create_osmonitor_url(status.road) %> show in OSMonitor]</small>
+[<%= create_osmonitor_url(report, status.road) %> show in OSMonitor]</small>

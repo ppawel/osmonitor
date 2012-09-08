@@ -21,8 +21,8 @@ class WikiManager
     self.gateway = MediaWiki::Gateway.new('https://wiki.openstreetmap.org/w/api.php')
   end
 
-  def get_erb_path
-    $osmonitor_home_dir + '/src/osmonitor/road_report/erb'
+  def get_erb_path(report_type)
+    $osmonitor_home_dir + "/src/osmonitor/#{report_type.downcase}/erb"
   end
 
   def login(user, password)
@@ -31,20 +31,25 @@ class WikiManager
 
   def render_reports_on_page(page)
     overall_report = OSMonitor::RoadReport::RoadReport.new
+    overall_report.report_request = ReportRequest.new
+    overall_report.report_request.report_type = 'ROAD_REPORT'
+
     page.get_segments('CYCLEWAY_REPORT').each {|segment| render_road_report(@cycleway_report_manager, page, segment, overall_report)}
     page.get_segments('ROAD_REPORT').each {|segment| render_road_report(@road_report_manager, page, segment, overall_report)}
     page.get_segments('ROAD_STATS').each {|segment| replace_segment(page, segment, render_stats(overall_report))}
   end
 
   def render_road_report(manager, page, segment, overall_report)
+    report_request = segment.to_report_request
     country = segment.params['country']
     refs = []
     refs = segment.params['refs'].split(',') if segment.params['refs']
     ref_prefix = segment.params['ref_prefix']
     report_text = nil
 
-    input = @input_manager.load(segment.to_report_request)
+    input = @input_manager.load(report_request)
     report = manager.generate_report(country, input)
+    report.report_request = report_request
     overall_report.add(report)
 
     report_text = render_erb('road_report.erb', country, report)
@@ -52,11 +57,11 @@ class WikiManager
   end
 
   def render_erb(file, country, report = nil, status = nil, issue = nil)
-    return ERB.new(File.read("#{get_erb_path}/#{file}"), nil, '<>').result(binding)
+    return ERB.new(File.read("#{get_erb_path(report.report_request.report_type)}/#{file}"), nil, '<>').result(binding)
   end
 
   def render_stats(report)
-     render_erb('road_report_stats.erb', report).result(binding())
+     render_erb('road_report_stats.erb', nil, report)
   end
 
   def get_osmonitor_page(input_page)
@@ -116,6 +121,7 @@ class OSMonitorWikiPageSegment
   def to_report_request
     request = ReportRequest.new
     request.report_type = type
+    request.country = params['country']
     request.params = params
     request
   end

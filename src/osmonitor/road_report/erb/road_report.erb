@@ -32,7 +32,7 @@
 <td>
 <ul>
 <% status.issues.each do |issue| %>
-<%= render_erb("issue_#{issue.name}.erb", country, nil, status, issue) %>
+<%= render_erb("issue_#{issue.name}.erb", country, report, status, issue) %>
 <% end %>
 </ul>
 </td>

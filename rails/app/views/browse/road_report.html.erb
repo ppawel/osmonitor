@@ -1,0 +1,191 @@
+<script type="text/javascript">
+  function refreshReport() {
+    var new_location = window.location.toString();
+    if (new_location.indexOf("use_cache") == -1) {
+      new_location = window.location.toString() + "?use_cache=false";
+    }
+    window.location.assign(new_location);
+  }
+
+  var map, vectors, formats, wkt;
+
+  function init(){
+      map = new OpenLayers.Map('map', {
+          'projection': new OpenLayers.Projection("EPSG:900913"),
+          'displayProjection': new OpenLayers.Projection('EPSG:4326')});
+
+      wms = new OpenLayers.Layer.OSM();
+
+      map.addLayers([wms]);
+
+      wkt = new OpenLayers.Format.WKT({
+          'internalProjection': map.baseLayer.projection,
+          'externalProjection': new OpenLayers.Projection('EPSG:4326')
+      });
+
+      map.addControl(new OpenLayers.Control.ScaleLine());
+      map.addControl(new OpenLayers.Control.MousePosition());
+      map.addControl(new OpenLayers.Control.Permalink(null, 'http://www.openstreetmap.org/', {}));
+
+      layer_switcher = new OpenLayers.Control.LayerSwitcher()
+      map.addControl(layer_switcher);
+      layer_switcher.maximizeControl();
+
+      all_ways_layer = new OpenLayers.Layer.Vector("Road (all ways + end nodes)",
+        {visibility: true, styleMap: new OpenLayers.StyleMap({'strokeWidth': 4, 'strokeColor': "black", strokeOpacity: 1})});
+      showWaysFromString(all_ways_layer, 'GEOMETRYCOLLECTION(<%= @all_ways_wkt %>)', 'green', true);
+      map.addLayer(all_ways_layer);
+
+      <% @road.comps.each_with_index do |comp, comp_index| %>
+        component<%= comp_index %>_layer = new OpenLayers.Layer.Vector(
+          'Component <%= comp_index + 1 %>',
+          {
+            visibility: false,
+            styleMap: new OpenLayers.StyleMap({'strokeWidth': 2, 'strokeColor': "blue", strokeOpacity: 1})
+          }
+        );
+
+        <% comp.exit_nodes.each do |node| %>
+        showPoint(component<%= comp_index %>_layer, '<%= node.point_wkt %>', 'brown');
+        <% end %>
+
+        <% comp.wkt_points.each_slice(2) do |point_from, point_to| %>
+          component<%= comp_index %>_layer.addFeatures(new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(new Array(
+            OpenLayers.Geometry.fromWKT('<%= point_from %>'),
+            OpenLayers.Geometry.fromWKT('<%= point_to %>'))).transform(
+              new OpenLayers.Projection("EPSG:4326"),
+              map.baseLayer.projection
+            )));
+        <% end %>
+
+        map.addLayer(component<%= comp_index %>_layer);
+
+        <%
+          roundtrip = comp.roundtrip
+        %>
+
+        <% if roundtrip.forward_path.complete %>
+        <% color = roundtrip.forward_path.complete ? 'green' : 'red' %>
+        component<%= comp_index %>roundtrip_forward_layer = new OpenLayers.Layer.Vector(
+          '<span style="color: <%= color %>">&nbsp;&nbsp;&nbsp;Roundtrip (forward) (<%= "%.2f" % (roundtrip.forward_path.length / 1000.0) %> km)</span>',
+          {visibility: false, styleMap: new OpenLayers.StyleMap({'strokeWidth': 2, 'strokeColor': "${waycolor}"})});
+
+        <% roundtrip.forward_path.wkt_points.each_slice(2) do |point_from, point_to| %>
+        component<%= comp_index %>roundtrip_forward_layer.addFeatures(new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(new Array(
+          OpenLayers.Geometry.fromWKT('<%= point_from %>'),
+          OpenLayers.Geometry.fromWKT('<%= point_to %>'))).transform(
+            new OpenLayers.Projection("EPSG:4326"),
+            map.baseLayer.projection
+          ), {waycolor: '<%= color %>'}));
+        <% end %>
+
+        showNode(component<%= comp_index %>roundtrip_forward_layer, '<%= roundtrip.forward_path.from.point_wkt %>', '<%= asset_path "flag_green.png" %>');
+        showNode(component<%= comp_index %>roundtrip_forward_layer, '<%= roundtrip.forward_path.to.point_wkt %>', '<%= asset_path "flag_finish.png" %>');
+
+        map.addLayer(component<%= comp_index %>roundtrip_forward_layer);
+        <% end %>
+
+        <% if roundtrip.backward_path %>
+        <% color = roundtrip.backward_path.complete ? 'green' : 'red' %>
+        component<%= comp_index %>roundtrip_backward_layer = new OpenLayers.Layer.Vector(
+          '<span style="color: <%= color %>">&nbsp;&nbsp;&nbsp;Roundtrip (backward) (<%= "%.2f" % (roundtrip.backward_path.length / 1000.0) %> km)</span>',
+          {visibility: false, styleMap: new OpenLayers.StyleMap({'strokeWidth': 2, 'strokeColor': "${waycolor}"})});
+
+        <% roundtrip.backward_path.wkt_points.each_slice(2) do |point_from, point_to| %>
+        component<%= comp_index %>roundtrip_backward_layer.addFeatures(new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(new Array(
+          OpenLayers.Geometry.fromWKT('<%= point_from %>'),
+          OpenLayers.Geometry.fromWKT('<%= point_to %>'))).transform(
+            new OpenLayers.Projection("EPSG:4326"),
+            map.baseLayer.projection
+          ), {waycolor: '<%= color %>'}));
+        <% end %>
+
+        showNode(component<%= comp_index %>roundtrip_backward_layer, '<%= roundtrip.backward_path.from.point_wkt %>', '<%= asset_path "flag_green.png" %>');
+        showNode(component<%= comp_index %>roundtrip_backward_layer, '<%= roundtrip.backward_path.to.point_wkt %>', '<%= asset_path "flag_finish.png" %>');
+
+        map.addLayer(component<%= comp_index %>roundtrip_backward_layer);
+        <% end %>
+/*
+        <% comp.roundtrip.failed_paths.each_with_index do |path, path_index| %>
+          <% color = 'red' %>
+
+          component<%= comp_index %>failed_path<%= path_index %>_layer = new OpenLayers.Layer.Vector(
+            '<span style="color: <%= color %>">&nbsp;&nbsp;&nbsp;Failed path <%= path_index + 1 %> (<%= "%.2f" % (path.length / 1000.0) %> km)</span>',
+            {visibility: false, styleMap: new OpenLayers.StyleMap({'strokeWidth': 2, 'strokeColor': "${waycolor}"})});
+
+          <% path.wkt_points.each_slice(2) do |point_from, point_to| %>
+          component<%= comp_index %>failed_path<%= path_index %>_layer.addFeatures(new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(new Array(
+            OpenLayers.Geometry.fromWKT('<%= point_from %>'),
+            OpenLayers.Geometry.fromWKT('<%= point_to %>'))).transform(
+              new OpenLayers.Projection("EPSG:4326"),
+              map.baseLayer.projection
+            ), {waycolor: '<%= color %>'}));
+          <% end %>
+
+          showNode(component<%= comp_index %>failed_path<%= path_index %>_layer, '<%= path.from.point_wkt %>', '<%= asset_path "flag_green.png" %>');
+          showNode(component<%= comp_index %>failed_path<%= path_index %>_layer, '<%= path.to.point_wkt %>', '<%= asset_path "flag_finish.png" %>');
+
+          map.addLayer(component<%= comp_index %>failed_path<%= path_index %>_layer);
+        <% end %>*/
+      <% end %>
+
+      <% @mark_points_all.each do |p| %>
+        showNode(all_ways_layer, '<%= p %>', '<%= asset_path "flag_blue.png" %>');
+      <% end %>
+  }
+
+  function showNode(vector_layer, point_wkt, image_url) {
+    vector_layer.addFeatures(new OpenLayers.Feature.Vector(
+            OpenLayers.Geometry.fromWKT(point_wkt).transform(new OpenLayers.Projection("EPSG:4326"), map.baseLayer.projection),
+            {}, {externalGraphic: image_url, graphicHeight: 24, graphicWidth: 24}));
+  }
+
+  function showPoint(vector_layer, point_wkt, color) {
+    vector_layer.addFeatures(new OpenLayers.Feature.Vector(
+            //OpenLayers.Geometry.Polygon.createRegularPolygon(
+            OpenLayers.Geometry.fromWKT(point_wkt).transform(new OpenLayers.Projection("EPSG:4326"), map.baseLayer.projection),
+            //100, 20, 0),
+            {}, {pointRadius: 6, strokeOpacity: 0.5, fillOpacity: 0.5, fillColor: color}));
+  }
+
+  function showWays(layer, features, waycolor, zoom) {
+    var bounds;
+      if(features) {
+          if(features.constructor != Array) {
+              features = [features];
+          }
+          okfeatures = new Array();
+          for(var i=0; i<features.length; ++i) {
+              if (features[i] == undefined || features[i].attributes == undefined) {
+                continue;
+              }
+              //alert(features[i]);
+              features[i].attributes.waycolor = waycolor;
+              if (!bounds) {
+                  bounds = features[i].geometry.getBounds();
+              } else {
+                  bounds.extend(features[i].geometry.getBounds());
+              }
+              okfeatures.push(features[i]);
+
+          }
+          layer.addFeatures(okfeatures);
+          if (zoom) {
+            map.zoomToExtent(bounds);
+          }
+      }
+  }
+
+  function showWaysFromString(layer, s, waycolor, zoom) {
+      showWays(layer, wkt.read(s), waycolor, zoom);
+  }
+</script>
+<div id="content">
+<div id="map" class="smallmap"></div>
+<br />
+<button name="use_cache" onclick="refreshReport()">refresh report</button>
+<br>
+
+<br>
+icons from <a href="http://www.fatcow.com/free-icons">FatCow</a>
+</div>

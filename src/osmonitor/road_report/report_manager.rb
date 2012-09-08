@@ -42,7 +42,7 @@ class ReportManager
       status = nil
 
       if use_cache
-        status = status_from_cache(country, ref)
+        status = status_from_cache(country, row['ref'])
         road = status.road if status
       end
 

@@ -168,6 +168,7 @@ class RoadIssue
 end
 
 class RoadReport
+  attr_accessor :report_request
   attr_accessor :statuses
 
   def initialize

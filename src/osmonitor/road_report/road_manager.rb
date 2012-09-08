@@ -53,7 +53,7 @@ class RoadManager
   WHERE
     #{get_find_relation_sql_where_clause(road)}
   ORDER BY covered DESC, r.id"
-puts sql
+#puts sql
     result = @conn.query(sql).collect {|row| process_tags(row, 'relation_tags')}
     road.relation = create_relation(result[0]) if result.size > 0 and result[0]['covered'] == 't'
 
@@ -99,7 +99,7 @@ puts sql
     node_dist_to_next
   FROM (#{from_sql}) AS query
   ORDER BY way_id, node_sequence_id, relation_sequence_id NULLS LAST, relation_id NULLS LAST"
-puts sql
+#puts sql
     result = @conn.query(sql).collect do |row|
       # This simply translates "tags" columns to Ruby hashes.
       process_tags(row, 'way_tags')
