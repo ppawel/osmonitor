@@ -2,6 +2,8 @@ require 'config'
 require 'erb'
 require 'media_wiki'
 
+module OSMonitor
+
 # Responsible for:
 # * interaction with a MediaWiki instance (can fetch/update pages)
 # * processing (parsing, replacing) OSMonitor segments in a wiki page
@@ -9,12 +11,18 @@ require 'media_wiki'
 class WikiManager
   attr_accessor :cycleway_report_manager
   attr_accessor :road_report_manager
+  attr_accessor :input_manager
   attr_accessor :gateway
 
   def initialize(cycleway_report_manager, road_report_manager)
     self.cycleway_report_manager = cycleway_report_manager
     self.road_report_manager = road_report_manager
+    self.input_manager = InputManager.new
     self.gateway = MediaWiki::Gateway.new('https://wiki.openstreetmap.org/w/api.php')
+  end
+
+  def get_erb_path
+    $osmonitor_home_dir + '/src/osmonitor/road_report/erb'
   end
 
   def login(user, password)
@@ -35,15 +43,20 @@ class WikiManager
     ref_prefix = segment.params['ref_prefix']
     report_text = nil
 
-    input = read_input
-    report, report_text = manager.generate_report(country, input)
+    input = @input_manager.load(segment.to_report_request)
+    report = manager.generate_report(country, input)
     overall_report.add(report)
 
+    report_text = render_erb('road_report.erb', country, report)
     replace_segment(page, segment, report_text)
   end
 
+  def render_erb(file, country, report = nil, status = nil, issue = nil)
+    return ERB.new(File.read("#{get_erb_path}/#{file}"), nil, '<>').result(binding)
+  end
+
   def render_stats(report)
-    ERB.new(File.read("erb/road_report_stats.erb")).result(binding())
+     render_erb('road_report_stats.erb', report).result(binding())
   end
 
   def get_osmonitor_page(input_page)
@@ -99,4 +112,13 @@ class OSMonitorWikiPageSegment
   attr_accessor :ending
   attr_accessor :type
   attr_accessor :params
+
+  def to_report_request
+    request = ReportRequest.new
+    request.report_type = type
+    request.params = params
+    request
+  end
+end
+
 end

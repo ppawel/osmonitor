@@ -1,5 +1,4 @@
 require 'osmonitor/core'
-require 'erb'
 require 'pg'
 
 module OSMonitor

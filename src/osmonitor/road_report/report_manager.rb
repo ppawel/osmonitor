@@ -1,5 +1,4 @@
 require 'osmonitor/core'
-require 'erb'
 require 'pg'
 
 module OSMonitor
@@ -10,16 +9,10 @@ class ReportManager
 
   attr_accessor :conn
   attr_accessor :road_manager
-  attr_accessor :report_template
 
   def initialize(conn)
     self.conn = conn
     self.road_manager = create_road_manager(conn)
-    self.report_template = ERB.new(File.read("#{get_erb_path}road_report.erb"), nil, '<>')
-  end
-
-  def get_erb_path
-    $osmonitor_home_dir + '/src/osmonitor/road_report/erb/'
   end
 
   def create_road_manager(conn)
@@ -74,13 +67,7 @@ class ReportManager
         "(comps = #{status.road.comps.map {|c| c.graph.num_vertices}.inspect})")
     end
 
-    @@log.debug "Done processing roads, rendering the report..."
-
-    report_text = @report_template.result(binding()).force_encoding('UTF-8')
-
-    @@log.debug "Done!"
-
-    return report, report_text
+    report
   end
 
   # Inserts given report status into the cache table.
@@ -99,10 +86,6 @@ class ReportManager
       status = Marshal.restore(PGconn.unescape_bytea(result.getvalue(0, 0)))
       return status
     end
-  end
-
-  def render(file, status = nil, issue = nil)
-    return ERB.new(File.read("#{@erb_path}#{file}"), nil, '<>').result(binding)
   end
 end
 

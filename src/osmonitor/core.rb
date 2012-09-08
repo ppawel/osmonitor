@@ -19,7 +19,9 @@ end
 
 require 'osmonitor/core/elogger'
 require 'osmonitor/core/logging'
+require 'osmonitor/core/model'
 require 'osmonitor/core/osm'
 require 'osmonitor/core/rgl'
+require 'osmonitor/core/input_manager'
 require 'osmonitor/core/wiki'
 require 'osmonitor/core/wiki_manager'

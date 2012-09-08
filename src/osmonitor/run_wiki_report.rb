@@ -11,10 +11,6 @@ module OSMonitor
 
 include OSMonitorLogger
 
-def self.read_input
-  CSV.read("../../../data/cycleways/CR_test.csv", {:headers => true})
-end
-
 def self.get_data_timestamp(conn)
   conn.query("SELECT OSM_GetDataTimestamp()").getvalue(0, 0)
 end
