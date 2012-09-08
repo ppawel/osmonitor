@@ -51,11 +51,9 @@ class RoadManager
   FROM relations r
   LEFT JOIN users u ON (u.id = r.user_id)
   WHERE
-    r.tags -> 'type' = 'route' AND
-    r.tags -> 'route' = 'road' AND
-    #{eval($sql_where_by_road_type_relations[road.country][road.ref_prefix], binding())}
+    #{get_find_relation_sql_where_clause(road)}
   ORDER BY covered DESC, r.id"
-#puts sql
+puts sql
     result = @conn.query(sql).collect {|row| process_tags(row, 'relation_tags')}
     road.relation = create_relation(result[0]) if result.size > 0 and result[0]['covered'] == 't'
 
@@ -101,7 +99,7 @@ class RoadManager
     node_dist_to_next
   FROM (#{from_sql}) AS query
   ORDER BY way_id, node_sequence_id, relation_sequence_id NULLS LAST, relation_id NULLS LAST"
-#puts sql
+puts sql
     result = @conn.query(sql).collect do |row|
       # This simply translates "tags" columns to Ruby hashes.
       process_tags(row, 'way_tags')
@@ -158,10 +156,21 @@ class RoadManager
   INNER JOIN nodes n ON (n.id = wn.node_id)
   INNER JOIN ways w ON (w.id = wn.way_id)
   LEFT JOIN users way_user ON (way_user.id = w.user_id)
-  WHERE #{eval($sql_where_by_road_type_ways[road.country][road.ref_prefix], binding())} AND
+  WHERE
+  #{get_find_ways_sql_where_clause(road)} AND
   #{get_sql_with_exceptions} AND
   ST_NumPoints(w.linestring) > 1 AND
   (SELECT ST_Contains(OSM_GetConfigGeomValue('boundary_#{road.country}'), w.linestring)) = True"
+  end
+
+  def get_find_relation_sql_where_clause(road)
+    "r.tags -> 'type' = 'route' AND
+    r.tags -> 'route' = 'road' AND
+    #{eval(OSMonitor.config['road_report']['find_relation_sql_where_clause'][road.country][road.ref_prefix], binding())}"
+  end
+
+  def get_find_ways_sql_where_clause(road)
+    eval(OSMonitor.config['road_report']['find_ways_sql_where_clause'][road.country][road.ref_prefix], binding())
   end
 
   def get_sql_with_exceptions

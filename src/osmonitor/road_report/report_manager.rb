@@ -20,8 +20,16 @@ class ReportManager
     self.report_template = ERB.new(File.read("#{erb_path}road_report.erb"), nil, '<>')
   end
 
+  def create_report_instance
+    RoadReport.new
+  end
+
+  def create_status_instance(road)
+    RoadStatus.new(road)
+  end
+
   def generate_report(country, input, use_cache = false)
-    report = RoadReport.new
+    report = create_report_instance
 
     @@log.debug "Got input (size = #{input.size})"
 
@@ -44,7 +52,7 @@ class ReportManager
 
         @@log.debug(" Road loaded! Validating...")
 
-        status = RoadStatus.new(road)
+        status = create_status_instance(road)
         status.validate
 
         @@log.debug(" Road validated! Caching...")

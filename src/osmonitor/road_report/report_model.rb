@@ -116,7 +116,7 @@ class RoadStatus
   end
 
   def get_proper_network
-    return get_relation_network(road.country, road.ref_prefix)
+    OSMonitor.config['road_report']['road_type_network_tag'][road.country][road.ref_prefix]
   end
 
   def has_proper_network
@@ -147,7 +147,7 @@ class RoadStatus
   # Finds ways without "ref" tag or with wrong tag value.
   def ways_with_wrong_ref
     return road.ways.values.select {|way| !way.tags.has_key?('ref') or
-      !road.get_refs(way).include?(eval($road_type_ref_tag[road.country][road.ref_prefix], binding()))}
+      !road.get_refs(way).include?(eval(OSMonitor.config['road_report']['road_type_ref_tag'][road.country][road.ref_prefix], binding()))}
   end
 end
 
