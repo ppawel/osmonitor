@@ -1,19 +1,49 @@
 require 'config'
+require 'erb'
 require 'media_wiki'
 
 # Responsible for:
 # * interaction with a MediaWiki instance (can fetch/update pages)
 # * processing (parsing, replacing) OSMonitor segments in a wiki page
-#
+# * rendering reports with wiki-compatible syntax
 class WikiManager
+  attr_accessor :cycleway_report_manager
+  attr_accessor :road_report_manager
   attr_accessor :gateway
 
-  def initialize
+  def initialize(cycleway_report_manager, road_report_manager)
+    self.cycleway_report_manager = cycleway_report_manager
+    self.road_report_manager = road_report_manager
     self.gateway = MediaWiki::Gateway.new('https://wiki.openstreetmap.org/w/api.php')
   end
 
   def login(user, password)
     @gateway.login(user, password)
+  end
+
+  def render_reports_on_page(page)
+    overall_report = OSMonitor::RoadReport::RoadReport.new
+    page.get_segments('CYCLEWAY_REPORT').each {|segment| render_road_report(@cycleway_report_manager, page, segment, overall_report)}
+    page.get_segments('ROAD_REPORT').each {|segment| render_road_report(@road_report_manager, page, segment, overall_report)}
+    page.get_segments('ROAD_STATS').each {|segment| replace_segment(page, segment, render_stats(overall_report))}
+  end
+
+  def render_road_report(manager, page, segment, overall_report)
+    country = segment.params['country']
+    refs = []
+    refs = segment.params['refs'].split(',') if segment.params['refs']
+    ref_prefix = segment.params['ref_prefix']
+    report_text = nil
+
+    input = read_input
+    report, report_text = manager.generate_report(country, input)
+    overall_report.add(report)
+
+    replace_segment(page, segment, report_text)
+  end
+
+  def render_stats(report)
+    ERB.new(File.read("erb/road_report_stats.erb")).result(binding())
   end
 
   def get_osmonitor_page(input_page)

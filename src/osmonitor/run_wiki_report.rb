@@ -1,56 +1,36 @@
+$:.unshift File.absolute_path(File.dirname(__FILE__) + '/../')
 $:.unshift File.absolute_path(File.dirname(__FILE__) + '/../../')
-$:.unshift File.absolute_path(File.dirname(__FILE__) + '/../../../')
+
+$osmonitor_home_dir = File.absolute_path(File.dirname(__FILE__) + '/../../')
 
 require 'osmonitor'
 require 'csv'
 require 'erb'
 
 module OSMonitor
-module CyclewayReport
 
 include OSMonitorLogger
 
-@overall_report = RoadReport.new
-
 def self.read_input
   CSV.read("../../../data/cycleways/CR_test.csv", {:headers => true})
-end
-
-def self.render_stats(report)
-  ERB.new(File.read("erb/road_report_stats.erb")).result(binding())
 end
 
 def self.get_data_timestamp(conn)
   conn.query("SELECT OSM_GetDataTimestamp()").getvalue(0, 0)
 end
 
-def self.run_report(input_page, output_page)
+def self.run_wiki_reports(input_page, output_page)
   report_start = Time.now
   conn = PGconn.open(:host => $config['host'], :port => $config['port'], :dbname => $config['dbname'], :user => $config['user'], :password => $config['password'])
   data_timestamp = get_data_timestamp(conn)
 
-  road_manager = RoadManager.new(conn)
-  report_manager = ReportManager.new(road_manager)
-  wiki_manager = WikiManager.new
+  cycleway_report_manager = OSMonitor::CyclewayReport::ReportManager.new(conn)
+  road_report_manager = OSMonitor::RoadReport::ReportManager.new(conn)
+  wiki_manager = WikiManager.new(cycleway_report_manager, road_report_manager)
 
   page = wiki_manager.get_osmonitor_page(input_page)
   old_page_text = page.text.dup
-
-  page.get_segments('CYCLEWAY_REPORT').each do |segment|
-    country = segment.params['country']
-    refs = []
-    refs = segment.params['refs'].split(',') if segment.params['refs']
-    ref_prefix = segment.params['ref_prefix']
-    report_text = nil
-
-    input = read_input
-    report, report_text = report_manager.generate_report(country, input)
-    @overall_report.add(report)
-
-    wiki_manager.replace_segment(page, segment, report_text)
-  end
-
-  page.get_segments('ROAD_STATS').each {|segment| wiki_manager.replace_segment(page, segment, render_stats(@overall_report))}
+  wiki_manager.render_reports_on_page(page)
 
   puts "Page size (old = #{old_page_text.size}, new = #{page.text.size})"
 
@@ -71,7 +51,6 @@ def self.run_report(input_page, output_page)
 end
 
 end
-end
 
 if ARGV.size == 0
   puts "Usage: road_report.rb <input page> <output page>"
@@ -83,4 +62,4 @@ else
   output_page = ARGV[1]
 end
 
-OSMonitor::CyclewayReport::run_report(input_page, output_page)
+OSMonitor::run_wiki_reports(input_page, output_page)

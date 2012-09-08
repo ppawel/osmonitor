@@ -11,13 +11,19 @@ class ReportManager
   attr_accessor :conn
   attr_accessor :road_manager
   attr_accessor :report_template
-  attr_accessor :erb_path
 
-  def initialize(road_manager, erb_path = 'erb/')
-    self.erb_path = erb_path
-    self.conn = road_manager.conn
-    self.road_manager = road_manager
-    self.report_template = ERB.new(File.read("#{erb_path}road_report.erb"), nil, '<>')
+  def initialize(conn)
+    self.conn = conn
+    self.road_manager = create_road_manager(conn)
+    self.report_template = ERB.new(File.read("#{get_erb_path}road_report.erb"), nil, '<>')
+  end
+
+  def get_erb_path
+    $osmonitor_home_dir + '/src/osmonitor/road_report/erb/'
+  end
+
+  def create_road_manager(conn)
+    RoadManager.new(conn)
   end
 
   def create_report_instance

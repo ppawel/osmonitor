@@ -22,7 +22,7 @@
 <tr>
 <% end %>
 <td style="text-align: center">
-{{<%= country %>-<%= status.road.ref_prefix %>|<%= status.road.ref_number %>}}
+{{cycleway|<%= status.road.ref_number %>}}
 </td>
 <td><div style="color: #666666; font-size: smaller;">
 <% if status.road.relation %><b>Relation:</b> {{relation|<%= status.road.relation.id %>}}<br><% end %>
