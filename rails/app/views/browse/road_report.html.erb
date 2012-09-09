@@ -49,8 +49,11 @@
         );
 
         <% comp.exit_nodes.each do |node| %>
-        showPoint(comp_layers[<%= comp_index %>], '<%= node.point_wkt %>', 'brown');
+        showPoint(all_ways_layer, '<%= node.point_wkt %>', 'red');
         <% end %>
+
+        showCircle(all_ways_layer, '<%= comp.beginning_nodes[0].point_wkt %>', 'green');
+        showCircle(all_ways_layer, '<%= comp.end_nodes[0].point_wkt %>', 'red');
 
         <% comp.wkt_points.each_slice(2) do |point_from, point_to| %>
           comp_layers[<%= comp_index %>].addFeatures(new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(new Array(
@@ -66,7 +69,7 @@
         <%
           roundtrip = comp.roundtrip
         %>
-comp_backward_path_layers
+
         <% if roundtrip.forward_path %>
         <% color = roundtrip.forward_path.complete ? 'green' : 'red' %>
         comp_forward_path_layers[<%= comp_index %>] = new OpenLayers.Layer.Vector(
@@ -111,7 +114,7 @@ comp_backward_path_layers
       <% end %>
 
       <% @mark_points_all.each do |p| %>
-        showNode(all_ways_layer, '<%= p %>', '<%= asset_path "flag_blue.png" %>');
+        //showNode(all_ways_layer, '<%= p %>', '<%= asset_path "flag_blue.png" %>');
       <% end %>
   }
 
@@ -126,7 +129,15 @@ comp_backward_path_layers
             //OpenLayers.Geometry.Polygon.createRegularPolygon(
             OpenLayers.Geometry.fromWKT(point_wkt).transform(new OpenLayers.Projection("EPSG:4326"), map.baseLayer.projection),
             //100, 20, 0),
-            {}, {pointRadius: 6, strokeOpacity: 0.5, fillOpacity: 0.5, fillColor: color}));
+            {}, {pointRadius: 6, strokeOpacity: 1, fillOpacity: 1, fillColor: color}));
+  }
+
+  function showCircle(vector_layer, point_wkt, color) {
+      vector_layer.addFeatures(new OpenLayers.Feature.Vector(
+//            OpenLayers.Geometry.Polygon.createRegularPolygon(
+            OpenLayers.Geometry.fromWKT(point_wkt).transform(new OpenLayers.Projection("EPSG:4326"), map.baseLayer.projection),
+//            100, 20, 0),
+            {}, {pointRadius: 22, strokeOpacity: 0.5, fillOpacity: 0.5, fillColor: color}));
   }
 
   function showWays(layer, features, waycolor, zoom) {
@@ -169,14 +180,20 @@ comp_backward_path_layers
   }
 
   function showForwardPath(comp_index) {
-    for (i = 0; i < comp_layers.length; i++) {
+    for (i = 0; i < comp_forward_path_layers.length; i++) {
       comp_forward_path_layers[i].setVisibility(i == comp_index);
+    }
+    for (i = 0; i < comp_backward_path_layers.length; i++) {
+      comp_backward_path_layers[i].setVisibility(false);
     }
     map.zoomToExtent(comp_forward_path_layers[comp_index].getDataExtent());
   }
 
   function showBackwardPath(comp_index) {
-    for (i = 0; i < comp_layers.length; i++) {
+    for (i = 0; i < comp_forward_path_layers.length; i++) {
+      comp_forward_path_layers[i].setVisibility(false);
+    }
+    for (i = 0; i < comp_backward_path_layers.length; i++) {
       comp_backward_path_layers[i].setVisibility(i == comp_index);
     }
     map.zoomToExtent(comp_backward_path_layers[comp_index].getDataExtent());
@@ -185,34 +202,39 @@ comp_backward_path_layers
 
 <div id="core" class="clearfix">
             <section id="left">
+<div class="border">
                 <h2>Road <%= @road.ref_prefix + @road.ref_number %></h2>
+
+<h3>Report</h3>
+
+<ul>
+<% @status.issues.each do |issue| %>
+<%= render_erb("issue_#{issue.name}.erb", @country, @report, @status, issue).html_safe %>
+<% end %>
+</ul>
 
 <h3>Structure</h3>
 
 <% @road.comps.each_with_index do |comp, i| %>
 <div class="component_info">
 <span class="title">Component <%= i + 1 %> (<a href="javascript:showComponent(<%= i %>)">show</a>)</span><br>
-<small>
-length: <%= format_length(comp.length) %> km<br>
-length of ways: <%= format_length(comp.segment_length) %> km<br>
-is oneway: <%= comp.oneway?.inspect %>
-</small>
-<br>
-<b>Paths:</b><br>
-<span style="color: <%= comp.roundtrip.forward_path.complete ? 'green' : 'red' %>">beginning &raquo; end</span> (<a href="javascript:showForwardPath(<%= i %>)">show</a>)<br>
-<span style="color: <%= comp.roundtrip.backward_path.complete ? 'green' : 'red' %>">beginning &laquo; end</span> (<a href="javascript:showBackwardPath(<%= i %>)">show</a>)
+path <span style="color: <%= comp.roundtrip.forward_path.complete ? 'green' : 'red' %>">from beginning to end</span> (<a href="javascript:showForwardPath(<%= i %>)">show</a>)<br>
+path <span style="color: <%= comp.roundtrip.backward_path.complete ? 'green' : 'red' %>">from end to beginning</span> (<a href="javascript:showBackwardPath(<%= i %>)">show</a>)
 </div>
 <% end %>
 
 <h3>Info</h3>
-<p>
-<% if @road.relation %><b>Relation:</b> {{relation|<%= @road.relation.id %>}}<br><% end %>
+<small>
+<% if @road.relation %><b>Relation:</b> <a href="http://www.openstreetmap.org/browse/relation/<%= @road.relation.id %>"><%= @road.relation.id %></a><br><% end %>
 <b>Ways:</b> all (<%= @road.num_all_ways %>), with ref tag (<%= @road.num_ref_ways %>), in relation (<%= @road.num_relation_ways %>)<% if !@status.percent_with_lanes.nan? and !@status.percent_with_maxspeed.nan? %>, with <i>lanes</i> (<%= @status.percent_with_lanes.to_i %>%), with <i>maxspeed</i> (<%= @status.percent_with_maxspeed.to_i %>%)<% end %><% if @road.relation and @road.relation.tags['note'] %><br><b>Note:</b> <%= @road.relation.tags['note'] %><% end %>
-</p>
+</small>
 
-<button name="use_cache" onclick="refreshReport()">refresh report</button>
+<p>
+<button name="use_cache" onclick="refreshReport()">refresh report (don't use cache)</button>
 <br>
 <small>icons from <a href="http://www.fatcow.com/free-icons">FatCow</a></small>
+</p>
+</div>
 </section>  
   
             <section id="right">  

@@ -16,3 +16,13 @@
   font-weight: bold;
   font-size: larger;
 }
+
+.border {
+  -moz-border-radius:10px;
+  -webkit-border-radius:10px;
+  border-radius:10px; //for opera
+  background:#f3f3f3;
+  border:1px solid #cccccc;
+  margin: 10px;
+  padding: 10px;
+}

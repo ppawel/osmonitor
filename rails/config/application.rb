@@ -24,6 +24,9 @@ module OsmonitorRails
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths << "#{Rails.root}/.."
     config.autoload_paths << "#{Rails.root}/../src"
+
+    $osmonitor_home_dir = "#{Rails.root}/.."
+
     #%W(#{config.root}/extras)
 
     # Only load the plugins named here, in the order given (default is alphabetical).

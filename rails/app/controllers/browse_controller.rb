@@ -1,6 +1,21 @@
 require 'config'
 require 'osmonitor'
 
+def render_erb(file, country, report = nil, status = nil, issue = nil)
+  wiki_to_html(ERB.new(File.read("#{get_erb_path(report.report_request.report_type)}/#{file}"), nil, '<>').result(binding))
+end
+
+def get_erb_path(report_type)
+  $osmonitor_home_dir + "/erb"
+end
+
+def wiki_to_html(text)
+  result = text.gsub(/\[([^\s]+) show in OSMonitor\]/, '')
+  result = result.gsub(/\[([^\s]+)\s(.*?)\]/, '<a href="\1">\2</a>')
+  result = result.gsub(/{{changeset\|(\d+).*?}}/, '<a href="http://www.openstreetmap.org/browse/changeset/\1">\1</a>')
+  result
+end
+
 class BrowseController < ApplicationController
   def get_conn
     PGconn.open(:host => $config['host'], :port => $config['port'], :dbname => $config['dbname'], :user => $config['user'], :password => $config['password'])
@@ -18,6 +33,7 @@ class BrowseController < ApplicationController
       return
     end
 
+    @country = params[:country]
     @status = @report.statuses[0]
     @road = @status.road
 
@@ -26,8 +42,6 @@ class BrowseController < ApplicationController
 
     log_time " wkt" do
       @all_ways_wkt = @road.ways.values.reduce('') {|s, w| w.geom ? s + w.geom + ',' : s}[0..-2]
-      @mark_points_all = @road.comps.collect {|c| c.end_nodes}.flatten.collect {|node| node.point_wkt}
-      @mark_points_all += @road.comps.collect {|c| c.beginning_nodes}.flatten.collect {|node| node.point_wkt}
     end
   end
 
@@ -43,15 +57,15 @@ class BrowseController < ApplicationController
       return
     end
 
-    @road = @report.statuses[0].road
+    @country = params[:country]
+    @status = @report.statuses[0]
+    @road = @status.road
 
     @all_ways_wkt = []
     @mark_points_all = []
 
     log_time " wkt" do
       @all_ways_wkt = @road.ways.values.reduce('') {|s, w| w.geom ? s + w.geom + ',' : s}[0..-2]
-      @mark_points_all = @road.comps.collect {|c| c.end_nodes}.flatten.collect {|node| node.point_wkt}
-      @mark_points_all += @road.comps.collect {|c| c.beginning_nodes}.flatten.collect {|node| node.point_wkt}
     end
   end
 end

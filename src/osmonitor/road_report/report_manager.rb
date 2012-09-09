@@ -29,6 +29,9 @@ class ReportManager
 
   def generate_report(country, input, use_cache = false)
     report = create_report_instance
+    report = OSMonitor::RoadReport::RoadReport.new
+    report.report_request = ReportRequest.new
+    report.report_request.report_type = 'ROAD_REPORT'
 
     @@log.debug "Got input (size = #{input.size})"
 
