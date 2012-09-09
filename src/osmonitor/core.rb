@@ -17,6 +17,11 @@ class Array
     end
 end
 
+def format_length(length_in_meters)
+  return '-' if length_in_meters.nil?
+  '%.2f' % (length_in_meters / 1000.0)
+end
+
 require 'osmonitor/core/elogger'
 require 'osmonitor/core/logging'
 require 'osmonitor/core/model'

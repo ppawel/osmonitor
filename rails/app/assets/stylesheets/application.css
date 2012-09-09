@@ -12,31 +12,58 @@
  *= require_tree .
  */
 
-table.wikitable {
-margin: 1em 1em 1em 0;
-background: #F9F9F9;
-border: 1px #AAA solid;
-border-collapse: collapse;
-color: black;
+/* page core */
+
+html, body {
+  height:100%;
+  font-family: "Lucida Grande", Verdana, Geneva, Lucida, Arial, Helvetica, sans-serif;
 }
 
-table.wikitable th {
-padding: 4px;
-background-color: #E9E9E9;
-border-style: solid;
-border-width: 1px;
-border-color: #AAA;
+div#wrapper {
+  width: 100%;
+  height: 100%;
 }
 
-.wikitable th, .wikitable td {
-border: 1px #AAA solid;
-padding: 0.2em;
+div#core {
+	display: block;
+	clear: both;
+	margin-bottom: 20px;
+  width: 100%;
+  height: 100%;
 }
 
-.wikitable th {
-background: #F2F2F2;
-text-align: center;
-font-weight: bold;
+section#left {
+	width: 20%;
+	float: left;
+  height: 100%;
+}
+
+section#right {
+  float: left;
+  width: 80%;
+  height: 100%;
+}
+
+/* clearfix */
+.clearfix:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+}
+
+.clearfix {
+	display: inline-block;
+}
+
+html[xmlns] .clearfix {
+	display: block;
+}
+
+* html .clearfix {
+	height: 1%;
 }
 
 small {

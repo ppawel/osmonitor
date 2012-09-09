@@ -18,7 +18,8 @@ class BrowseController < ApplicationController
       return
     end
 
-    @road = @report.statuses[0].road
+    @status = @report.statuses[0]
+    @road = @status.road
 
     @all_ways_wkt = []
     @mark_points_all = []
