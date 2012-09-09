@@ -52,8 +52,13 @@
         showPoint(all_ways_layer, '<%= node.point_wkt %>', 'red');
         <% end %>
 
+        <% if !comp.beginning_nodes.empty? %>
         showCircle(all_ways_layer, '<%= comp.beginning_nodes[0].point_wkt %>', 'green');
+        <% end %>
+
+        <% if !comp.end_nodes.empty? %>
         showCircle(all_ways_layer, '<%= comp.end_nodes[0].point_wkt %>', 'red');
+        <% end %>
 
         <% comp.wkt_points.each_slice(2) do |point_from, point_to| %>
           comp_layers[<%= comp_index %>].addFeatures(new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(new Array(

@@ -65,8 +65,7 @@ class ReportManager
 
       report.add_status(status)
 
-      @@log.debug("END road #{country} / #{row['ref']} took #{Time.now - road_before} " +
-        "(comps = #{status.road.comps.map {|c| c.graph.num_vertices}.inspect})")
+      @@log.debug("END road #{country} / #{row['ref']} took #{Time.now - road_before}")
     end
 
     report

@@ -15,8 +15,6 @@ module RoadReport
 
 $rgeo_factory = ::RGeo::Geographic.spherical_factory()
 
-
-
 class Road
   include OSMonitorLogger
 
@@ -47,7 +45,7 @@ class Road
   end
 
   def empty?
-    @graph.empty?
+    graph.empty?
   end
 
   # Returns a list of strings representing the "ref" tag. This is a list because sometimes this tag contains many values, e.g. "34; S1".
@@ -90,10 +88,6 @@ class Road
     @comps.size
   end
 
-  def num_logical_comps
-    @comps.size - (@comps.select {|c| !find_sister_component(c).empty?}.size / 2)
-  end
-
   def correct_num_comps
     return @relation.tags['osmonitor:road_components'].to_i if @relation and @relation.tags['osmonitor:road_components']
     1
@@ -106,7 +100,7 @@ class Road
   end
 
   def find_sister_component(c)
-    @comps.select {|component| c.oneway? and component.oneway? and (c.segment_length - component.segment_length).abs < 2222}
+    @comps.select {|component| c.oneway? and component.oneway? and c != component and (c.segment_length - component.segment_length).abs < 2222}
   end
 
   def length
@@ -154,16 +148,37 @@ class Road
         i += 1
       end
 
-      add_way_to_graph(@graph, way_rows)
+      add_way_to_graph(graph, way_rows)
     end
   end
 
   def calculate_components
-    @graph.to_undirected.connected_components_nonrecursive.each do |comp|
+    graph.to_undirected.connected_components_nonrecursive.each do |comp|
       # Use Set here because include? method is much faster on Set than Array.
-      induced = @graph.induced_subgraph(Set.new(comp.vertices))
+      induced = graph.induced_subgraph(Set.new(comp.vertices))
       @comps << RoadComponent.new(self, induced)
     end
+  end
+
+  def find_super_components
+    new_comps = []
+    skip_those = []
+
+    @comps.each do |comp|
+      next if skip_those.include?(comp)
+      sister = find_sister_component(comp)
+
+      if sister.empty?
+        new_comps << comp
+      else
+        skip_those << sister[0]
+        supercomp = RoadSuperComponent.new(comp, sister[0])
+        new_comps << supercomp
+        @@log.debug "   found super component: #{supercomp})"
+      end
+    end
+
+    @comps = new_comps
   end
 
   def add_way_to_graph(graph, way_rows)
@@ -237,21 +252,21 @@ class RoadComponent
   end
 
   def beginning_nodes
-    return [] if !@roundtrip
-    @roundtrip.beginning_nodes
+    return [] if !roundtrip
+    roundtrip.beginning_nodes
   end
 
   def end_nodes
-    return [] if !@roundtrip
-    @roundtrip.end_nodes
+    return [] if !roundtrip
+    roundtrip.end_nodes
   end
 
   def length
-    @roundtrip.length if @roundtrip
+    roundtrip.length if roundtrip
   end
 
   def segment_length
-    @graph.labels.values.uniq.reduce(0) {|total, segment| total + segment.length}
+    graph.labels.values.uniq.reduce(0) {|total, segment| total + segment.length}
   end
 
   def found_beginning_and_end?
@@ -260,13 +275,9 @@ class RoadComponent
 
   # Calculates beginning and end of this road component and tries to find a roundtrip.
   def calculate
-    if @exit_nodes.empty?
-      @@log.debug " No exit nodes?!"
-      return
-    end
-
+    
     roundtrips = []
-    closest_to_all = closest_nodes_to_all(@graph.vertices, @exit_nodes, 333)[0..5]
+    closest_to_all = closest_nodes_to_all(graph.vertices, @exit_nodes, 333)[0..5]
 
     roundtrips << find_roundtrip(Array.new(@exit_nodes))
     roundtrips << find_roundtrip(Array.new(@exit_nodes), true)
@@ -309,7 +320,7 @@ class RoadComponent
   end
 
   def prepare_distance_graph(candidate_nodes)
-    distance_graph = @graph.to_undirected
+    distance_graph = graph.to_undirected
 
     candidate_nodes.each do |node|
       closest = closest_nodes(candidate_nodes, node)
@@ -338,15 +349,19 @@ class RoadComponent
 
     from_nodes.each do |node1|
       to_nodes.each do |node2|
-        dist = @graph.dist(node1, node2)
+        dist = graph.dist(node1, node2)
 
         if dist
-          return RoadComponentPath.new(node1, node2, true, segments(@graph.path(node1, node2)))
+          return RoadComponentPath.new(node1, node2, true, segments(graph.path(node1, node2)))
         else
           new_failed = calculate_failed_path(node1, node2)
           failed = new_failed if !failed or new_failed.length > failed.length
         end
       end
+    end
+
+    if !failed and @road.nodes.size >= 2
+      failed = RoadComponentPath.new(@road.nodes[@road.nodes.keys[0]], @road.nodes[@road.nodes.keys[1]], false, [])
     end
 
     failed
@@ -368,7 +383,7 @@ class RoadComponent
     it.set_to_end
 
     segments = []
-    it.path.each_cons(2) {|n1, n2| segments << @graph.get_label(n1, n2)}
+    it.path.each_cons(2) {|n1, n2| segments << graph.get_label(n1, n2)}
     RoadComponentPath.new(node1, node2, false, segments.select {|s| s})
   end
 
@@ -399,13 +414,13 @@ class RoadComponent
   end
 
   def has_complete_roundtrip?
-    @roundtrip and @roundtrip.complete?
+    roundtrip and roundtrip.complete?
   end
 
   # Determines if this component is oneway - meaning that it is (mostly) composed of oneway ways.
   def calculate_oneway
-    return false if !@graph.acyclic?
-    segments = @graph.labels.values
+    return false if !graph.acyclic?
+    segments = graph.labels.values
     all_count = segments.select {|s| s}.size
     oneway_count = segments.select {|s| s and s.way.oneway?}.size
     return oneway_count.to_f / all_count.to_f >= 0.9
@@ -417,12 +432,58 @@ class RoadComponent
 
   def wkt_points
     points = []
-    @graph.labels.values.each do |segment|
+    graph.labels.values.each do |segment|
       next if !segment
       points << segment.from_node.point_wkt
       points << segment.to_node.point_wkt
     end
     points
+  end
+
+  def to_s
+    "RoadComponent(size = #{graph.num_vertices})"
+  end
+end
+
+# Super component is just an aggregation of two components, e.g. for a highway that has two separate components in different directions.
+# For purposes of reporting they should be considered one (super) component.
+class RoadSuperComponent < RoadComponent
+  attr_accessor :subcomp1
+  attr_accessor :subcomp2
+
+  def initialize(comp1, comp2)
+    self.subcomp1 = comp1
+    self.subcomp2 = comp2
+  end
+
+  def graph; @subcomp1.graph end
+  def beginning_nodes; @subcomp1.beginning_nodes + @subcomp2.beginning_nodes end
+  def end_nodes; @subcomp1.end_nodes + @subcomp2.end_nodes end
+  def exit_nodes; @subcomp1.exit_nodes + @subcomp2.exit_nodes end
+  def segment_length; @subcomp1.segment_length end
+
+  def roundtrip
+    RoadComponentRoundtrip.new(self, beginning_nodes, end_nodes, forward_path, backward_path)
+  end
+
+  def forward_path
+    path1 = @subcomp1.roundtrip.get_complete_path
+    path2 = @subcomp2.roundtrip.get_complete_path
+    return path1 if path1
+    return path2 if path2
+  end
+
+  def backward_path
+    path1 = @subcomp1.roundtrip.get_complete_path
+    path2 = @subcomp2.roundtrip.get_complete_path
+    return path1 if path1 and path1 != forward_path
+    return path2 if path2 and path2 != forward_path
+  end
+
+  
+
+  def to_s
+    "RoadSuperComponent(subcomp1 = #{subcomp1}, subcomp2 = #{subcomp2})"
   end
 end
 
@@ -481,6 +542,11 @@ class RoadComponentRoundtrip
     return ((@forward_path and @forward_path.complete) or (@backward_path and @backward_path.complete)) if @component.oneway?
     # Otherwise both paths are needed.
     @forward_path and @forward_path.complete and @backward_path and @backward_path.complete
+  end
+
+  def get_complete_path
+    return @forward_path if @forward_path.complete
+    return @backward_path if @backward_path.complete
   end
 
   def length

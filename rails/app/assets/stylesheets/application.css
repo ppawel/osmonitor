@@ -75,3 +75,20 @@ ul {
   margin: 0px;
   padding-left: 15px;
 }
+
+:link {
+	color:#0000ff;
+	text-decoration: none;
+	}
+a:visited {
+	color:#0000ff;
+	text-decoration: none;
+	}
+a:hover {
+	color: #0000cc;
+	text-decoration: none;
+	}
+a:active {
+	color:#0000cc;
+	text-decoration: none;
+	}

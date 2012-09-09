@@ -11,8 +11,8 @@ end
 
 def wiki_to_html(text)
   result = text.gsub(/\[([^\s]+) show in OSMonitor\]/, '')
-  result = result.gsub(/\[([^\s]+)\s(.*?)\]/, '<a href="\1">\2</a>')
-  result = result.gsub(/{{changeset\|(\d+).*?}}/, '<a href="http://www.openstreetmap.org/browse/changeset/\1">\1</a>')
+  result = result.gsub(/\[([^\s]+)\s(.*?)\]/, '<a target="_blank" href="\1">\2</a>')
+  result = result.gsub(/{{changeset\|(\d+).*?}}/, '<a target="_blank" href="http://www.openstreetmap.org/browse/changeset/\1">\1</a>')
   result
 end
 

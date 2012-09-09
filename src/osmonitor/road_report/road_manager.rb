@@ -24,9 +24,10 @@ class RoadManager
     log_time " create_graph" do road.create_graph(data) end
     log_time " calculate_components" do road.calculate_components end
 
-    @@log.debug " comps = #{road.num_comps}, logical_comps = #{road.num_logical_comps}, should be #{road.correct_num_comps}"
-
     log_time " calculate" do road.comps.each {|c| c.calculate} end
+    log_time " find_super_components" do road.find_super_components end
+
+    @@log.debug " comps = #{road.num_comps}, should be #{road.correct_num_comps}"
 
     road
   end
