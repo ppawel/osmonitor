@@ -1,9 +1,0 @@
-<li> <small>
-<% if status.road.length %>OSM length: <b><%= '%.2f' % status.road.length %></b> km / <% elsif status.road.approx_length %>OSM length (approx): <b><%= '%.2f' % status.road.approx_length %></b> km / <% end %>
-<% if status.road.relation and !status.input_length %>
-no input length ([[OSMonitor#Tags|how to add it?]])
-<% end %>
-<% if status.input_length %>
-input length: <i><%= '%.2f' % status.input_length %></i> km
-<% end %>
-[<%= create_osmonitor_url(report, status.road) %> show in OSMonitor]</small>
