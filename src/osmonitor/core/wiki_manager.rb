@@ -22,7 +22,7 @@ class WikiManager
   end
 
   def get_erb_path(report_type)
-    $osmonitor_home_dir + "/src/osmonitor/#{report_type.downcase}/erb"
+    $osmonitor_home_dir + "/erb"
   end
 
   def login(user, password)
@@ -52,7 +52,7 @@ class WikiManager
     report.report_request = report_request
     overall_report.add(report)
 
-    report_text = render_erb('road_report.erb', country, report)
+    report_text = render_erb("wiki_#{report_request.report_type.downcase}.erb", country, report)
     replace_segment(page, segment, report_text)
   end
 
@@ -61,7 +61,7 @@ class WikiManager
   end
 
   def render_stats(report)
-     render_erb('road_report_stats.erb', nil, report)
+     render_erb('wiki_road_report_stats.erb', nil, report)
   end
 
   def get_osmonitor_page(input_page)
