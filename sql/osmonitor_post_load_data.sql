@@ -1,7 +1,4 @@
-﻿-- Need this to avoid joining with nodes table to get node geometry which is extremely painful.
-ALTER TABLE way_nodes ADD COLUMN node_geom geometry;
-
--- Used to preprocess distance from one node to the next node.
+﻿-- Used to preprocess distance from one node to the next node.
 ALTER TABLE way_nodes ADD COLUMN dist_to_next double precision;
 
 -- Way "ref" tag values are put in this column because matching ref against hstore string values like "A1; S3" is slow.
@@ -17,6 +14,7 @@ DECLARE
 	i int;
   data_timestamp timestamp;
 BEGIN
+SET enable_seqscan = off;
 i := 0;
 all_rows := (SELECT COUNT(*) FROM ways WHERE OSM_GetConfigDateValue('last_preprocessing_data_timestamp') IS NULL OR tstamp > OSM_GetConfigDateValue('last_preprocessing_data_timestamp'));
 
@@ -25,20 +23,17 @@ FOR way IN ref LOOP
 	raise notice '% Processing way % (% of % - %%%)', clock_timestamp(), way.id, i, all_rows, ((i / all_rows) * 100)::integer;
 
 	UPDATE way_nodes wn
-	SET node_geom = (SELECT n.geom FROM nodes n WHERE n.id = wn.node_id)
-	WHERE wn.way_id = way.id;
-
-	raise notice '   Done update 1';
-
-	UPDATE way_nodes wn SET dist_to_next = ST_Distance_Sphere(wn.node_geom,
+	SET dist_to_next = ST_Distance_Sphere(n.geom,
 		(SELECT
-			wn_next.node_geom
+			n_next.geom
 		FROM way_nodes wn_next
+		INNER JOIN nodes n_next ON (n_next.id = wn_next.node_id)
 		WHERE wn_next.way_id = wn.way_id AND
 			wn_next.sequence_id = wn.sequence_id + 1))
-	WHERE wn.way_id = way.id;
+  FROM nodes n
+	WHERE wn.way_id = way.id AND n.id = wn.node_id;
 
-	raise notice '   Done update 2';
+	raise notice '   Done update 1';
 
 	UPDATE
 		ways w
@@ -51,7 +46,7 @@ FOR way IN ref LOOP
 		END)
 	WHERE w.id = way.id;
 
-	raise notice '   Done update 3';
+	raise notice '   Done update 2';
 END LOOP;
 
 data_timestamp := (SELECT OSM_GetDataTimestamp());

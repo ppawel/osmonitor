@@ -80,8 +80,11 @@ class RoadManager
       from_sql = "(#{get_sql_for_ref_ways(road)})"
     end
 
+    road_row = ensure_road_row(road)
+
     sql =
 "SELECT DISTINCT ON (way_id, node_sequence_id)
+    #{road_row['id']} AS road_id,
     way_last_update_user_id,
     way_last_update_user_name,
     way_last_update_timestamp,
@@ -99,7 +102,7 @@ class RoadManager
   FROM (#{from_sql}) AS query
   ORDER BY way_id, node_sequence_id, relation_sequence_id NULLS LAST, relation_id NULLS LAST"
 #puts sql
-    result = @conn.query(sql).collect do |row|
+    result = get_road_data(road_row, road, sql).collect do |row|
       # This simply translates "tags" columns to Ruby hashes.
       process_tags(row, 'way_tags')
       process_tags(row, 'node_tags')
@@ -108,6 +111,45 @@ class RoadManager
     #@log.debug("   load_road_graph: query took #{Time.now - before}")
 
     return result
+  end
+
+  def ensure_road_row(road)
+    result = get_road_row(road)
+
+    if !result
+      @conn.query("INSERT INTO osmonitor_roads (country, ref_prefix, ref_number, sql_text) VALUES
+        ('#{road.country}', '#{road.ref_prefix}', '#{road.ref_number}', NULL)")
+      result = ensure_road_row(road)
+    end
+
+    result
+  end
+
+  def get_road_row(road)
+    result = @conn.query("SELECT * FROM osmonitor_roads
+      WHERE country = '#{road.country}' AND ref_prefix = '#{road.ref_prefix}' AND ref_number = '#{road.ref_number}'").to_a
+    return result[0] if !result.empty?
+  end
+
+  def get_road_data(road_row, road, sql)
+    road_row = get_road_row(road)
+
+    if road_row['sql_text'] != sql
+      @@log.debug " Refreshing road data..."
+      update_sql_text(road_row['id'], sql)
+      refresh_road_data(road_row['id'])
+    end
+
+    @conn.query("SELECT * FROM osmonitor_road_data WHERE road_id = #{road_row['id']}
+ORDER BY way_id, node_sequence_id, relation_sequence_id NULLS LAST, relation_id NULLS LAST")
+  end
+
+  def update_sql_text(road_id, sql)
+    @conn.query("UPDATE osmonitor_roads SET sql_text = '#{PGconn.escape(sql)}' WHERE id = #{road_id}")
+  end
+
+  def refresh_road_data(road_id)
+    @conn.query("SELECT OSM_RefreshRoadData(#{road_id})")
   end
 
   def get_sql_for_relation_ways(road)
@@ -181,13 +223,6 @@ class RoadManager
   def get_node_xy(node_id)
     result = @conn.query("SELECT ST_X(geom), ST_Y(geom) FROM nodes WHERE id = #{node_id}")
     return result.getvalue(0, 0), result.getvalue(0, 1)
-  end
-
-  # Useful in tests and data_for_road.rb test script.
-  def get_road_data(country, ref_prefix, ref_number)
-    road = Road.new(country, ref_prefix, ref_number)
-    fill_road_relation(road)
-    return load_ways(road)
   end
 end
 

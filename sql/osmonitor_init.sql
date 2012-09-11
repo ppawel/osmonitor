@@ -1,7 +1,6 @@
 ﻿---- DDL
 
 DROP TABLE IF EXISTS config_options;
-
 CREATE TABLE config_options (
   option_key text NOT NULL PRIMARY KEY,
   text_value text,
@@ -10,13 +9,41 @@ CREATE TABLE config_options (
 );
 
 DROP TABLE IF EXISTS report_statuses;
-
 CREATE TABLE report_statuses (
   road_ref text NOT NULL,
   country text NOT NULL,
   cached_date timestamp without time zone NOT NULL,
   status bytea,
   PRIMARY KEY(road_ref, country)
+);
+
+DROP TABLE IF EXISTS osmonitor_roads;
+CREATE TABLE osmonitor_roads (
+  id SERIAL PRIMARY KEY,
+  country character varying(5),
+  ref_prefix character varying(10),
+  ref_number character varying(10),
+  sql_text text,
+  UNIQUE (country, ref_prefix, ref_number)
+);
+
+DROP TABLE IF EXISTS osmonitor_road_data;
+CREATE TABLE osmonitor_road_data (
+  road_id INTEGER,
+  way_last_update_user_id INTEGER,
+  way_last_update_user_name TEXT,
+  way_last_update_timestamp timestamp without time zone,
+  way_last_update_changeset_id INTEGER,
+  relation_id INTEGER,
+  member_role text,
+  relation_sequence_id INTEGER,
+  node_sequence_id INTEGER,
+  way_id BIGINT,
+  way_tags hstore,
+  way_geom text,
+  node_geom text,
+  node_id BIGINT,
+  node_dist_to_next double precision
 );
 
 ---- DATA
@@ -38,14 +65,15 @@ INSERT INTO config_options (option_key, date_value) VALUES ('last_preprocessing_
 
 ---- FUNCTIONS
 
-DROP FUNCTION IF EXISTS OSM_GetDataTimestamp();
+DROP FUNCTION IF EXISTS exec(text);
+CREATE FUNCTION exec(text) RETURNS text AS $$ BEGIN EXECUTE $1; RETURN $1; END $$ LANGUAGE plpgsql;
 
+DROP FUNCTION IF EXISTS OSM_GetDataTimestamp();
 CREATE FUNCTION OSM_GetDataTimestamp() RETURNS TIMESTAMP AS $$
 	SELECT MAX(tstamp) FROM ways
 $$ LANGUAGE SQL;
 
 DROP FUNCTION IF EXISTS OSM_GetRelationGeometry(bigint);
-
 CREATE FUNCTION OSM_GetRelationGeometry(bigint) RETURNS geometry AS $$
 	SELECT ST_Union(w.linestring)::geometry
 	FROM relation_members rm
@@ -70,8 +98,33 @@ CREATE FUNCTION OSM_IsMostlyCoveredBy(text, bigint) RETURNS boolean AS $$
 		WHERE rm.relation_id = $2 AND member_type = 'W')::float * 33
 $$ LANGUAGE SQL;
 
-DROP FUNCTION IF EXISTS OSM_GetConfigGeomValue(text);
+DROP FUNCTION IF EXISTS OSM_RefreshRoadData(integer);
+CREATE FUNCTION OSM_RefreshRoadData(integer) RETURNS void AS $$
+DECLARE
+  row RECORD;
+BEGIN
+  SELECT * FROM osmonitor_roads WHERE id = $1 INTO row;
+  DELETE FROM osmonitor_road_data WHERE road_id = $1;
+  PERFORM exec('INSERT INTO osmonitor_road_data
+        (road_id,
+        way_last_update_user_id,
+    way_last_update_user_name,
+    way_last_update_timestamp,
+    way_last_update_changeset_id,
+    relation_id,
+    member_role,
+    relation_sequence_id,
+    node_sequence_id,
+    way_id,
+    way_tags,
+    way_geom,
+    node_geom,
+    node_id,
+    node_dist_to_next) ' || row.sql_text);
+END;
+$$ LANGUAGE plpgsql;
 
+DROP FUNCTION IF EXISTS OSM_GetConfigGeomValue(text);
 CREATE FUNCTION OSM_GetConfigGeomValue(text) RETURNS geometry IMMUTABLE AS $$
 	SELECT geom_value
 	FROM config_options
@@ -79,7 +132,6 @@ CREATE FUNCTION OSM_GetConfigGeomValue(text) RETURNS geometry IMMUTABLE AS $$
 $$ LANGUAGE SQL;
 
 DROP FUNCTION IF EXISTS OSM_GetConfigDateValue(text);
-
 CREATE FUNCTION OSM_GetConfigDateValue(text) RETURNS timestamp IMMUTABLE AS $$
 	SELECT date_value
 	FROM config_options
@@ -87,7 +139,6 @@ CREATE FUNCTION OSM_GetConfigDateValue(text) RETURNS timestamp IMMUTABLE AS $$
 $$ LANGUAGE SQL;
 
 DROP FUNCTION IF EXISTS OSM_GetConfigTextValue(text);
-
 CREATE FUNCTION OSM_GetConfigTextValue(text) RETURNS text IMMUTABLE AS $$
 	SELECT text_value
 	FROM config_options
