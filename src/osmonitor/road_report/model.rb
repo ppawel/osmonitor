@@ -33,6 +33,7 @@ class Road
   attr_accessor :nodes
   attr_accessor :graph
   attr_accessor :comps
+  attr_accessor :row
 
   def initialize(country, input)
     self.country = country
