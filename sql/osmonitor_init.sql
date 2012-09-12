@@ -84,15 +84,15 @@ CREATE FUNCTION exec(text) RETURNS text AS $$ BEGIN EXECUTE $1; RETURN $1; END $
 
 DROP FUNCTION IF EXISTS OSM_GetDataTimestamp();
 CREATE FUNCTION OSM_GetDataTimestamp() RETURNS TIMESTAMP AS $$
-	SELECT MAX(tstamp) FROM ways
+  SELECT MAX(tstamp) FROM ways
 $$ LANGUAGE SQL;
 
 DROP FUNCTION IF EXISTS OSM_GetRelationGeometry(bigint);
 CREATE FUNCTION OSM_GetRelationGeometry(bigint) RETURNS geometry AS $$
-	SELECT ST_Union(w.linestring)::geometry
-	FROM relation_members rm
-	INNER JOIN ways w ON (w.id = rm.member_id)
-	WHERE rm.relation_id = $1 AND member_type = 'W'
+  SELECT ST_Union(w.linestring)::geometry
+  FROM relation_members rm
+  INNER JOIN ways w ON (w.id = rm.member_id)
+  WHERE rm.relation_id = $1 AND member_type = 'W'
 $$ LANGUAGE SQL;
 
 DROP FUNCTION IF EXISTS OSM_IsMostlyCoveredBy(text, bigint);
@@ -101,15 +101,15 @@ DROP FUNCTION IF EXISTS OSM_IsMostlyCoveredBy(text, bigint);
 -- param 1 - option_key from table osmonitor_config_options
 -- param 2 - relation id
 CREATE FUNCTION OSM_IsMostlyCoveredBy(text, bigint) RETURNS boolean AS $$
-	SELECT (SELECT COUNT(*)
-		FROM (SELECT ST_Contains((SELECT geom_value FROM osmonitor_config_options WHERE option_key = $1), linestring) AS is
-			FROM relation_members rm
-			INNER JOIN ways w ON (w.id = rm.member_id)
-			WHERE rm.relation_id = $2 AND member_type = 'W') AS covered WHERE covered.is)::float * 100
-		  > (SELECT COUNT(*)
-		FROM relation_members rm
-		INNER JOIN ways w ON (w.id = rm.member_id)
-		WHERE rm.relation_id = $2 AND member_type = 'W')::float * 33
+  SELECT (SELECT COUNT(*)
+    FROM (SELECT ST_Contains((SELECT geom_value FROM osmonitor_config_options WHERE option_key = $1), linestring) AS is
+      FROM relation_members rm
+      INNER JOIN ways w ON (w.id = rm.member_id)
+      WHERE rm.relation_id = $2 AND member_type = 'W') AS covered WHERE covered.is)::float * 100
+      > (SELECT COUNT(*)
+    FROM relation_members rm
+    INNER JOIN ways w ON (w.id = rm.member_id)
+    WHERE rm.relation_id = $2 AND member_type = 'W')::float * 33
 $$ LANGUAGE SQL;
 
 DROP FUNCTION IF EXISTS OSM_RefreshRoadData(integer);
@@ -117,8 +117,10 @@ CREATE FUNCTION OSM_RefreshRoadData(integer) RETURNS void AS $$
 DECLARE
   row RECORD;
 BEGIN
+  -- Needed for SQL queries.
   SELECT * FROM osmonitor_roads WHERE id = $1 INTO row;
 
+  -- Remove then insert road data again.
   DELETE FROM osmonitor_road_data WHERE road_id = $1;
   PERFORM exec('INSERT INTO osmonitor_road_data
         (road_id,
@@ -134,8 +136,17 @@ BEGIN
     way_tags,
     way_geom,
     node_geom,
-    node_id,
-    node_dist_to_next) ' || row.data_sql_query);
+    node_id) ' || row.data_sql_query);
+
+  -- Recalculate distances between nodes for this road.
+  UPDATE osmonitor_road_data orr
+  SET node_dist_to_next = ST_Distance_Sphere(orr.node_geom,
+    (SELECT
+      orr_next.node_geom
+    FROM osmonitor_road_data orr_next
+    WHERE orr_next.way_id = orr.way_id AND
+      orr_next.node_sequence_id = orr.node_sequence_id + 1))
+  WHERE orr.road_id = $1;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -176,21 +187,21 @@ $$ LANGUAGE plpgsql;
 
 DROP FUNCTION IF EXISTS OSM_GetConfigGeomValue(text);
 CREATE FUNCTION OSM_GetConfigGeomValue(text) RETURNS geometry IMMUTABLE AS $$
-	SELECT geom_value
-	FROM osmonitor_config_options
-	WHERE option_key = $1
+  SELECT geom_value
+  FROM osmonitor_config_options
+  WHERE option_key = $1
 $$ LANGUAGE SQL;
 
 DROP FUNCTION IF EXISTS OSM_GetConfigDateValue(text);
 CREATE FUNCTION OSM_GetConfigDateValue(text) RETURNS timestamp IMMUTABLE AS $$
-	SELECT date_value
-	FROM osmonitor_config_options
-	WHERE option_key = $1
+  SELECT date_value
+  FROM osmonitor_config_options
+  WHERE option_key = $1
 $$ LANGUAGE SQL;
 
 DROP FUNCTION IF EXISTS OSM_GetConfigTextValue(text);
 CREATE FUNCTION OSM_GetConfigTextValue(text) RETURNS text IMMUTABLE AS $$
-	SELECT text_value
-	FROM osmonitor_config_options
-	WHERE option_key = $1
+  SELECT text_value
+  FROM osmonitor_config_options
+  WHERE option_key = $1
 $$ LANGUAGE SQL;

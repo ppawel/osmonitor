@@ -1,13 +1,10 @@
-﻿-- Used to preprocess distance from one node to the next node.
-ALTER TABLE way_nodes ADD COLUMN dist_to_next double precision;
-
--- Way "ref" tag values are put in this column because matching ref against hstore string values like "A1; S3" is slow.
+﻿-- Way "ref" tag values are put in this column because matching ref against hstore string values like "A1; S3" is slow.
 ALTER TABLE ways ADD COLUMN refs text[];
 
-DROP FUNCTION IF EXISTS OSM_PreprocessUsingCursor();
+DROP FUNCTION IF EXISTS OSM_Preprocess();
 
 -- Preprocesses some stuff so Ruby does not have to work so hard on reports.
-CREATE FUNCTION OSM_PreprocessUsingCursor() RETURNS void AS $$
+CREATE FUNCTION OSM_Preprocess() RETURNS void AS $$
 DECLARE
 	ref CURSOR FOR SELECT * FROM ways WHERE OSM_GetConfigDateValue('last_preprocessing_data_timestamp') IS NULL OR tstamp > OSM_GetConfigDateValue('last_preprocessing_data_timestamp');
 	all_rows float;
@@ -22,19 +19,6 @@ FOR way IN ref LOOP
 	i := i + 1;
 	raise notice '% Processing way % (% of % - %%%)', clock_timestamp(), way.id, i, all_rows, ((i / all_rows) * 100)::integer;
 
-	UPDATE way_nodes wn
-	SET dist_to_next = ST_Distance_Sphere(n.geom,
-		(SELECT
-			n_next.geom
-		FROM way_nodes wn_next
-		INNER JOIN nodes n_next ON (n_next.id = wn_next.node_id)
-		WHERE wn_next.way_id = wn.way_id AND
-			wn_next.sequence_id = wn.sequence_id + 1))
-  FROM nodes n
-	WHERE wn.way_id = way.id AND n.id = wn.node_id;
-
-	raise notice '   Done update 1';
-
 	UPDATE
 		ways w
 	SET refs = 
@@ -45,8 +29,6 @@ FOR way IN ref LOOP
 			ELSE ARRAY[REPLACE(tags-> 'ref', ' ', '')]
 		END)
 	WHERE w.id = way.id;
-
-	raise notice '   Done update 2';
 END LOOP;
 
 data_timestamp := (SELECT OSM_GetDataTimestamp());

@@ -117,7 +117,8 @@ class RoadManager
   end
 
   def get_road_data(road)
-    @conn.query("SELECT * FROM osmonitor_road_data WHERE road_id = #{road.row['id']}
+    @conn.query("SELECT *, ST_AsText(way_geom) AS way_geom,
+    ST_AsText(node_geom) AS node_geom FROM osmonitor_road_data WHERE road_id = #{road.row['id']}
 ORDER BY way_id, node_sequence_id, relation_sequence_id NULLS LAST, relation_id NULLS LAST")
   end
 
@@ -144,8 +145,7 @@ ORDER BY way_id, node_sequence_id, relation_sequence_id NULLS LAST, relation_id 
     way_tags,
     way_geom,
     node_geom,
-    node_id,
-    node_dist_to_next
+    node_id
   FROM (#{from_sql}) AS query
   ORDER BY way_id, node_sequence_id, relation_sequence_id NULLS LAST, relation_id NULLS LAST"
     sql
@@ -172,10 +172,9 @@ ORDER BY way_id, node_sequence_id, relation_sequence_id NULLS LAST, relation_id 
     wn.sequence_id AS node_sequence_id,
     wn.way_id AS way_id,
     w.tags AS way_tags,
-    ST_AsText(w.linestring) AS way_geom,
-    ST_AsText(n.geom) AS node_geom,
-    wn.node_id AS node_id,
-    wn.dist_to_next AS node_dist_to_next
+    w.linestring AS way_geom,
+    n.geom AS node_geom,
+    wn.node_id AS node_id
   FROM way_nodes wn
   INNER JOIN relation_members rm ON (rm.member_id = way_id)
   INNER JOIN nodes n ON (n.id = wn.node_id)
@@ -197,10 +196,9 @@ ORDER BY way_id, node_sequence_id, relation_sequence_id NULLS LAST, relation_id 
     wn.sequence_id AS node_sequence_id,
     wn.way_id AS way_id,
     w.tags AS way_tags,
-    ST_AsText(w.linestring) AS way_geom,
-    ST_AsText(n.geom) AS node_geom,
-    wn.node_id AS node_id,
-    wn.dist_to_next AS node_dist_to_next
+    w.linestring AS way_geom,
+    n.geom AS node_geom,
+    wn.node_id AS node_id
   FROM way_nodes wn
   INNER JOIN nodes n ON (n.id = wn.node_id)
   INNER JOIN ways w ON (w.id = wn.way_id)
