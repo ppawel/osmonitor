@@ -18,11 +18,9 @@ class RoadManager
 
     road.row = ensure_road_row(road)
 
-    update_road_relations_if_needed(road, get_relation_sql(road))
-
+    log_time " update_road_relations_if_needed" do update_road_relations_if_needed(road, get_relation_sql(road)) end
     log_time " fill_road_relation" do fill_road_relation(road) end
-
-    update_road_data_if_needed(road, get_ways_sql(road))
+    log_time " update_road_data_if_needed" do update_road_data_if_needed(road, get_ways_sql(road)) end
 
     data = []
 

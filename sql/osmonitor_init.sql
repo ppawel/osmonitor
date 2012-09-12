@@ -17,17 +17,6 @@ CREATE TABLE report_statuses (
   PRIMARY KEY(road_ref, country)
 );
 
-DROP TABLE IF EXISTS osmonitor_roads;
-CREATE TABLE osmonitor_roads (
-  id SERIAL PRIMARY KEY,
-  country character varying(5),
-  ref_prefix character varying(10),
-  ref_number character varying(10),
-  data_sql_query text,
-  relation_sql_query text,
-  UNIQUE (country, ref_prefix, ref_number)
-);
-
 DROP TABLE IF EXISTS osmonitor_road_relations;
 CREATE TABLE osmonitor_road_relations (
   road_id integer,
@@ -54,11 +43,28 @@ CREATE TABLE osmonitor_road_data (
   node_dist_to_next double precision
 );
 
-DROP TABLE IF EXISTS osmonitor_relation_countries;
-CREATE TABLE osmonitor_relation_countries (
-  relation_id INTEGER PRIMARY KEY,
-  country character varying(5) NOT NULL
+DROP TABLE IF EXISTS osmonitor_roads;
+CREATE TABLE osmonitor_roads (
+  id SERIAL PRIMARY KEY,
+  country character varying(5),
+  ref_prefix character varying(10),
+  ref_number character varying(10),
+  data_sql_query text,
+  relation_sql_query text,
+  UNIQUE (country, ref_prefix, ref_number)
 );
+
+ALTER TABLE osmonitor_road_data ADD CONSTRAINT fk_osmonitor_road_data_road_id FOREIGN KEY (road_id) REFERENCES osmonitor_roads (id)
+   ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE osmonitor_road_relations ADD CONSTRAINT fk_osmonitor_road_relations_road_id FOREIGN KEY (road_id) REFERENCES osmonitor_roads (id)
+   ON UPDATE CASCADE ON DELETE CASCADE;
+
+DROP INDEX IF EXISTS idx_osmonitor_road_data_road_id;
+CREATE INDEX idx_osmonitor_road_data_road_id
+  ON osmonitor_road_data
+  USING btree
+  (road_id);
 
 ---- DATA
 
@@ -145,6 +151,7 @@ BEGIN
       orr_next.node_geom
     FROM osmonitor_road_data orr_next
     WHERE orr_next.way_id = orr.way_id AND
+      orr_next.road_id = orr.road_id AND
       orr_next.node_sequence_id = orr.node_sequence_id + 1))
   WHERE orr.road_id = $1;
 END;
@@ -159,29 +166,6 @@ BEGIN
   DELETE FROM osmonitor_road_relations WHERE road_id = $1;
   PERFORM exec('INSERT INTO osmonitor_road_relations (road_id, relation_id)
     SELECT ' || $1 || ' AS road_id, r.id AS relation_id FROM (' || row.relation_sql_query || ') AS r');
-END;
-$$ LANGUAGE plpgsql;
-
-DROP FUNCTION IF EXISTS OSM_CalculateRelationCountries();
-CREATE FUNCTION OSM_CalculateRelationCountries() RETURNS void AS $$
-DECLARE
-  boundary_row RECORD;
-  relation_row RECORD;
-  covered boolean;
-  i integer;
-  count integer;
-
-BEGIN
-  TRUNCATE osmonitor_relation_countries;
-  i := 0;
-  count := (SELECT COUNT(*) FROM relations WHERE tags -> 'type' = 'route' AND tags -> 'route' IN ('road', 'bicycle'));
-  FOR relation_row IN SELECT * FROM relations WHERE tags -> 'type' = 'route' AND tags -> 'route' IN ('road', 'bicycle') LOOP
-    i := i + 1;
-    RAISE NOTICE '% of %', i, count;
-    FOR boundary_row IN SELECT * FROM osmonitor_config_options WHERE option_key ilike 'boundary_%' LOOP
-      covered := (SELECT OSM_IsMostlyCoveredBy(boundary_row.option_key, relation_row.id));
-    END LOOP;
-  END LOOP;
 END;
 $$ LANGUAGE plpgsql;
 
