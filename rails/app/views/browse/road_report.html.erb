@@ -35,7 +35,7 @@
       //layer_switcher.maximizeControl();
 
       all_ways_layer = new OpenLayers.Layer.Vector("Road (all ways)",
-        {visibility: true, styleMap: new OpenLayers.StyleMap({'strokeWidth': 10, 'strokeColor': "black", strokeOpacity: 0.25})});
+        {visibility: true, styleMap: new OpenLayers.StyleMap({'strokeWidth': 20, 'strokeColor': "black", strokeOpacity: 0.25})});
       showWaysFromString(all_ways_layer, 'GEOMETRYCOLLECTION(<%= @all_ways_wkt %>)', 'green', true);
       map.addLayer(all_ways_layer);
 
@@ -216,6 +216,8 @@
 <% @status.issues.each do |issue| %>
 <%= render_erb("issue_#{issue.name}.erb", @country, @report, @status, issue).html_safe %>
 <% end %>
+<% if @road.relation %><li> <small><b>relation:</b> <a href="http://www.openstreetmap.org/browse/relation/<%= @road.relation.id %>"><%= @road.relation.id %></a></small><br><% end %>
+<li> <small><b>ways:</b> all (<%= @road.num_all_ways %>), with ref tag (<%= @road.num_ref_ways %>), in relation (<%= @road.num_relation_ways %>)<% if !@status.percent_with_lanes.nan? and !@status.percent_with_maxspeed.nan? %>, with <i>lanes</i> (<%= @status.percent_with_lanes.to_i %>%), with <i>maxspeed</i> (<%= @status.percent_with_maxspeed.to_i %>%)<% end %><% if @road.relation and @road.relation.tags['note'] %><br><b>Note:</b> <%= @road.relation.tags['note'] %><% end %></small>
 </ul>
 
 <h3>Structure</h3>
@@ -233,12 +235,6 @@
 <%= render_path_info(comp.roundtrip.backward_path, 'beginning &laquo;&laquo; end').html_safe %> (<a href="javascript:showBackwardPath(<%= i %>)">show</a>)
 </div>
 <% end %>
-
-<h3>Info</h3>
-<small>
-<% if @road.relation %><b>Relation:</b> <a href="http://www.openstreetmap.org/browse/relation/<%= @road.relation.id %>"><%= @road.relation.id %></a><br><% end %>
-<b>Ways:</b> all (<%= @road.num_all_ways %>), with ref tag (<%= @road.num_ref_ways %>), in relation (<%= @road.num_relation_ways %>)<% if !@status.percent_with_lanes.nan? and !@status.percent_with_maxspeed.nan? %>, with <i>lanes</i> (<%= @status.percent_with_lanes.to_i %>%), with <i>maxspeed</i> (<%= @status.percent_with_maxspeed.to_i %>%)<% end %><% if @road.relation and @road.relation.tags['note'] %><br><b>Note:</b> <%= @road.relation.tags['note'] %><% end %>
-</small>
 
 <p>
 <button name="use_cache" onclick="refreshReport()">refresh report (don't use cache)</button>
