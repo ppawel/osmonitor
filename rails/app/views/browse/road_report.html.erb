@@ -34,8 +34,8 @@
       map.addControl(layer_switcher);
       //layer_switcher.maximizeControl();
 
-      all_ways_layer = new OpenLayers.Layer.Vector("Road (all ways + end nodes)",
-        {visibility: true, styleMap: new OpenLayers.StyleMap({'strokeWidth': 4, 'strokeColor': "black", strokeOpacity: 1})});
+      all_ways_layer = new OpenLayers.Layer.Vector("Road (all ways)",
+        {visibility: true, styleMap: new OpenLayers.StyleMap({'strokeWidth': 10, 'strokeColor': "black", strokeOpacity: 0.25})});
       showWaysFromString(all_ways_layer, 'GEOMETRYCOLLECTION(<%= @all_ways_wkt %>)', 'green', true);
       map.addLayer(all_ways_layer);
 
@@ -49,7 +49,7 @@
         );
 
         <% comp.exit_nodes.each do |node| %>
-        showPoint(all_ways_layer, '<%= node.point_wkt %>', 'red');
+        //showPoint(all_ways_layer, '<%= node.point_wkt %>', 'red');
         <% end %>
 
         <% if !comp.beginning_nodes.empty? %>
@@ -220,11 +220,17 @@
 
 <h3>Structure</h3>
 
+<%
+  def render_path_info(path, description)
+    "#{description} (#{format_length(path.length)} km): <span style=\"color: #{path.complete ? 'green' : 'red'}\"> #{path.complete ? 'OK' : 'NOT OK'}</span>"
+  end
+%>
+
 <% @road.comps.each_with_index do |comp, i| %>
 <div class="component_info">
 <span class="title">Component <%= i + 1 %> (<a href="javascript:showComponent(<%= i %>)">show</a>)</span><br>
-path <span style="color: <%= comp.roundtrip.forward_path.complete ? 'green' : 'red' %>">from beginning to end</span> (<a href="javascript:showForwardPath(<%= i %>)">show</a>)<br>
-path <span style="color: <%= comp.roundtrip.backward_path.complete ? 'green' : 'red' %>">from end to beginning</span> (<a href="javascript:showBackwardPath(<%= i %>)">show</a>)
+<%= render_path_info(comp.roundtrip.forward_path, 'beginning &raquo;&raquo; end').html_safe %> (<a href="javascript:showForwardPath(<%= i %>)">show</a>)<br>
+<%= render_path_info(comp.roundtrip.backward_path, 'beginning &laquo;&laquo; end').html_safe %> (<a href="javascript:showBackwardPath(<%= i %>)">show</a>)
 </div>
 <% end %>
 
@@ -244,5 +250,12 @@ path <span style="color: <%= comp.roundtrip.backward_path.complete ? 'green' : '
   
             <section id="right">  
 <div id="map" class="smallmap"></div>
+<table>
+<tr>
+<td><b>Map legend:</b></td>
+<td><%= image_tag "road_beginning.png" %></td>
+<td>beginning of a road</td>
+<td><%= image_tag "road_end.png" %></td><td>end of a road</td>
+</tr></table>
             </section>  
         </div>  
