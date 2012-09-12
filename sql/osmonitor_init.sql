@@ -8,15 +8,6 @@ CREATE TABLE osmonitor_config_options (
   date_value timestamp without time zone
 );
 
-DROP TABLE IF EXISTS report_statuses;
-CREATE TABLE report_statuses (
-  road_ref text NOT NULL,
-  country text NOT NULL,
-  cached_date timestamp without time zone NOT NULL,
-  status bytea,
-  PRIMARY KEY(road_ref, country)
-);
-
 DROP TABLE IF EXISTS osmonitor_road_relations;
 CREATE TABLE osmonitor_road_relations (
   road_id integer,
@@ -46,12 +37,14 @@ CREATE TABLE osmonitor_road_data (
 DROP TABLE IF EXISTS osmonitor_roads;
 CREATE TABLE osmonitor_roads (
   id SERIAL PRIMARY KEY,
+  data_timestamp timestamp without time zone,
+  report_timestamp timestamp without time zone,
   country character varying(5),
-  ref_prefix character varying(10),
-  ref_number character varying(10),
+  ref character varying(20),
   data_sql_query text,
   relation_sql_query text,
-  UNIQUE (country, ref_prefix, ref_number)
+  status bytea,
+  UNIQUE (country, ref)
 );
 
 ALTER TABLE osmonitor_road_data ADD CONSTRAINT fk_osmonitor_road_data_road_id FOREIGN KEY (road_id) REFERENCES osmonitor_roads (id)

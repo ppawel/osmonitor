@@ -84,8 +84,7 @@ class RoadManager
     result = get_road_row(road)
 
     if !result
-      @conn.query("INSERT INTO osmonitor_roads (country, ref_prefix, ref_number) VALUES
-        ('#{road.country}', '#{road.ref_prefix}', '#{road.ref_number}')")
+      @conn.query("INSERT INTO osmonitor_roads (country, ref) VALUES ('#{road.country}', '#{road.ref}')")
       result = ensure_road_row(road)
     end
 
@@ -110,7 +109,7 @@ class RoadManager
 
   def get_road_row(road)
     result = @conn.query("SELECT * FROM osmonitor_roads
-      WHERE country = '#{road.country}' AND ref_prefix = '#{road.ref_prefix}' AND ref_number = '#{road.ref_number}'").to_a
+      WHERE country = '#{road.country}' AND ref = '#{road.ref}'").to_a
     return result[0] if !result.empty?
   end
 

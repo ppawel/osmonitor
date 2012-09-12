@@ -45,6 +45,10 @@ class Road
     self.comps = []
   end
 
+  def ref
+    "#{@ref_prefix}#{ref_number}"
+  end
+
   def empty?
     graph.empty?
   end
