@@ -38,8 +38,8 @@ class RoadManager
 
   def fill_road_relation(road)
     sql = "SELECT
-    r.id AS relation_id,
-    r.tags AS relation_tags,
+    r.id AS id,
+    r.tags AS tags,
     r.user_id AS last_update_user_id,
     u.name AS last_update_user_name,
     r.tstamp AS last_update_timestamp,
@@ -50,21 +50,14 @@ class RoadManager
     WHERE orr.road_id = #{road.row['id']}
     ORDER BY r.id"
 
-    result = @conn.query(sql).collect {|row| process_tags(row, 'relation_tags')}
-    road.relation = create_relation(result[0]) if result.size > 0
+    result = @conn.query(sql).collect {|row| process_tags(row)}
+    road.relation = Relation.new(result[0]) if result.size > 0
 
     if result.size > 1
       result[1..-1].each do |row|
-        road.other_relations << create_relation(row)
+        road.other_relations << Relation.new(row)
       end
     end
-  end
-
-  def create_relation(row)
-    relation = Relation.new(row['relation_id'].to_i, row['relation_tags'])
-    relation.last_update = Changeset.new(row['last_update_user_id'].to_i, row['last_update_user_name'],
-      row['last_update_timestamp'], row['last_update_changeset_id'])
-    relation
   end
 
   def load_ways(road)

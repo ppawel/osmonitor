@@ -20,9 +20,10 @@ def self.run_wiki_reports(input_page, output_page)
   conn = PGconn.open(:host => $config['host'], :port => $config['port'], :dbname => $config['dbname'], :user => $config['user'], :password => $config['password'])
   data_timestamp = get_data_timestamp(conn)
 
+  admin_report_manager = OSMonitor::AdminReport::ReportManager.new(conn)
   cycleway_report_manager = OSMonitor::CyclewayReport::ReportManager.new(conn)
   road_report_manager = OSMonitor::RoadReport::ReportManager.new(conn)
-  wiki_manager = WikiManager.new(cycleway_report_manager, road_report_manager)
+  wiki_manager = WikiManager.new(admin_report_manager, cycleway_report_manager, road_report_manager)
 
   page = wiki_manager.get_osmonitor_page(input_page)
   old_page_text = page.text.dup

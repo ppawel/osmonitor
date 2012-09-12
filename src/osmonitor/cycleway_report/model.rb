@@ -1,8 +1,7 @@
 require 'rgeo'
 
 require 'config'
-require 'osmonitor/core'
-require 'osmonitor/road_report'
+require 'osmonitor'
 
 module OSMonitor
 module CyclewayReport

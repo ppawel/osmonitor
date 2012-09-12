@@ -9,12 +9,14 @@ module OSMonitor
 # * processing (parsing, replacing) OSMonitor segments in a wiki page
 # * rendering reports with wiki-compatible syntax
 class WikiManager
+  attr_accessor :admin_report_manager
   attr_accessor :cycleway_report_manager
   attr_accessor :road_report_manager
   attr_accessor :input_manager
   attr_accessor :gateway
 
-  def initialize(cycleway_report_manager, road_report_manager)
+  def initialize(admin_report_manager, cycleway_report_manager, road_report_manager)
+    self.admin_report_manager = admin_report_manager
     self.cycleway_report_manager = cycleway_report_manager
     self.road_report_manager = road_report_manager
     self.input_manager = InputManager.new
@@ -34,17 +36,15 @@ class WikiManager
     overall_report.report_request = ReportRequest.new
     overall_report.report_request.report_type = 'ROAD_REPORT'
 
-    page.get_segments('CYCLEWAY_REPORT').each {|segment| render_road_report(@cycleway_report_manager, page, segment, overall_report)}
-    page.get_segments('ROAD_REPORT').each {|segment| render_road_report(@road_report_manager, page, segment, overall_report)}
+    page.get_segments('ADMIN_REPORT').each {|segment| render_report(@admin_report_manager, page, segment, overall_report)}
+    page.get_segments('CYCLEWAY_REPORT').each {|segment| render_report(@cycleway_report_manager, page, segment, overall_report)}
+    page.get_segments('ROAD_REPORT').each {|segment| render_report(@road_report_manager, page, segment, overall_report)}
     page.get_segments('ROAD_STATS').each {|segment| replace_segment(page, segment, render_stats(overall_report))}
   end
 
-  def render_road_report(manager, page, segment, overall_report)
+  def render_report(manager, page, segment, overall_report)
     report_request = segment.to_report_request
     country = segment.params['country']
-    refs = []
-    refs = segment.params['refs'].split(',') if segment.params['refs']
-    ref_prefix = segment.params['ref_prefix']
     report_text = nil
 
     input = @input_manager.load(report_request)

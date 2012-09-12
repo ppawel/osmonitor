@@ -4,12 +4,17 @@ module OSMonitor
 class InputManager
 
   def load(report_request)
+    result = load_admin(report_request) if report_request.report_type == :ADMIN_REPORT.to_s
     result = load_cycleways(report_request) if report_request.report_type == :CYCLEWAY_REPORT.to_s
     result = load_roads(report_request) if report_request.report_type == :ROAD_REPORT.to_s
     result
   end
 
   protected
+
+  def load_admin(report_request)
+    to_hash_array(CSV.read("#{get_data_path}/admin/#{report_request.country}.csv", {:headers => true}))
+  end
 
   def load_cycleways(report_request)
     to_hash_array(CSV.read("#{get_data_path}/cycleways/#{report_request.country}.csv", {:headers => true}))

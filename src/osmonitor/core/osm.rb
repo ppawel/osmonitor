@@ -19,9 +19,11 @@ class Relation
   attr_accessor :tags
   attr_accessor :last_update
 
-  def initialize(id, tags)
-    self.id = id
-    self.tags = tags
+  def initialize(row)
+    self.id = row['id'].to_i
+    self.tags = row['tags']
+    self.last_update = Changeset.new(row['last_update_user_id'].to_i, row['last_update_user_name'],
+      row['last_update_timestamp'], row['last_update_changeset_id'])
   end
 
   def distance

@@ -1,0 +1,41 @@
+<center>
+<table class="wikitable" border="1" cellspacing="0" cellpadding="2" width="80%">
+<tr style="background-color:#E9E9E9">
+<th scope="col" width="2%">Ref
+</th>
+<th scope="col" width="35%">Relation
+</th>
+<th scope="col" width="43%">Bot report
+</th>
+</tr>
+
+<% report.statuses.each do |status| %>
+<%
+  color = nil
+  color = 'PaleGreen' if status.green?
+  color = 'PaleGoldenrod' if status.get_issues(:WARNING).size > 0
+  color = 'LightSalmon' if status.get_issues(:ERROR).size > 0
+%>
+<% if color %>
+<tr style="background-color:<%= color %>">
+<% else %>
+<tr>
+<% end %>
+<td style="text-align: center">
+<%= status.boundary.input['name'] %>
+</td>
+<td><div style="color: #666666; font-size: smaller;">
+<% if status.boundary.relation %><b>Relation:</b> {{relation|<%= status.boundary.relation.id %>}}<br><% end %><% if status.boundary.relation and status.boundary.relation.tags['note'] %><br><b>Note:</b> <%= status.boundary.relation.tags['note'] %><% end %>
+</div>
+</td>
+<td>
+<ul>
+<% status.issues.each do |issue| %>
+<%= render_erb("issue_#{issue.name}.erb", country, report, status, issue) %>
+<% end %>
+</ul>
+</td>
+</tr>
+<% end %>
+</table>
+</center>
