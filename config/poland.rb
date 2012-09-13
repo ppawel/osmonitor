@@ -9,7 +9,11 @@ module OSMonitor
   '2' => '"r.tags->\'admin_level\' = \'2\' AND LOWER(r.tags->\'name\') = \'polska\'"',
 
   '4' => '"r.tags->\'admin_level\' = \'4\'
-      AND LOWER(r.tags->\'name\') = \'województwo #{UnicodeUtils.downcase(boundary.input[\'name\'])}\'"'
+      AND LOWER(r.tags->\'name\') = \'województwo #{UnicodeUtils.downcase(boundary.input[\'name\'])}\'"',
+
+  '6' => '"--r.tags->\'admin_level\' = \'6\' AND
+      (LOWER(r.tags->\'name\') = \'powiat #{UnicodeUtils.downcase(boundary.input[\'name\'])}\'
+        OR (r.tags?\'teryt:terc\' AND r.tags->\'teryt:terc\' = \'#{boundary.input[\'id\']}\'))"'
 }
 
 # ROAD REPORT

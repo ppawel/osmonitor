@@ -44,7 +44,7 @@ class AdminManager
 
   def load_ways(boundary)
     sql = "SELECT
-      ST_IsClosed(ST_MakeLine(w.linestring))
+      ST_IsClosed(ST_LineMerge(ST_Collect(w.linestring)))
     FROM ways w
     INNER JOIN relation_members rm ON (rm.member_id = w.id)
     WHERE rm.relation_id = #{boundary.relation.id}"
