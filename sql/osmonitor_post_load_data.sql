@@ -33,7 +33,7 @@ END LOOP;
 
 data_timestamp := (SELECT OSM_GetDataTimestamp());
 raise notice 'Finished, data timestamp is %', data_timestamp;
-UPDATE config_options SET date_value = data_timestamp WHERE option_key = 'last_preprocessing_data_timestamp';
+UPDATE osmonitor_config_options SET date_value = data_timestamp WHERE option_key = 'last_preprocessing_data_timestamp';
 
 END;
 $$ LANGUAGE plpgsql;

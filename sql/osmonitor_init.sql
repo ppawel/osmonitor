@@ -147,6 +147,12 @@ BEGIN
       orr_next.road_id = orr.road_id AND
       orr_next.node_sequence_id = orr.node_sequence_id + 1))
   WHERE orr.road_id = $1;
+
+  UPDATE osmonitor_roads SET data_timestamp =
+    (SELECT MAX(way_last_update_timestamp)
+    FROM osmonitor_road_data
+    WHERE road_id = $1)
+  WHERE id = $1;
 END;
 $$ LANGUAGE plpgsql;
 
