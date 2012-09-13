@@ -12,6 +12,9 @@ def self.config
   @@config
 end
 
+@@config['admin_report'] = {}
+@@config['admin_report']['find_relation_sql_where_clause'] = {}
+
 @@config['cycleway_report'] = {}
 @@config['cycleway_report']['find_relation_sql_where_clause'] = {}
 @@config['cycleway_report']['find_ways_sql_where_clause'] = {}

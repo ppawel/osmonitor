@@ -1,4 +1,16 @@
+# encoding: utf-8
+
 module OSMonitor
+
+# ADMIN REPORT
+
+# SQL where clause by admin_level
+@@config['admin_report']['find_relation_sql_where_clause']['PL'] = {
+  '2' => '"r.tags->\'admin_level\' = \'2\' AND LOWER(r.tags->\'name\') = \'polska\'"',
+
+  '4' => '"r.tags->\'admin_level\' = \'4\'
+      AND LOWER(r.tags->\'name\') = \'województwo #{UnicodeUtils.downcase(boundary.input[\'name\'])}\'"'
+}
 
 # ROAD REPORT
 

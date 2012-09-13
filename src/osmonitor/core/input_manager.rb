@@ -13,7 +13,7 @@ class InputManager
   protected
 
   def load_admin(report_request)
-    to_hash_array(CSV.read("#{get_data_path}/admin/#{report_request.country}.csv", {:headers => true}))
+    to_hash_array(CSV.read("#{get_data_path}/admin/#{report_request.country}.csv", {:headers => true, :encoding => 'UTF-8'}))
   end
 
   def load_cycleways(report_request)

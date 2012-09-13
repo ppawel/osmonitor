@@ -20,6 +20,7 @@ class Boundary
   attr_accessor :input
   attr_accessor :relation
   attr_accessor :other_relations
+  attr_accessor :closed
 
   def initialize(country, input)
     self.country = country
