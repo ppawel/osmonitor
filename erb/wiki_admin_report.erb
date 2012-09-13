@@ -42,7 +42,7 @@
 <%= status.entity.input['name'] %>
 </td>
 <td><div style="color: #666666; font-size: smaller;">
-<% if status.entity.relation %><b>Relation:</b> {{relation|<%= status.entity.relation.id %>}}<br><% end %><% if status.entity.relation and status.entity.relation.tags['note'] %><br><b>Note:</b> <%= status.entity.relation.tags['note'] %><% end %>
+<% if status.entity.relation %><b>Relation:</b> {{relation|<%= status.entity.relation.id %>}}<% end %><% if status.entity.relation and status.entity.relation.tags['note'] %><br><b>Note:</b> <%= status.entity.relation.tags['note'] %><% end %>
 </div>
 </td>
 <td>
