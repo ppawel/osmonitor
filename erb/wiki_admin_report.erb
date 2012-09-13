@@ -1,27 +1,44 @@
-<center>
-<table class="wikitable" border="1" cellspacing="0" cellpadding="2" width="80%">
-<tr style="background-color:#E9E9E9">
-<th scope="col">Name
-</th>
-<th scope="col">Relation
-</th>
-<th scope="col">Bot report
-</th>
-</tr>
 
+<% prev_admin_level = -1 %>
 <% report.statuses.each do |status| %>
 <%
   color = nil
   color = 'PaleGreen' if status.green?
   color = 'PaleGoldenrod' if status.get_issues(:WARNING).size > 0
   color = 'LightSalmon' if status.get_issues(:ERROR).size > 0
+  admin_level = status.entity.input['admin_level'].to_i
 %>
+
+<% if admin_level <= 4 and prev_admin_level != admin_level %>
+
+<% if prev_admin_level != -1 %>
+</table>
+</center>
+<% end %>
+
+== <%= status.entity.input['name'] %> ==
+
+<center>
+<table class="wikitable" border="1" cellspacing="0" cellpadding="2" width="80%">
+<tr style="background-color:#E9E9E9">
+<th scope="col" width="2%">Name
+</th>
+<th scope="col" width="35%">Info
+</th>
+<th scope="col" width="43%">Report
+</th>
+</tr>
+
+<% end %>
+
+<% prev_admin_level = admin_level %>
+
 <% if color %>
 <tr style="background-color:<%= color %>">
 <% else %>
 <tr>
 <% end %>
-<td style="text-align: center">
+<td>
 <%= status.entity.input['name'] %>
 </td>
 <td><div style="color: #666666; font-size: smaller;">
@@ -37,5 +54,3 @@
 </td>
 </tr>
 <% end %>
-</table>
-</center>

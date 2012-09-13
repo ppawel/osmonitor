@@ -1,4 +1,5 @@
 require 'xml'
+require 'unicode_utils'
 
 def get_id(row)
   woj = row.find_first("col[@name='WOJ']").content
