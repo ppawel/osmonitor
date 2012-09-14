@@ -24,6 +24,8 @@ gem 'rgeo'
 gem 'stream'
 gem 'pg'
 gem 'mediawiki-gateway'
+gem 'unicode_utils'
+
 gem 'therubyracer'
 gem 'jquery-rails'
 
