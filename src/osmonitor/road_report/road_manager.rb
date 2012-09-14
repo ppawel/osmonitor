@@ -16,8 +16,7 @@ class RoadManager
   def load_road(country, input)
     road = Road.new(country, input)
 
-    road.row = ensure_road_row(road)
-
+    log_time " ensure_road_row" do road.row = ensure_road_row(road) end
     log_time " update_road_relations_if_needed" do update_road_relations_if_needed(road, get_relation_sql(road)) end
     log_time " fill_road_relation" do fill_road_relation(road) end
     log_time " update_road_data_if_needed" do update_road_data_if_needed(road, get_ways_sql(road)) end
@@ -76,7 +75,7 @@ class RoadManager
   def ensure_road_row(road)
     result = get_road_row(road)
 
-    if !result
+    if result.nil?
       @conn.query("INSERT INTO osmonitor_roads (country, ref) VALUES ('#{road.country}', '#{road.ref}')")
       result = ensure_road_row(road)
     end
