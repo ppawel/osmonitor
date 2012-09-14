@@ -33,3 +33,7 @@ CREATE INDEX idx_ways_timestamp
   ON ways
   USING btree
   (tstamp);
+
+DROP INDEX IF EXISTS idx_osmonitor_roads_ref;
+CREATE INDEX idx_osmonitor_roads_ref
+   ON osmonitor_roads USING btree (ref ASC NULLS LAST, country ASC NULLS LAST);

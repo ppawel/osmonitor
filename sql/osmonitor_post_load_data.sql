@@ -52,7 +52,7 @@ all_rows := (SELECT COUNT(*) FROM osmonitor_roads);
 
 FOR road IN ref LOOP
 	i := i + 1;
-	raise notice '% Processing road % (% of % - %%%)', clock_timestamp(), road.id, i, all_rows, ((i / all_rows) * 100)::integer;
+	raise notice '% Processing road % (%) (% of % - %%%)', clock_timestamp(), road.ref, road.id, i, all_rows, ((i / all_rows) * 100)::integer;
 
 	changed := (SELECT COUNT(*)
 		FROM osmonitor_road_data orr
@@ -60,11 +60,11 @@ FOR road IN ref LOOP
 		INNER JOIN ways w ON (w.id = orr.way_id)
 		WHERE r.id = road.id AND w.tstamp > orr.way_last_update_timestamp);
 
-	raise notice ' changed = %', changed;
+	raise notice '% changed = %', clock_timestamp(), changed;
 
 	IF changed > 0 THEN
 		PERFORM OSM_RefreshRoadData(road.id);
-		raise notice ' refreshed';
+		raise notice '% refreshed', clock_timestamp();
 	END IF;
 END LOOP;
 END;
