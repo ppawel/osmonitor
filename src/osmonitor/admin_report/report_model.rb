@@ -18,7 +18,7 @@ class BoundaryStatus < OSMonitor::Status
   end
 
   def correct_teryt_id?
-    @entity.relation.tags['teryt:terc'] == @entity.input['id']
+    @entity.relation.tags['admin_level'] == '2' or @entity.relation.tags['teryt:terc'] == @entity.input['id']
   end
 end
 
