@@ -119,6 +119,8 @@ BEGIN
   -- Needed for SQL queries.
   SELECT * FROM osmonitor_roads WHERE id = $1 INTO row;
 
+  RAISE NOTICE ' Road % (%): remove then insert road data again', row.ref, row.id;
+
   -- Remove then insert road data again.
   DELETE FROM osmonitor_road_data WHERE road_id = $1;
   PERFORM exec('INSERT INTO osmonitor_road_data
@@ -137,6 +139,8 @@ BEGIN
     node_geom,
     node_id) ' || row.data_sql_query);
 
+  RAISE NOTICE ' Road % (%): recalculate', row.ref, row.id;
+
   -- Recalculate distances between nodes for this road.
   UPDATE osmonitor_road_data orr
   SET node_dist_to_next = ST_Distance_Sphere(orr.node_geom,
@@ -147,12 +151,16 @@ BEGIN
       orr_next.road_id = orr.road_id AND
       orr_next.node_sequence_id = orr.node_sequence_id + 1))
   WHERE orr.road_id = $1;
+END;
+$$ LANGUAGE plpgsql;
 
+DROP FUNCTION IF EXISTS OSM_UpdateRoadDataTimestamps();
+CREATE FUNCTION OSM_UpdateRoadDataTimestamps() RETURNS void AS $$
+BEGIN
   UPDATE osmonitor_roads SET data_timestamp =
     (SELECT MAX(way_last_update_timestamp)
     FROM osmonitor_road_data
-    WHERE road_id = $1)
-  WHERE id = $1;
+    WHERE road_id = id);
 END;
 $$ LANGUAGE plpgsql;
 

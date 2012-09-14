@@ -37,3 +37,35 @@ UPDATE osmonitor_config_options SET date_value = data_timestamp WHERE option_key
 
 END;
 $$ LANGUAGE plpgsql;
+
+DROP FUNCTION IF EXISTS OSM_RefreshChangedRoads();
+CREATE FUNCTION OSM_RefreshChangedRoads() RETURNS void AS $$
+DECLARE
+	ref CURSOR FOR SELECT * FROM osmonitor_roads ORDER BY id;
+	all_rows float;
+	i int;
+	changed int;
+BEGIN
+SET enable_seqscan = off;
+i := 0;
+all_rows := (SELECT COUNT(*) FROM osmonitor_roads);
+
+FOR road IN ref LOOP
+	i := i + 1;
+	raise notice '% Processing road % (% of % - %%%)', clock_timestamp(), road.id, i, all_rows, ((i / all_rows) * 100)::integer;
+
+	changed := (SELECT COUNT(*)
+		FROM osmonitor_road_data orr
+		INNER JOIN osmonitor_roads r ON (r.id = orr.road_id)
+		INNER JOIN ways w ON (w.id = orr.way_id)
+		WHERE r.id = road.id AND w.tstamp > orr.way_last_update_timestamp);
+
+	raise notice ' changed = %', changed;
+
+	IF changed > 0 THEN
+		PERFORM OSM_RefreshRoadData(road.id);
+		raise notice ' refreshed';
+	END IF;
+END LOOP;
+END;
+$$ LANGUAGE plpgsql;

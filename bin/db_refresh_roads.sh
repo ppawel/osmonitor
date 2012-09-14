@@ -6,4 +6,5 @@ AUTH_FILE=$ROOT_DIR/authFile
 . $AUTH_FILE
 
 cd $ROOT_DIR/sql
-psql -1 -f osmonitor_post_load_data.sql -U $user $database
+
+psql -1 -c 'SELECT OSM_RefreshChangedRoads()' -U $user $database
