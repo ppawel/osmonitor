@@ -295,11 +295,7 @@ class RoadComponent
   end
 
   def select_best_roundtrip(roundtrips)
-    result = roundtrips[0]
-    roundtrips.each do |r|
-      result = r if r.complete? and (result.length.nil? or r.length > result.length)
-    end
-    result
+    roundtrips.max
   end
 
   def find_roundtrip(nodes, expand = false)
@@ -559,6 +555,14 @@ class RoadComponentRoundtrip
     return @forward_path.length if @forward_path and @forward_path.complete and @component.oneway?
     return @backward_path.length if @backward_path and @backward_path.complete and @component.oneway?
     (@forward_path.length + @backward_path.length) / 2.0
+  end
+
+  def <=>(other_roundtrip)
+    return length <=> other_roundtrip.length if complete? and other_roundtrip.complete?
+    return 1 if complete?
+    return -1 if other_roundtrip.complete?
+    return (@forward_path.length + @backward_path.length) <=> (other_roundtrip.forward_path.length + other_roundtrip.backward_path.length)
+    0
   end
 
   def to_s
