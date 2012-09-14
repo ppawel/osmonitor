@@ -35,7 +35,7 @@ class BrowseController < ApplicationController
 
     @country = params[:country]
     @status = @report.statuses[0]
-    @road = @status.road
+    @road = @status.entity
 
     @all_ways_wkt = []
     @mark_points_all = []
@@ -59,7 +59,7 @@ class BrowseController < ApplicationController
 
     @country = params[:country]
     @status = @report.statuses[0]
-    @road = @status.road
+    @road = @status.entity
 
     @all_ways_wkt = []
     @mark_points_all = []
