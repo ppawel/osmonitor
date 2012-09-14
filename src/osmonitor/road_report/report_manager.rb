@@ -45,7 +45,7 @@ class ReportManager
 
       if use_cache
         status = status_from_cache(country, row['ref'])
-        road = status.road if status
+        road = status.entity if status
       end
 
       if !status or !road
@@ -74,7 +74,7 @@ class ReportManager
   # Inserts given report status into the cache table.
   def cache_status(country, status)
     dump = PGconn.escape_bytea(Marshal.dump(status))
-    @conn.query("UPDATE osmonitor_roads SET report_timestamp = NOW(), status = '#{dump}' WHERE id = #{status.road.row['id']}")
+    @conn.query("UPDATE osmonitor_roads SET report_timestamp = NOW(), status = '#{dump}' WHERE id = #{status.entity.row['id']}")
   end
 
   # Retrieves report status from the cache table.

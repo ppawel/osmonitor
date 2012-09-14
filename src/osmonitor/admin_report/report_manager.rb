@@ -28,14 +28,14 @@ class ReportManager
 
       boundary = admin_manager.load_boundary(country, row)
 
-      @@log.debug(" Road loaded! Validating...")
+      @@log.debug(" Entity loaded! Validating...")
 
       status = BoundaryStatus.new(boundary)
       status.validate
 
       report.add_status(status)
 
-      @@log.debug("END road #{country} / #{row['ref']} took #{Time.now - road_before}")
+      @@log.debug("END boundary #{country} / admin_level = #{row['admin_level']} / name = #{row['name']} (#{i + 1} of #{input.size}) took #{Time.now - road_before}")
     end
 
     report
