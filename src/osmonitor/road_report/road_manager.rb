@@ -100,7 +100,7 @@ class RoadManager
   end
 
   def get_road_row(road)
-    result = @conn.query("SELECT * FROM osmonitor_roads
+    result = @conn.query("SELECT *, '' AS status FROM osmonitor_roads
       WHERE country = '#{road.country}' AND ref = '#{road.ref}'").to_a
     return result[0] if !result.empty?
   end

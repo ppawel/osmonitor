@@ -81,7 +81,7 @@ class ReportManager
   def status_from_cache(country, ref)
     result = @conn.query("SELECT status FROM osmonitor_roads WHERE country = '#{country}' AND ref = '#{ref}'")
 
-    if result.ntuples == 1
+    if result.ntuples == 1 and result.getvalue(0, 0)
       status = Marshal.restore(PGconn.unescape_bytea(result.getvalue(0, 0)))
       return status
     end
