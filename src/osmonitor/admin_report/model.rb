@@ -27,6 +27,10 @@ class Boundary
     self.input = input
     self.other_relations = []
   end
+
+  def last_update
+    @relation.last_update if @relation
+  end
 end
 
 end

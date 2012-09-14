@@ -8,7 +8,8 @@ class BoundaryStatus < OSMonitor::Status
     if @entity.relation
       add_error('boundary_not_closed') if !@entity.closed
       add_error('boundary_admin_level') if !correct_admin_level?
-      add_error('boundary_teryt') if !correct_teryt_id?
+      add_warning('boundary_teryt') if !correct_teryt_id?
+      add_info('last_update')
     end
   end
 
