@@ -60,5 +60,8 @@ terc_doc.find('/teryt/catalog/row', 't:http://teryt/').each do |el|
   admin_level = get_admin_level(el).to_i
   next if admin_level > 6
 
-  puts "#{get_id(el)},#{get_parent_id(el)},#{get_admin_level(el)},#{get_name(el)}"
+  name = get_name(el)
+  name = UnicodeUtils.downcase(name) if admin_level == 4 # DOLNOŚLĄSKIE, MAZOWIECKIE, POMORSKIE - don't scream at me!
+
+  puts "#{get_id(el)},#{get_parent_id(el)},#{get_admin_level(el)},#{name}"
 end
