@@ -15,7 +15,7 @@ module OSMonitor
       r.tags->\'type\' = \'boundary\' AND
       (((LOWER(r.tags->\'name\') = \'powiat #{UnicodeUtils.downcase(boundary.input[\'name\'])}\' OR
         LOWER(r.tags->\'name\') = \'#{UnicodeUtils.downcase(boundary.input[\'name\'])}\' OR
-        LOWER(r.tags->\'name\') ilike \'Miasto #{UnicodeUtils.downcase(boundary.input[\'name\'])}\') AND NOT r.tags?\'teryt:terc\' AND r.tags->\'admin_level\' = \'6\')
+        LOWER(r.tags->\'name\') ilike \'Miasto #{UnicodeUtils.downcase(boundary.input[\'name\'])}\') AND r.tags->\'admin_level\' = \'6\')
         OR (r.tags?\'teryt:terc\' AND r.tags->\'teryt:terc\' = \'#{boundary.input[\'id\']}\'))"'
 }
 
