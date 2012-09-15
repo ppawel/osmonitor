@@ -43,11 +43,23 @@ class AdminManager
   end
 
   def load_ways(boundary)
+    sql = "SELECT *
+    FROM ways w
+    INNER JOIN relation_members rm ON (rm.member_id = w.id)
+    WHERE rm.relation_id = #{boundary.relation.id} AND rm.member_type = 'W'"
+
+    @conn.query(sql).each do |row|
+      process_tags(row)
+      boundary.ways << Way.new(row['id'].to_i, row['member_role'], row['tags'])
+    end
+
+    # Check if ways form a closed line.
+
     sql = "SELECT
       ST_IsClosed(ST_LineMerge(ST_Collect(w.linestring)))
     FROM ways w
     INNER JOIN relation_members rm ON (rm.member_id = w.id)
-    WHERE rm.relation_id = #{boundary.relation.id}"
+    WHERE rm.relation_id = #{boundary.relation.id} AND rm.member_type = 'W'"
 
     boundary.closed = @conn.query(sql).getvalue(0, 0) == 't'
   end

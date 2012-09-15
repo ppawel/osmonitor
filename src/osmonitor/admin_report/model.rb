@@ -20,12 +20,14 @@ class Boundary
   attr_accessor :input
   attr_accessor :relation
   attr_accessor :other_relations
+  attr_accessor :ways
   attr_accessor :closed
 
   def initialize(country, input)
     self.country = country
     self.input = input
     self.other_relations = []
+    self.ways = []
   end
 
   def last_update
