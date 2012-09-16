@@ -39,7 +39,11 @@
 <%= status.entity.input['name'] %>
 </td>
 <td><div style="color: #666666; font-size: smaller;">
-<% if status.entity.relation %><b>Relation:</b> {{relation|<%= status.entity.relation.id %>}}<% end %><% if status.entity.relation and status.entity.relation.tags['note'] %><br><b>Note:</b> <%= status.entity.relation.tags['note'] %><% end %>
+<% if status.entity.relation %>
+<b>Relation:</b> {{relation|<%= status.entity.relation.id %>}}
+<b>Wikipedia:</b> <% if status.entity.relation.tags.has_key?('wikipedia') %>[[wikipedia:<%= status.entity.relation.tags['wikipedia'] %>]]<% end %> <% if status.entity.relation.tags.has_key?('wikipedia:pl') %>[[wikipedia:pl:<%= status.entity.relation.tags['wikipedia:pl'] %>]]<% end %>
+<% end %>
+<% if status.entity.relation and status.entity.relation.tags['note'] %><br><b>Note:</b> <%= status.entity.relation.tags['note'] %><% end %>
 </div>
 </td>
 <td>
