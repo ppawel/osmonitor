@@ -10,7 +10,7 @@ class BoundaryStatus < OSMonitor::Status
       add_error('boundary_not_closed') if !@entity.closed
       add_error('boundary_admin_level') if !correct_admin_level?
       add_warning('boundary_teryt') if !correct_teryt_id?
-      add_warning('boundary_ways_with_admin_level') if !ways_with_admin_level.empty?
+      #add_warning('boundary_ways_with_admin_level') if !ways_with_admin_level.empty?
     end
   end
 
@@ -24,6 +24,10 @@ class BoundaryStatus < OSMonitor::Status
 
   def ways_with_admin_level
     # Ignore country admin_level for now until it is discussed more.
+    @entity.ways.select {|way| way.tags.has_key?('admin_level') and way.tags['admin_level'] != '2'}
+  end
+
+  def ways_with_not_inner
     @entity.ways.select {|way| way.tags.has_key?('admin_level') and way.tags['admin_level'] != '2'}
   end
 end
