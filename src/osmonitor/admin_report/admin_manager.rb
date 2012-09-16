@@ -16,16 +16,16 @@ class AdminManager
     self.conn.query('set enable_seqscan = false;') if conn
   end
 
-  def load_boundary(country, input)
+  def load_boundary(country, input, all_input)
     boundary = Boundary.new(country, input)
 
-    load_relations(boundary)
+    load_relations(boundary, all_input)
     load_ways(boundary) if boundary.relation
 
     boundary
   end
 
-  def load_relations(boundary)
+  def load_relations(boundary, all_input)
     sql = "SELECT
     r.id AS id,
     r.tags AS tags,
@@ -40,6 +40,13 @@ class AdminManager
 #puts sql
     result = @conn.query(sql).collect {|row| process_tags(row)}
     boundary.relation = Relation.new(result[0]) if result.size > 0
+
+    # Check if the relation is not already reserved for some other id
+    # See also https://github.com/ppawel/osmonitor/issues/33
+    if boundary.relation and boundary.relation.tags['teryt:terc'] != boundary.input['id'] and
+      all_input.detect {|row| row['id'] == boundary.relation.tags['teryt:terc'] and row['id'] != boundary.input['id']}
+      boundary.relation = nil
+    end
   end
 
   def load_ways(boundary)

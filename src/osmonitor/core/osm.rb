@@ -29,6 +29,10 @@ class Relation
   def distance
     @tags['distance'].gsub(/,/, '.').to_f if @tags['distance']
   end
+
+  def to_s
+    "Relation(id = #{@id}, tags = #{@tags}"
+  end
 end
 
 # Represents a node in OSM sense.

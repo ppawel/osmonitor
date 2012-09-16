@@ -26,7 +26,7 @@ class ReportManager
 
       @@log.debug("BEGIN boundary #{country} / admin_level = #{row['admin_level']} / name = #{row['name']} (#{i + 1} of #{input.size})")
 
-      boundary = admin_manager.load_boundary(country, row)
+      boundary = admin_manager.load_boundary(country, row, input)
 
       @@log.debug(" Entity loaded! Validating...")
 
