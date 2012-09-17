@@ -36,10 +36,24 @@ CREATE INDEX idx_ways_timestamp
 
 DROP INDEX IF EXISTS idx_osmonitor_roads_ref;
 CREATE INDEX idx_osmonitor_roads_ref
-   ON osmonitor_roads USING btree (ref ASC NULLS LAST, country ASC NULLS LAST);
+   ON osmonitor_roads
+   USING btree
+   (ref ASC NULLS LAST, country ASC NULLS LAST);
 
 DROP INDEX IF EXISTS idx_osmonitor_road_data_road_id;
 CREATE INDEX idx_osmonitor_road_data_road_id
   ON osmonitor_road_data
   USING btree
   (road_id);
+
+DROP INDEX IF EXISTS idx_osmonitor_road_relations_road_id;
+CREATE INDEX idx_osmonitor_road_relations_road_id
+  ON osmonitor_road_relations
+  USING btree
+  (road_id);
+
+DROP INDEX IF EXISTS idx_osmonitor_road_data_distance_calc_index;
+CREATE INDEX idx_osmonitor_road_data_distance_calc_index
+  ON osmonitor_road_data
+  USING btree
+  (road_id, way_id, node_sequence_id);

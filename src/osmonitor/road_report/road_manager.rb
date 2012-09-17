@@ -85,16 +85,18 @@ class RoadManager
 
   def update_road_data_if_needed(road, data_sql)
     if road.row['data_sql_query'] != data_sql
-      @@log.debug " Refreshing road data..."
+      @@log.debug "  Updating SQL query..."
       @conn.query("UPDATE osmonitor_roads SET data_sql_query = '#{PGconn.escape(data_sql)}' WHERE id = '#{road.row['id']}'")
+      @@log.debug "  Calling OSM_RefreshRoadData..."
       @conn.query("SELECT OSM_RefreshRoadData('#{road.row['id']}')")
     end
   end
 
   def update_road_relations_if_needed(road, relation_sql)
     if road.row['relation_sql_query'] != relation_sql
-      @@log.debug " Refreshing road relations..."
+      @@log.debug "  Updating SQL query..."
       @conn.query("UPDATE osmonitor_roads SET relation_sql_query = '#{PGconn.escape(relation_sql)}' WHERE id = '#{road.row['id']}'")
+      @@log.debug "  Calling OSM_RefreshRoadRelations..."
       @conn.query("SELECT OSM_RefreshRoadRelations('#{road.row['id']}')")
     end
   end

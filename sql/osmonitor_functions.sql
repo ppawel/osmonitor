@@ -58,6 +58,7 @@ BEGIN
 
   -- Remove then insert road data again.
   DELETE FROM osmonitor_road_data WHERE road_id = $1;
+  RAISE NOTICE ' Removed';
   PERFORM exec('INSERT INTO osmonitor_road_data
         (road_id,
         way_last_update_user_id,
@@ -122,7 +123,9 @@ DECLARE
   row RECORD;
 BEGIN
   SELECT * FROM osmonitor_roads WHERE id = $1 INTO row;
+  raise notice 'Deleting existing relations...';
   DELETE FROM osmonitor_road_relations WHERE road_id = $1;
+  raise notice 'Inserting new relations...';
   PERFORM exec('INSERT INTO osmonitor_road_relations (road_id, relation_id)
     SELECT ''' || $1 || ''' AS road_id, r.id AS relation_id FROM (' || row.relation_sql_query || ') AS r');
 END;
