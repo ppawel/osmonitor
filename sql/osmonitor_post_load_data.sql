@@ -9,12 +9,12 @@ DECLARE
 	ref CURSOR FOR SELECT * FROM ways WHERE OSM_GetConfigDateValue('last_preprocessing_data_timestamp') IS NULL OR tstamp > OSM_GetConfigDateValue('last_preprocessing_data_timestamp');
 	all_rows float;
 	i int;
-  data_timestamp timestamp;
+	data_timestamp timestamp;
 BEGIN
 SET enable_seqscan = off;
 i := 0;
 all_rows := (SELECT COUNT(*) FROM ways WHERE OSM_GetConfigDateValue('last_preprocessing_data_timestamp') IS NULL OR tstamp > OSM_GetConfigDateValue('last_preprocessing_data_timestamp'));
-
+m
 FOR way IN ref LOOP
 	i := i + 1;
 	raise notice '% Processing way % (% of % - %%%)', clock_timestamp(), way.id, i, all_rows, ((i / all_rows) * 100)::integer;
@@ -46,7 +46,6 @@ DECLARE
 	i int;
 	changed int;
 BEGIN
-SET enable_seqscan = off;
 i := 0;
 all_rows := (SELECT COUNT(*) FROM osmonitor_roads);
 
@@ -54,11 +53,21 @@ FOR road IN ref LOOP
 	i := i + 1;
 	raise notice '% Processing road % (%) (% of % - %%%)', clock_timestamp(), road.ref, road.id, i, all_rows, ((i / all_rows) * 100)::integer;
 
+	-- Check if relations have changed.
 	changed := (SELECT COUNT(*)
-		FROM osmonitor_road_data orr
-		INNER JOIN osmonitor_roads r ON (r.id = orr.road_id)
-		INNER JOIN ways w ON (w.id = orr.way_id)
-		WHERE r.id = road.id AND w.tstamp > orr.way_last_update_timestamp);
+		FROM osmonitor_road_relations orr
+		INNER JOIN osmonitor_roads rds ON (rds.id = orr.road_id)
+		INNER JOIN relations r ON (r.id = orr.relation_id)
+		WHERE rds.id = road.id AND r.tstamp > rds.data_timestamp);
+
+	IF changed = 0 THEN
+		-- Check if existing road ways have changed.
+		changed := (SELECT COUNT(*)
+			FROM osmonitor_road_data orr
+			INNER JOIN osmonitor_roads r ON (r.id = orr.road_id)
+			INNER JOIN ways w ON (w.id = orr.way_id)
+			WHERE r.id = road.id AND w.tstamp > orr.way_last_update_timestamp);
+	END IF;
 
 	raise notice '% changed = %', clock_timestamp(), changed;
 
@@ -67,5 +76,7 @@ FOR road IN ref LOOP
 		raise notice '% refreshed', clock_timestamp();
 	END IF;
 END LOOP;
+
+PERFORM OSM_UpdateRoadDataTimestamps();
 END;
 $$ LANGUAGE plpgsql;

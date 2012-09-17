@@ -21,9 +21,7 @@
 <% else %>
 <tr>
 <% end %>
-<td style="text-align: center">
-{{<%= country %>-<%= status.entity.ref_prefix %>|<%= status.entity.ref_number %>}}
-</td>
+<td style="text-align: center">{{OSMonitor/Ref|<%= status.entity.ref %>}}</td>
 <td><div style="color: #666666; font-size: smaller;">
 <% if status.entity.relation %><b>Relation:</b> {{relation|<%= status.entity.relation.id %>}}<br><% end %>
 <b>Ways:</b> all (<%= status.entity.num_all_ways %>), with ref tag (<%= status.entity.num_ref_ways %>), in relation (<%= status.entity.num_relation_ways %>)<% if !status.percent_with_lanes.nan? and !status.percent_with_maxspeed.nan? %>, with <i>lanes</i> (<%= status.percent_with_lanes.to_i %>%), with <i>maxspeed</i> (<%= status.percent_with_maxspeed.to_i %>%)<% end %><% if status.entity.relation and status.entity.relation.tags['note'] %><br><b>Note:</b> <%= status.entity.relation.tags['note'] %><% end %>

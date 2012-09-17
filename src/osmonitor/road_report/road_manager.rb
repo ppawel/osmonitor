@@ -144,7 +144,9 @@ ORDER BY way_id, node_sequence_id, relation_sequence_id NULLS LAST, relation_id 
     "SELECT r.id
   FROM relations r
   WHERE
-    #{get_find_relation_sql_where_clause(road)} AND
+    r.tags -> 'type' = 'route' AND
+    r.tags -> 'route' = 'road' AND
+    r.tags @>  '\"ref\"=>\"#{road.input['ref']}\"' AND
     OSM_IsMostlyCoveredBy('boundary_#{road.country}', r.id) = true
   ORDER BY r.id"
   end
@@ -193,20 +195,10 @@ ORDER BY way_id, node_sequence_id, relation_sequence_id NULLS LAST, relation_id 
   INNER JOIN ways w ON (w.id = wn.way_id)
   LEFT JOIN users way_user ON (way_user.id = w.user_id)
   WHERE
-  #{get_find_ways_sql_where_clause(road)} AND
+  w.refs @> ARRAY['#{road.input['ref']}'] AND
   #{get_sql_with_exceptions} AND
   ST_NumPoints(w.linestring) > 1 AND
   (SELECT ST_Contains(OSM_GetConfigGeomValue('boundary_#{road.country}'), w.linestring)) = True"
-  end
-
-  def get_find_relation_sql_where_clause(road)
-    "r.tags -> 'type' = 'route' AND
-    r.tags -> 'route' = 'road' AND
-    #{eval(OSMonitor.config['road_report']['find_relation_sql_where_clause'][road.country][road.ref_prefix], binding())}"
-  end
-
-  def get_find_ways_sql_where_clause(road)
-    eval(OSMonitor.config['road_report']['find_ways_sql_where_clause'][road.country][road.ref_prefix], binding())
   end
 
   def get_sql_with_exceptions

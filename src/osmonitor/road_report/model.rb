@@ -25,8 +25,6 @@ class Road
 
   attr_accessor :country
   attr_accessor :input
-  attr_accessor :ref_prefix
-  attr_accessor :ref_number
   attr_accessor :relation
   attr_accessor :other_relations
   attr_accessor :ways
@@ -38,7 +36,6 @@ class Road
   def initialize(country, input)
     self.country = country
     self.input = input
-    self.ref_prefix, self.ref_number = Road.parse_ref(input['ref'])
     self.nodes = {}
     self.ways = {}
     self.other_relations = []
@@ -46,7 +43,7 @@ class Road
   end
 
   def ref
-    "#{@ref_prefix}#{ref_number}"
+    @input['ref']
   end
 
   def empty?

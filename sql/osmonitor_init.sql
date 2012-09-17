@@ -157,10 +157,16 @@ $$ LANGUAGE plpgsql;
 DROP FUNCTION IF EXISTS OSM_UpdateRoadDataTimestamps();
 CREATE FUNCTION OSM_UpdateRoadDataTimestamps() RETURNS void AS $$
 BEGIN
-  UPDATE osmonitor_roads SET data_timestamp =
-    (SELECT MAX(way_last_update_timestamp)
-    FROM osmonitor_road_data
-    WHERE road_id = id);
+  UPDATE osmonitor_roads rds SET data_timestamp =
+    (SELECT MAX(q.tstamp)
+    FROM (SELECT MAX(way_last_update_timestamp) AS tstamp
+	FROM osmonitor_road_data
+	WHERE road_id = rds.id
+	UNION
+	SELECT MAX(tstamp) AS tstamp
+	FROM osmonitor_road_relations orr
+	INNER JOIN relations r ON (r.id = orr.relation_id)
+	WHERE orr.road_id = rds.id) q);
 END;
 $$ LANGUAGE plpgsql;
 

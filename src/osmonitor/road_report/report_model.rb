@@ -20,10 +20,7 @@ class RoadStatus < OSMonitor::Status
 
     add_error('no_relation') if !@entity.relation
     add_error('has_many_covered_relations') if @entity.relation and has_many_covered_relations
-
-    if !ways_without_highway_tag.empty?
-      add_error('has_ways_without_highway_tag', {:ways => ways_without_highway_tag})
-    end
+    add_error('has_ways_without_highway_tag', {:ways => ways_without_highway_tag}) if !ways_without_highway_tag.empty?
 
     if @entity.empty?
       add_error('empty')
@@ -75,7 +72,7 @@ class RoadStatus < OSMonitor::Status
   end
 
   def get_proper_network
-    OSMonitor.config['road_report']['road_type_network_tag'][@entity.country][@entity.ref_prefix]
+    @entity.input['network']
   end
 
   def has_proper_network
