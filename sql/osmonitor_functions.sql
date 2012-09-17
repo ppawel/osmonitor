@@ -42,12 +42,12 @@ CREATE FUNCTION OSM_IsMostlyCoveredBy(text, bigint) RETURNS boolean AS $$
 $$ LANGUAGE SQL;
 
 ------
------- OSM_Preprocess
+------ OSM_RefreshRoadData(text)
 ------
------- Preprocesses some stuff so Ruby does not have to work so hard on reports.
 ------
-DROP FUNCTION IF EXISTS OSM_RefreshRoadData(integer);
-CREATE FUNCTION OSM_RefreshRoadData(integer) RETURNS void AS $$
+------
+DROP FUNCTION IF EXISTS OSM_RefreshRoadData(text);
+CREATE FUNCTION OSM_RefreshRoadData(text) RETURNS void AS $$
 DECLARE
   row RECORD;
 BEGIN
@@ -72,7 +72,8 @@ BEGIN
     way_tags,
     way_geom,
     node_geom,
-    node_id) ' || row.data_sql_query);
+    node_id) 
+    SELECT ''' || $1 || ''' AS road_id, r.* FROM (' || row.data_sql_query || ') AS r');
 
   RAISE NOTICE ' Road % (%): recalculate', row.ref, row.id;
 
@@ -90,9 +91,9 @@ END;
 $$ LANGUAGE plpgsql;
 
 ------
------- OSM_Preprocess
+------ OSM_UpdateRoadDataTimestamps
 ------
------- Preprocesses some stuff so Ruby does not have to work so hard on reports.
+------
 ------
 DROP FUNCTION IF EXISTS OSM_UpdateRoadDataTimestamps();
 CREATE FUNCTION OSM_UpdateRoadDataTimestamps() RETURNS void AS $$
@@ -111,19 +112,19 @@ END;
 $$ LANGUAGE plpgsql;
 
 ------
------- OSM_Preprocess
+------ OSM_RefreshRoadRelations(text)
 ------
------- Preprocesses some stuff so Ruby does not have to work so hard on reports.
 ------
-DROP FUNCTION IF EXISTS OSM_RefreshRoadRelations(integer);
-CREATE FUNCTION OSM_RefreshRoadRelations(integer) RETURNS void AS $$
+------
+DROP FUNCTION IF EXISTS OSM_RefreshRoadRelations(text);
+CREATE FUNCTION OSM_RefreshRoadRelations(text) RETURNS void AS $$
 DECLARE
   row RECORD;
 BEGIN
   SELECT * FROM osmonitor_roads WHERE id = $1 INTO row;
   DELETE FROM osmonitor_road_relations WHERE road_id = $1;
   PERFORM exec('INSERT INTO osmonitor_road_relations (road_id, relation_id)
-    SELECT ' || $1 || ' AS road_id, r.id AS relation_id FROM (' || row.relation_sql_query || ') AS r');
+    SELECT ''' || $1 || ''' AS road_id, r.id AS relation_id FROM (' || row.relation_sql_query || ') AS r');
 END;
 $$ LANGUAGE plpgsql;
 
@@ -178,6 +179,7 @@ DECLARE
   ref CURSOR FOR SELECT * FROM osmonitor_roads ORDER BY id;
   all_rows float;
   i int;
+  current_ways int;
   changed int;
 BEGIN
 i := 0;
@@ -205,7 +207,8 @@ FOR road IN ref LOOP
 
   raise notice '% changed = %', clock_timestamp(), changed;
 
-  IF changed > 0 THEN
+  IF changed > 0 OR road.data_timestamp IS NULL THEN
+    PERFORM OSM_RefreshRoadRelations(road.id);
     PERFORM OSM_RefreshRoadData(road.id);
     raise notice '% refreshed', clock_timestamp();
   END IF;

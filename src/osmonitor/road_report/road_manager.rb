@@ -46,7 +46,7 @@ class RoadManager
     FROM osmonitor_road_relations orr
     INNER JOIN relations r ON (r.id = orr.relation_id)
     INNER JOIN users u ON (u.id = r.user_id)
-    WHERE orr.road_id = #{road.row['id']}
+    WHERE orr.road_id = '#{road.row['id']}'
     ORDER BY r.id"
 
     result = @conn.query(sql).collect {|row| process_tags(row)}
@@ -76,7 +76,7 @@ class RoadManager
     result = get_road_row(road)
 
     if result.nil?
-      @conn.query("INSERT INTO osmonitor_roads (country, ref) VALUES ('#{road.country}', '#{road.ref}')")
+      @conn.query("INSERT INTO osmonitor_roads (id, country, ref) VALUES ('#{road.input['id']}', '#{road.country}', '#{road.ref}')")
       result = ensure_road_row(road)
     end
 
@@ -86,16 +86,16 @@ class RoadManager
   def update_road_data_if_needed(road, data_sql)
     if road.row['data_sql_query'] != data_sql
       @@log.debug " Refreshing road data..."
-      @conn.query("UPDATE osmonitor_roads SET data_sql_query = '#{PGconn.escape(data_sql)}' WHERE id = #{road.row['id']}")
-      @conn.query("SELECT OSM_RefreshRoadData(#{road.row['id']})")
+      @conn.query("UPDATE osmonitor_roads SET data_sql_query = '#{PGconn.escape(data_sql)}' WHERE id = '#{road.row['id']}'")
+      @conn.query("SELECT OSM_RefreshRoadData('#{road.row['id']}')")
     end
   end
 
   def update_road_relations_if_needed(road, relation_sql)
     if road.row['relation_sql_query'] != relation_sql
       @@log.debug " Refreshing road relations..."
-      @conn.query("UPDATE osmonitor_roads SET relation_sql_query = '#{PGconn.escape(relation_sql)}' WHERE id = #{road.row['id']}")
-      @conn.query("SELECT OSM_RefreshRoadRelations(#{road.row['id']})")
+      @conn.query("UPDATE osmonitor_roads SET relation_sql_query = '#{PGconn.escape(relation_sql)}' WHERE id = '#{road.row['id']}'")
+      @conn.query("SELECT OSM_RefreshRoadRelations('#{road.row['id']}')")
     end
   end
 
@@ -107,7 +107,7 @@ class RoadManager
 
   def get_road_data(road)
     @conn.query("SELECT *, ST_AsText(way_geom) AS way_geom,
-    ST_AsText(node_geom) AS node_geom FROM osmonitor_road_data WHERE road_id = #{road.row['id']}
+    ST_AsText(node_geom) AS node_geom FROM osmonitor_road_data WHERE road_id = '#{road.row['id']}'
 ORDER BY way_id, node_sequence_id, relation_sequence_id NULLS LAST, relation_id NULLS LAST")
   end
 
@@ -121,7 +121,6 @@ ORDER BY way_id, node_sequence_id, relation_sequence_id NULLS LAST, relation_id 
     end
 
     sql = "SELECT DISTINCT ON (way_id, node_sequence_id)
-    #{road.row['id']} AS road_id,
     way_last_update_user_id,
     way_last_update_user_name,
     way_last_update_timestamp,

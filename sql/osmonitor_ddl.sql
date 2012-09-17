@@ -11,14 +11,14 @@ CREATE TABLE osmonitor_config_options (
 
 DROP TABLE IF EXISTS osmonitor_road_relations;
 CREATE TABLE osmonitor_road_relations (
-  road_id character varying(20),
+  road_id text,
   relation_id integer,
   UNIQUE (road_id, relation_id)
 );
 
 DROP TABLE IF EXISTS osmonitor_road_data;
 CREATE TABLE osmonitor_road_data (
-  road_id character varying(20),
+  road_id text,
   way_last_update_user_id INTEGER,
   way_last_update_user_name TEXT,
   way_last_update_timestamp timestamp without time zone,
@@ -37,7 +37,7 @@ CREATE TABLE osmonitor_road_data (
 
 DROP TABLE IF EXISTS osmonitor_roads;
 CREATE TABLE osmonitor_roads (
-  id character varying(20) PRIMARY KEY,
+  id text PRIMARY KEY,
   data_timestamp timestamp without time zone,
   report_timestamp timestamp without time zone,
   country character varying(5),
