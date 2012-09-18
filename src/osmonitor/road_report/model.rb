@@ -131,7 +131,7 @@ class Road
   def skip_way?(way)
     # Ferry routes are an exception to accommodate roads in Poland :)
     (!way.tags.has_key?('highway') and way.tags['route'] != 'ferry') or
-      way.tags['highway'] == 'construction' or way.tags['highway'] == 'proposed' or way.tags['access'] == 'no'
+      way.tags['highway'] == 'proposed'# or way.tags['access'] == 'no'
   end
 
   def create_graph(data)
