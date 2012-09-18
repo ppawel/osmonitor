@@ -50,9 +50,10 @@ DROP FUNCTION IF EXISTS OSM_RefreshRoadData(text);
 CREATE FUNCTION OSM_RefreshRoadData(text) RETURNS void AS $$
 DECLARE
   road RECORD;
+  road_relation_id integer;
 BEGIN
-  -- Needed for SQL queries.
   SELECT * FROM osmonitor_roads WHERE id = $1 INTO road;
+  road_relation_id := (SELECT relation_id FROM osmonitor_road_relations WHERE road_id = $1 ORDER BY relation_id LIMIT 1);
 
   RAISE NOTICE ' Road % (%): remove then insert road data again', road.ref, road.id;
 
@@ -61,7 +62,11 @@ BEGIN
   RAISE NOTICE ' Removed';
 
   INSERT INTO osmonitor_road_data
-    (SELECT
+	SELECT DISTINCT ON (way_id, node_sequence_id)
+	*
+	FROM
+    ((SELECT
+	road.id AS road_id,
       way_user.id AS way_last_update_user_id,
       way_user.name AS way_last_update_user_name,
       w.tstamp AS way_last_update_timestamp,
@@ -76,12 +81,13 @@ BEGIN
       n.geom AS node_geom,
       wn.node_id AS node_id
     FROM way_nodes wn
-    INNER JOIN relation_members rm ON (rm.member_id = way_id)
+    INNER JOIN relation_members rm ON (rm.member_id = way_id AND rm.member_type = 'W')
     INNER JOIN nodes n ON (n.id = wn.node_id)
     INNER JOIN ways w ON (w.id = wn.way_id)
     LEFT JOIN users way_user ON (way_user.id = w.user_id)
-    WHERE rm.relation_id IS NULL) UNION
+    WHERE road_relation_id IS NOT NULL AND rm.relation_id = road_relation_id) UNION
     (SELECT
+    road.id AS road_id,
     way_user.id AS way_last_update_user_id,
     way_user.name AS way_last_update_user_name,
     w.tstamp AS way_last_update_timestamp,
@@ -100,15 +106,15 @@ BEGIN
   INNER JOIN ways w ON (w.id = wn.way_id)
   LEFT JOIN users way_user ON (way_user.id = w.user_id)
   WHERE
-  w.refs @> ARRAY[road.ref] AND
+  w.refs @> ARRAY[road.ref]::text[] AND
   (NOT w.tags ?| ARRAY['aerialway', 'aeroway', 'building', 'waterway']) AND
     ((w.tags -> 'railway') IS NULL OR (w.tags -> 'highway') IS NOT NULL) AND
     ((w.tags -> 'highway') IS NULL OR w.tags -> 'highway' != 'cycleway') AND
   ST_NumPoints(w.linestring) > 1 AND
-  (SELECT ST_Contains(OSM_GetConfigGeomValue('boundary_' || road.country), w.linestring)) = True)
-  ORDER BY way_id, node_sequence_id, relation_sequence_id NULLS LAST, relation_id NULLS LAST
+  (SELECT ST_Contains(OSM_GetConfigGeomValue('boundary_' || road.country), w.linestring)) = True)) query
+  ORDER BY way_id, node_sequence_id, relation_sequence_id NULLS LAST, relation_id NULLS LAST;
 
-  RAISE NOTICE ' Road % (%): recalculate', row.ref, row.id;
+  RAISE NOTICE ' Road % (%): recalculate', road.ref, road.id;
 
   -- Recalculate distances between nodes for this road.
   UPDATE osmonitor_road_data orr
@@ -165,11 +171,8 @@ BEGIN
   INSERT INTO osmonitor_road_relations (road_id, relation_id)
     SELECT $1 AS road_id, r.id
     FROM relations r
-    WHERE
-      r.tags -> 'type' = 'route' AND
-      r.tags -> 'route' = 'road' AND
-      r.tags @>  '\"ref\"=>\"#{road.input['ref']}\"' AND
-    OSM_IsMostlyCoveredBy('boundary_' || road.country, r.id) = true;
+    WHERE r.tags @> hstore(ARRAY[['type', 'route'], ['route', 'road'], ['ref', road.ref]]) AND
+	OSM_IsMostlyCoveredBy('boundary_' || road.country, r.id) = true;
 END;
 $$ LANGUAGE plpgsql;
 
