@@ -10,10 +10,10 @@ class RoadStatus < OSMonitor::Status
     end
 
     if input_length
-      add_info('osm_length')
+      add_info('osm_length') if !@entity.empty?
     else
       # No input length = warning.
-      add_warning('osm_length')
+      add_warning('osm_length') if !@entity.empty?
     end
 
     add_info('last_update')

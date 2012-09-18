@@ -1,9 +1,8 @@
 <li> <small>
-<% if status.entity.length %>OSM length: <b><%= '%.2f' % status.entity.length %></b> km / <% elsif status.entity.approx_length %>OSM length (approx): <b><%= '%.2f' % status.entity.approx_length %></b> km / <% end %>
+<% if status.entity.length %>OSM length: <b><%= '%.2f' % status.entity.length %></b> km<% elsif status.entity.approx_length %>OSM length (approx): <b><%= '%.2f' % status.entity.approx_length %></b> km<% end %>
 <% if status.entity.relation and !status.input_length %>
-no input length ([[OSMonitor#Tags|how to add it?]])
+/ no input length ([[OSMonitor#Tags|how to add it?]])
 <% end %>
 <% if status.input_length %>
-input length: <i><%= '%.2f' % status.input_length %></i> km
-<% end %>
-[<%= create_osmonitor_url(report, status.entity) %> show in OSMonitor]</small>
+/ input length: <i><%= '%.2f' % status.input_length %></i> km
+<% end %></small>
