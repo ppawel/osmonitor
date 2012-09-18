@@ -1,3 +1,5 @@
+require 'csv'
+
 module OSMonitor
 
 # Responsible for loading input data (e.g. road reference numbers, data for cycleways) to report on.
@@ -23,10 +25,10 @@ class InputManager
   def load_roads(report_request)
     result = to_hash_array(CSV.read("#{get_data_path}/road_refs/#{report_request.country}.csv", {:headers => true}))
 
-    if report_request.params.has_key?('ref_prefix')
-      result = filter_by_prefix(result, report_request.params['ref_prefix'])
-    elsif report_request.params.has_key?('refs')
-      result = filter_by_refs(result, report_request.params['refs'].split(','))
+    if report_request.id_prefix
+      result = filter_by_prefix(result, report_request.id_prefix)
+    elsif report_request.ids
+      result = filter_by_refs(result, report_request.ids.split(','))
     end
 
     result

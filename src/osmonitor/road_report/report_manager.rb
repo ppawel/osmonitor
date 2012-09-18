@@ -38,13 +38,13 @@ class ReportManager
     input.each_with_index do |row, i|
       road_before = Time.now
 
-      @@log.debug("BEGIN road #{country} / #{row['ref']} (#{i + 1} of #{input.size})")
+      @@log.debug("BEGIN road #{country} / #{row['id']} (#{i + 1} of #{input.size})")
 
       road = nil
       status = nil
 
       if use_cache
-        status = status_from_cache(country, row['ref'])
+        status = status_from_cache(country, row['id'])
         road = status.entity if status
       end
 
@@ -65,7 +65,7 @@ class ReportManager
 
       report.add_status(status)
 
-      @@log.debug("END road #{country} / #{row['ref']} took #{Time.now - road_before}")
+      @@log.debug("END road #{country} / #{row['id']} took #{Time.now - road_before}")
     end
 
     report
@@ -78,8 +78,8 @@ class ReportManager
   end
 
   # Retrieves report status from the cache table.
-  def status_from_cache(country, ref)
-    result = @conn.query("SELECT status FROM osmonitor_roads WHERE country = '#{country}' AND ref = '#{ref}'")
+  def status_from_cache(country, id)
+    result = @conn.query("SELECT status FROM osmonitor_roads WHERE country = '#{country}' AND id = '#{id}'")
 
     if result.ntuples == 1 and result.getvalue(0, 0)
       status = Marshal.restore(PGconn.unescape_bytea(result.getvalue(0, 0)))

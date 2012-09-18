@@ -3,7 +3,8 @@ module OSMonitor
 class ReportRequest
   attr_accessor :report_type
   attr_accessor :country
-  attr_accessor :params
+  attr_accessor :ids
+  attr_accessor :id_prefix
 end
 
 class Report

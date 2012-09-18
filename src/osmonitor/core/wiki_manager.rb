@@ -122,7 +122,8 @@ class OSMonitorWikiPageSegment
     request = ReportRequest.new
     request.report_type = type
     request.country = params['country']
-    request.params = params
+    request.ids = params['refs']
+    request.id_prefix = params['ref_prefix']
     request
   end
 end
