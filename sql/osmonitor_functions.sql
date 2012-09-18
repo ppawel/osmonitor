@@ -49,32 +49,64 @@ $$ LANGUAGE SQL;
 DROP FUNCTION IF EXISTS OSM_RefreshRoadData(text);
 CREATE FUNCTION OSM_RefreshRoadData(text) RETURNS void AS $$
 DECLARE
-  row RECORD;
+  road RECORD;
 BEGIN
   -- Needed for SQL queries.
-  SELECT * FROM osmonitor_roads WHERE id = $1 INTO row;
+  SELECT * FROM osmonitor_roads WHERE id = $1 INTO road;
 
-  RAISE NOTICE ' Road % (%): remove then insert road data again', row.ref, row.id;
+  RAISE NOTICE ' Road % (%): remove then insert road data again', road.ref, road.id;
 
   -- Remove then insert road data again.
   DELETE FROM osmonitor_road_data WHERE road_id = $1;
   RAISE NOTICE ' Removed';
-  PERFORM exec('INSERT INTO osmonitor_road_data
-        (road_id,
-        way_last_update_user_id,
-    way_last_update_user_name,
-    way_last_update_timestamp,
-    way_last_update_changeset_id,
-    relation_id,
-    member_role,
-    relation_sequence_id,
-    node_sequence_id,
-    way_id,
-    way_tags,
-    way_geom,
-    node_geom,
-    node_id) 
-    SELECT ''' || $1 || ''' AS road_id, r.* FROM (' || row.data_sql_query || ') AS r');
+
+  INSERT INTO osmonitor_road_data
+    (SELECT
+      way_user.id AS way_last_update_user_id,
+      way_user.name AS way_last_update_user_name,
+      w.tstamp AS way_last_update_timestamp,
+      w.changeset_id AS way_last_update_changeset_id,
+      rm.relation_id AS relation_id,
+      rm.member_role AS member_role,
+      rm.sequence_id AS relation_sequence_id,
+      wn.sequence_id AS node_sequence_id,
+      wn.way_id AS way_id,
+      w.tags AS way_tags,
+      w.linestring AS way_geom,
+      n.geom AS node_geom,
+      wn.node_id AS node_id
+    FROM way_nodes wn
+    INNER JOIN relation_members rm ON (rm.member_id = way_id)
+    INNER JOIN nodes n ON (n.id = wn.node_id)
+    INNER JOIN ways w ON (w.id = wn.way_id)
+    LEFT JOIN users way_user ON (way_user.id = w.user_id)
+    WHERE rm.relation_id IS NULL) UNION
+    (SELECT
+    way_user.id AS way_last_update_user_id,
+    way_user.name AS way_last_update_user_name,
+    w.tstamp AS way_last_update_timestamp,
+    w.changeset_id AS way_last_update_changeset_id,
+    NULL::bigint AS relation_id,
+    NULL::text AS member_role,
+    NULL::bigint AS relation_sequence_id,
+    wn.sequence_id AS node_sequence_id,
+    wn.way_id AS way_id,
+    w.tags AS way_tags,
+    w.linestring AS way_geom,
+    n.geom AS node_geom,
+    wn.node_id AS node_id
+  FROM way_nodes wn
+  INNER JOIN nodes n ON (n.id = wn.node_id)
+  INNER JOIN ways w ON (w.id = wn.way_id)
+  LEFT JOIN users way_user ON (way_user.id = w.user_id)
+  WHERE
+  w.refs @> ARRAY[road.ref] AND
+  (NOT w.tags ?| ARRAY['aerialway', 'aeroway', 'building', 'waterway']) AND
+    ((w.tags -> 'railway') IS NULL OR (w.tags -> 'highway') IS NOT NULL) AND
+    ((w.tags -> 'highway') IS NULL OR w.tags -> 'highway' != 'cycleway') AND
+  ST_NumPoints(w.linestring) > 1 AND
+  (SELECT ST_Contains(OSM_GetConfigGeomValue('boundary_' || road.country), w.linestring)) = True)
+  ORDER BY way_id, node_sequence_id, relation_sequence_id NULLS LAST, relation_id NULLS LAST
 
   RAISE NOTICE ' Road % (%): recalculate', row.ref, row.id;
 
@@ -120,14 +152,24 @@ $$ LANGUAGE plpgsql;
 DROP FUNCTION IF EXISTS OSM_RefreshRoadRelations(text);
 CREATE FUNCTION OSM_RefreshRoadRelations(text) RETURNS void AS $$
 DECLARE
-  row RECORD;
+  road RECORD;
 BEGIN
-  SELECT * FROM osmonitor_roads WHERE id = $1 INTO row;
-  raise notice 'Deleting existing relations...';
+  SELECT * FROM osmonitor_roads WHERE id = $1 INTO road;
+
+  RAISE NOTICE 'Deleting existing relations...';
+
   DELETE FROM osmonitor_road_relations WHERE road_id = $1;
-  raise notice 'Inserting new relations...';
-  PERFORM exec('INSERT INTO osmonitor_road_relations (road_id, relation_id)
-    SELECT ''' || $1 || ''' AS road_id, r.id AS relation_id FROM (' || row.relation_sql_query || ') AS r');
+
+  RAISE NOTICE 'Inserting new relations...';
+  
+  INSERT INTO osmonitor_road_relations (road_id, relation_id)
+    SELECT $1 AS road_id, r.id
+    FROM relations r
+    WHERE
+      r.tags -> 'type' = 'route' AND
+      r.tags -> 'route' = 'road' AND
+      r.tags @>  '\"ref\"=>\"#{road.input['ref']}\"' AND
+    OSM_IsMostlyCoveredBy('boundary_' || road.country, r.id) = true;
 END;
 $$ LANGUAGE plpgsql;
 

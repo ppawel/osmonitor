@@ -42,8 +42,6 @@ CREATE TABLE osmonitor_roads (
   report_timestamp timestamp without time zone,
   country character varying(5),
   ref character varying(20),
-  data_sql_query text,
-  relation_sql_query text,
   status bytea,
   UNIQUE (country, ref)
 );
