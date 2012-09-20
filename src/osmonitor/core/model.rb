@@ -74,8 +74,14 @@ class Status
   def validate
   end
 
+  def color
+    return :GREEN if get_issues(:ERROR).empty? and get_issues(:WARNING).empty? and !@noreport
+    return :YELLOW if get_issues(:ERROR).empty? and !get_issues(:WARNING).empty? and !@noreport
+    return :RED
+  end
+
   def green?
-    get_issues(:ERROR).empty? and get_issues(:WARNING).empty? and !@noreport
+    color == :GREEN
   end
 end
 

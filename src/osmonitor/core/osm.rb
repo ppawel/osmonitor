@@ -1,3 +1,7 @@
+require 'rgeo'
+
+$rgeo_factory = ::RGeo::Geographic.simple_mercator_factory()
+
 # Holds data for an update (edit) operation on some OSM entity.
 class Changeset
   attr_accessor :user_id
@@ -39,12 +43,20 @@ end
 class Node
   attr_accessor :id
   attr_accessor :tags
-  attr_accessor :point_wkb
+  attr_accessor :point
 
   def initialize(id, tags, wkb)
     self.id = id
     self.tags = tags
-    self.point_wkb = wkb
+    self.point = $rgeo_factory.parse_wkb(wkb) if wkb
+  end
+
+  def distance(node)
+    @point.distance(node.point)
+  end
+
+  def point_wkt
+    @point.as_text
   end
 
   def hash
@@ -66,15 +78,16 @@ class Way
   attr_accessor :id
   attr_accessor :member_role
   attr_accessor :tags
-  attr_accessor :geom
+  attr_accessor :linestring
   attr_accessor :relation
   attr_accessor :segments
   attr_accessor :last_update
 
-  def initialize(id, member_role, tags)
+  def initialize(id, member_role, tags, wkb)
     self.id = id
     self.member_role = member_role
     self.tags = tags
+    self.linestring = $rgeo_factory.parse_wkb(wkb) if wkb
     self.segments = []
   end
 
@@ -96,6 +109,10 @@ class Way
 
   def length
     @segments.reduce(0) {|total, segment| total + segment.length}
+  end
+
+  def linestring_wkt
+    @linestring.as_text
   end
 
   def to_s

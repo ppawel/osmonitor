@@ -36,7 +36,7 @@
 
       all_ways_layer = new OpenLayers.Layer.Vector("Road (all ways)",
         {visibility: true, styleMap: new OpenLayers.StyleMap({'strokeWidth': 20, 'strokeColor': "black", strokeOpacity: 0.25})});
-      showWaysFromString(all_ways_layer, 'GEOMETRYCOLLECTION(<%= @all_ways_wkt %>)', 'green', true);
+      showWaysFromString(all_ways_layer, '<%= @road.geom_wkt %>', 'green', true);
       map.addLayer(all_ways_layer);
 
       <% @road.comps.each_with_index do |comp, comp_index| %>
@@ -116,10 +116,6 @@
 
         map.addLayer(comp_backward_path_layers[<%= comp_index %>]);
         <% end %>
-      <% end %>
-
-      <% @mark_points_all.each do |p| %>
-        //showNode(all_ways_layer, '<%= p %>', '<%= asset_path "flag_blue.png" %>');
       <% end %>
   }
 

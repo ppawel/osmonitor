@@ -58,6 +58,7 @@ class RoadManager
       process_tags(row, 'way_tags')
       process_tags(row, 'node_tags')
       row['node_wkb'] = PGconn.unescape_bytea(row['node_wkb'])
+      row['way_wkb'] = PGconn.unescape_bytea(row['way_wkb'])
       result << row
     end
     result

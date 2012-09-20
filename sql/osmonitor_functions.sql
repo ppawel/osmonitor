@@ -58,6 +58,7 @@ CREATE FUNCTION OSM_LoadRoadData(text) RETURNS TABLE(road_id text,
   node_sequence_id INTEGER,
   way_id BIGINT,
   way_tags hstore,
+  way_wkb bytea,
   node_id BIGINT,
   node_dist_to_next double precision,
   node_wkb bytea) AS $$
@@ -75,20 +76,21 @@ BEGIN
   END IF;
 
   RETURN QUERY SELECT
-	rd.road_id,
-	rd.way_last_update_user_id,
-	rd.way_last_update_user_name,
-	rd.way_last_update_timestamp,
-	rd.way_last_update_changeset_id,
-	rd.relation_id,
-	rd.member_role,
-	rd.relation_sequence_id,
-	rd.node_sequence_id,
-	rd.way_id,
-	rd.way_tags,
-	rd.node_id,
-	rd.node_dist_to_next,
-	ST_AsBinary(rd.node_geom) AS node_wkb
+  rd.road_id,
+  rd.way_last_update_user_id,
+  rd.way_last_update_user_name,
+  rd.way_last_update_timestamp,
+  rd.way_last_update_changeset_id,
+  rd.relation_id,
+  rd.member_role,
+  rd.relation_sequence_id,
+  rd.node_sequence_id,
+  rd.way_id,
+  rd.way_tags,
+  ST_AsBinary(rd.way_geom) AS way_wkb,
+  rd.node_id,
+  rd.node_dist_to_next,
+  ST_AsBinary(rd.node_geom) AS node_wkb
   FROM osmonitor_road_data rd
   WHERE rd.road_id = $1
   ORDER BY rd.way_id, rd.node_sequence_id, rd.relation_sequence_id NULLS LAST, rd.relation_id NULLS LAST;
@@ -107,7 +109,7 @@ DECLARE
   road_relation_id integer;
   road_data_timestamp timestamp without time zone;
 BEGIN
-	PERFORM OSM_RefreshRoadRelations($1);
+  PERFORM OSM_RefreshRoadRelations($1);
 
   SELECT * FROM osmonitor_roads WHERE id = $1 INTO road;
   road_relation_id := (SELECT relation_id FROM osmonitor_road_relations WHERE road_id = $1 ORDER BY relation_id LIMIT 1);

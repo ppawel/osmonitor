@@ -3,17 +3,8 @@ require 'rgeo'
 require 'config'
 require 'osmonitor/core'
 
-def distance_between(node1, node2)
-  return nil if !node1.point_wkb or !node2.point_wkb
-  point1 = $rgeo_factory.parse_wkb(node1.point_wkb)
-  point2 = $rgeo_factory.parse_wkb(node2.point_wkb)
-  point1.distance(point2)
-end
-
 module OSMonitor
 module RoadReport
-
-$rgeo_factory = ::RGeo::Geographic.spherical_factory()
 
 class Road
   include OSMonitorLogger
@@ -130,9 +121,16 @@ class Road
   # Determines whether given way should be skipped during road graph creation.
   def skip_way?(way)
     # Ferry routes are an exception to accommodate roads in Poland :)
-    (!way.tags.has_key?('highway') and way.tags['route'] != 'ferry') or
-      way.tags['highway'] == 'proposed' or way.tags['highway'] == 'construction' or
-      (way.tags['access'] == 'no' and !way.tags.has_key?('construction'))
+    return true if !way.tags.has_key?('highway') and way.tags['route'] != 'ferry'
+
+    # Skip ways that are in construction (don't exist) - but note that ways that are repaired are NOT skipped
+    return true if way.tags['highway'] == 'proposed' or way.tags['highway'] == 'construction'
+
+    # Skip ways that exist and are not accessible.
+    return true if way.tags['access'] == 'no' and way.tags['highway'] != 'construction'
+
+    # Otherwise the way is cool.
+    return false
   end
 
   def create_graph(data)
@@ -225,12 +223,17 @@ class Road
   end
 
   def create_way(row)
-    way = Way.new(row['way_id'].to_i, row['member_role'], row['way_tags'])
+    way = Way.new(row['way_id'].to_i, row['member_role'], row['way_tags'], row['way_wkb'])
     way.last_update = Changeset.new(row['way_last_update_user_id'].to_i, row['way_last_update_user_name'],
       row['way_last_update_timestamp'], row['way_last_update_changeset_id'])
-    way.geom = row['way_geom'] if row['way_geom']
     way.relation = @relation
     way
+  end
+
+  def geom_wkt
+    return '' if @ways.empty?
+    ways_wkt = @ways.values.reduce('') {|result, way| result + way.linestring.as_text + ','}[0..-2]
+    "GEOMETRYCOLLECTION(#{ways_wkt})"
   end
 end
 
@@ -278,9 +281,8 @@ class RoadComponent
 
   # Calculates beginning and end of this road component and tries to find a roundtrip.
   def calculate
-    
     roundtrips = []
-    closest_to_all = closest_nodes_to_all(graph.vertices, @exit_nodes, 333)[0..5]
+    closest_to_all = closest_nodes_to_all(graph.vertices, @exit_nodes, 666)
 
     roundtrips << find_roundtrip(Array.new(@exit_nodes))
     roundtrips << find_roundtrip(Array.new(@exit_nodes), true)
@@ -397,17 +399,18 @@ class RoadComponent
     max_dist = [segment_length * 0.10, 2222].min if !max_dist
     closest = []
     nodes.each do |node_to|
-      d = distance_between(node_from, node_to)
-      closest << node_to if d and d <= max_dist
+      d = node_from.distance(node_to)
+      closest << [node_to, d] if d and d <= max_dist
     end
-    closest.uniq
+    closest.sort_by! {|x| x[1]}
+    closest.collect {|x| x[0]}.uniq
   end
 
   # Returns a list of nodes that are within max_dist of given nodes.
   def closest_nodes_to_all(nodes, nodes_from, max_dist = nil)
     closest = []
     nodes_from.each do |node_from|
-      closest += closest_nodes(nodes, node_from, max_dist)
+      closest += closest_nodes(nodes, node_from, max_dist)[0..5]
     end
     closest.uniq
   end
@@ -440,7 +443,7 @@ class RoadComponent
   end
 
   def to_s
-    "RoadComponent(size = #{graph.num_vertices})"
+    "RoadComponent(size = #{graph.num_vertices}, length = #{length})"
   end
 end
 
@@ -478,8 +481,6 @@ class RoadSuperComponent < RoadComponent
     return path1 if path1 and path1 != forward_path
     return path2 if path2 and path2 != forward_path
   end
-
-  
 
   def to_s
     "RoadSuperComponent(subcomp1 = #{subcomp1}, subcomp2 = #{subcomp2})"

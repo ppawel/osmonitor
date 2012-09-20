@@ -29,13 +29,6 @@ class BrowseController < ApplicationController
     @country = params[:country]
     @status = @report.statuses[0]
     @road = @status.entity
-
-    @all_ways_wkt = []
-    @mark_points_all = []
-
-    log_time " wkt" do
-      @all_ways_wkt = @road.ways.values.reduce('') {|s, w| w.geom ? s + w.geom + ',' : s}[0..-2]
-    end
   end
 
   def cycleway_report
