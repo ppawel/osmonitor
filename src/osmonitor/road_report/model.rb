@@ -4,9 +4,9 @@ require 'config'
 require 'osmonitor/core'
 
 def distance_between(node1, node2)
-  return nil if !node1.point_wkt or !node2.point_wkt
-  point1 = $rgeo_factory.parse_wkt(node1.point_wkt)
-  point2 = $rgeo_factory.parse_wkt(node2.point_wkt)
+  return nil if !node1.point_wkb or !node2.point_wkb
+  point1 = $rgeo_factory.parse_wkb(node1.point_wkb)
+  point2 = $rgeo_factory.parse_wkb(node2.point_wkb)
   point1.distance(point2)
 end
 
@@ -208,8 +208,8 @@ class Road
       node1 = get_node(a_node_id)
       node2 = get_node(b_node_id)
 
-      node1 = add_node(Node.new(a_node_id, a['node_tags'], a['node_geom'])) if !node1
-      node2 = add_node(Node.new(b_node_id, b['node_tags'], b['node_geom'])) if !node2
+      node1 = add_node(Node.new(a_node_id, a['node_tags'], a['node_wkb'])) if !node1
+      node2 = add_node(Node.new(b_node_id, b['node_tags'], b['node_wkb'])) if !node2
 
       segment = way.add_segment(node1, node2, a['node_dist_to_next'].to_f)
 

@@ -39,12 +39,12 @@ end
 class Node
   attr_accessor :id
   attr_accessor :tags
-  attr_accessor :point_wkt
+  attr_accessor :point_wkb
 
-  def initialize(id, tags, wkt)
+  def initialize(id, tags, wkb)
     self.id = id
     self.tags = tags
-    self.point_wkt = wkt
+    self.point_wkb = wkb
   end
 
   def hash

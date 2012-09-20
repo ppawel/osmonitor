@@ -42,6 +42,60 @@ CREATE FUNCTION OSM_IsMostlyCoveredBy(text, bigint) RETURNS boolean AS $$
 $$ LANGUAGE SQL;
 
 ------
+------ OSM_LoadRoadData(text)
+------
+------ Loads road data, refreshing it first if needed.
+------
+DROP FUNCTION IF EXISTS OSM_LoadRoadData(text);
+CREATE FUNCTION OSM_LoadRoadData(text) RETURNS TABLE(road_id text,
+  way_last_update_user_id INTEGER,
+  way_last_update_user_name TEXT,
+  way_last_update_timestamp timestamp without time zone,
+  way_last_update_changeset_id INTEGER,
+  relation_id INTEGER,
+  member_role text,
+  relation_sequence_id INTEGER,
+  node_sequence_id INTEGER,
+  way_id BIGINT,
+  way_tags hstore,
+  node_id BIGINT,
+  node_dist_to_next double precision,
+  node_wkb bytea) AS $$
+
+DECLARE
+  do_refresh boolean;
+  road record;
+BEGIN
+  SELECT * FROM osmonitor_roads WHERE id = $1 INTO road;
+
+  do_refresh := road.needs_refresh;
+
+  IF do_refresh THEN
+    PERFORM OSM_RefreshRoadData($1);
+  END IF;
+
+  RETURN QUERY SELECT
+	rd.road_id,
+	rd.way_last_update_user_id,
+	rd.way_last_update_user_name,
+	rd.way_last_update_timestamp,
+	rd.way_last_update_changeset_id,
+	rd.relation_id,
+	rd.member_role,
+	rd.relation_sequence_id,
+	rd.node_sequence_id,
+	rd.way_id,
+	rd.way_tags,
+	rd.node_id,
+	rd.node_dist_to_next,
+	ST_AsBinary(rd.node_geom) AS node_wkb
+  FROM osmonitor_road_data rd
+  WHERE rd.road_id = $1
+  ORDER BY rd.way_id, rd.node_sequence_id, rd.relation_sequence_id NULLS LAST, rd.relation_id NULLS LAST;
+END;
+$$ LANGUAGE plpgsql;
+
+------
 ------ OSM_RefreshRoadData(text)
 ------
 ------
@@ -51,22 +105,24 @@ CREATE FUNCTION OSM_RefreshRoadData(text) RETURNS void AS $$
 DECLARE
   road RECORD;
   road_relation_id integer;
+  road_data_timestamp timestamp without time zone;
 BEGIN
+	PERFORM OSM_RefreshRoadRelations($1);
+
   SELECT * FROM osmonitor_roads WHERE id = $1 INTO road;
   road_relation_id := (SELECT relation_id FROM osmonitor_road_relations WHERE road_id = $1 ORDER BY relation_id LIMIT 1);
 
-  RAISE NOTICE ' Road % (%): remove then insert road data again', road.ref, road.id;
-
   -- Remove then insert road data again.
   DELETE FROM osmonitor_road_data WHERE road_id = $1;
-  RAISE NOTICE ' Removed';
+
+  RAISE NOTICE '% OSM_RefreshRoadData(%): removed data, inserting new data...', clock_timestamp(), road.id;
 
   INSERT INTO osmonitor_road_data
-	SELECT DISTINCT ON (way_id, node_sequence_id)
-	*
-	FROM
+  SELECT DISTINCT ON (way_id, node_sequence_id)
+  *
+  FROM
     ((SELECT
-	road.id AS road_id,
+  road.id AS road_id,
       way_user.id AS way_last_update_user_id,
       way_user.name AS way_last_update_user_name,
       w.tstamp AS way_last_update_timestamp,
@@ -114,7 +170,7 @@ BEGIN
   (SELECT ST_Contains(OSM_GetConfigGeomValue('boundary_' || road.country), w.linestring)) = True)) query
   ORDER BY way_id, node_sequence_id, relation_sequence_id NULLS LAST, relation_id NULLS LAST;
 
-  RAISE NOTICE ' Road % (%): recalculate', road.ref, road.id;
+  RAISE NOTICE '% OSM_RefreshRoadData(%): inserted new data', clock_timestamp(), road.id;
 
   -- Recalculate distances between nodes for this road.
   UPDATE osmonitor_road_data orr
@@ -126,6 +182,20 @@ BEGIN
       orr_next.road_id = orr.road_id AND
       orr_next.node_sequence_id = orr.node_sequence_id + 1))
   WHERE orr.road_id = $1;
+
+  UPDATE osmonitor_roads SET needs_refresh = false WHERE id = $1;
+
+  road_data_timestamp := (SELECT MAX(q.tstamp)
+    FROM (SELECT MAX(way_last_update_timestamp) AS tstamp
+  FROM osmonitor_road_data
+  WHERE road_id = $1
+  UNION
+  SELECT MAX(tstamp) AS tstamp
+  FROM osmonitor_road_relations orr
+  INNER JOIN relations r ON (r.id = orr.relation_id)
+  WHERE orr.road_id = $1) q);
+
+  UPDATE osmonitor_roads SET data_timestamp = road_data_timestamp WHERE id = $1;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -162,17 +232,15 @@ DECLARE
 BEGIN
   SELECT * FROM osmonitor_roads WHERE id = $1 INTO road;
 
-  RAISE NOTICE 'Deleting existing relations...';
-
   DELETE FROM osmonitor_road_relations WHERE road_id = $1;
 
-  RAISE NOTICE 'Inserting new relations...';
+  RAISE NOTICE '% OSM_RefreshRoadRelations(%): removed data, inserting new data...', clock_timestamp(), road.id;
   
   INSERT INTO osmonitor_road_relations (road_id, relation_id)
     SELECT $1 AS road_id, r.id
     FROM relations r
     WHERE r.tags @> hstore(ARRAY[['type', 'route'], ['route', 'road'], ['ref', road.ref]]) AND
-	OSM_IsMostlyCoveredBy('boundary_' || road.country, r.id) = true;
+  OSM_IsMostlyCoveredBy('boundary_' || road.country, r.id) = true;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -184,14 +252,14 @@ $$ LANGUAGE plpgsql;
 DROP FUNCTION IF EXISTS OSM_Preprocess();
 CREATE FUNCTION OSM_Preprocess() RETURNS void AS $$
 DECLARE
-  ref CURSOR FOR SELECT * FROM ways WHERE OSM_GetConfigDateValue('last_preprocessing_data_timestamp') IS NULL OR tstamp > OSM_GetConfigDateValue('last_preprocessing_data_timestamp');
+  data_timestamp timestamp;
+  ref CURSOR FOR SELECT id, tstamp FROM ways WHERE tstamp > OSM_GetConfigDateValue('last_preprocessing_data_timestamp') ORDER BY tstamp;
   all_rows float;
   i int;
-  data_timestamp timestamp;
 BEGIN
 SET enable_seqscan = off;
 i := 0;
-all_rows := (SELECT COUNT(*) FROM ways WHERE OSM_GetConfigDateValue('last_preprocessing_data_timestamp') IS NULL OR tstamp > OSM_GetConfigDateValue('last_preprocessing_data_timestamp'));
+all_rows := (SELECT COUNT(*) FROM ways WHERE tstamp > OSM_GetConfigDateValue('last_preprocessing_data_timestamp'));
 
 FOR way IN ref LOOP
   i := i + 1;
@@ -207,9 +275,11 @@ FOR way IN ref LOOP
       ELSE ARRAY[REPLACE(tags-> 'ref', ' ', '')]
     END)
   WHERE w.id = way.id;
+
+  data_timestamp := way.tstamp;
 END LOOP;
 
-data_timestamp := (SELECT OSM_GetDataTimestamp());
+--data_timestamp := (SELECT OSM_GetDataTimestamp());
 raise notice 'Finished, data timestamp is %', data_timestamp;
 UPDATE osmonitor_config_options SET date_value = data_timestamp WHERE option_key = 'last_preprocessing_data_timestamp';
 
@@ -224,45 +294,26 @@ $$ LANGUAGE plpgsql;
 DROP FUNCTION IF EXISTS OSM_RefreshChangedRoads();
 CREATE FUNCTION OSM_RefreshChangedRoads() RETURNS void AS $$
 DECLARE
-  ref CURSOR FOR SELECT * FROM osmonitor_roads ORDER BY id;
+  ref CURSOR FOR SELECT * FROM osmonitor_roads WHERE needs_refresh = true ORDER BY id;
   all_rows float;
   i int;
   current_ways int;
   changed int;
 BEGIN
 i := 0;
-all_rows := (SELECT COUNT(*) FROM osmonitor_roads);
+all_rows := (SELECT COUNT(*) FROM osmonitor_roads WHERE needs_refresh = true);
 
 FOR road IN ref LOOP
   i := i + 1;
-  raise notice '% Processing road % (%) (% of % - %%%)', clock_timestamp(), road.ref, road.id, i, all_rows, ((i / all_rows) * 100)::integer;
-
-  -- Check if relations have changed.
-  changed := (SELECT COUNT(*)
-    FROM osmonitor_road_relations orr
-    INNER JOIN osmonitor_roads rds ON (rds.id = orr.road_id)
-    INNER JOIN relations r ON (r.id = orr.relation_id)
-    WHERE rds.id = road.id AND r.tstamp > rds.data_timestamp);
-
-  IF changed = 0 THEN
-    -- Check if existing road ways have changed.
-    changed := (SELECT COUNT(*)
-      FROM osmonitor_road_data orr
-      INNER JOIN osmonitor_roads r ON (r.id = orr.road_id)
-      INNER JOIN ways w ON (w.id = orr.way_id)
-      WHERE r.id = road.id AND w.tstamp > orr.way_last_update_timestamp);
-  END IF;
-
-  raise notice '% changed = %', clock_timestamp(), changed;
-
-  IF changed > 0 OR road.data_timestamp IS NULL THEN
-    PERFORM OSM_RefreshRoadRelations(road.id);
-    PERFORM OSM_RefreshRoadData(road.id);
-    raise notice '% refreshed', clock_timestamp();
-  END IF;
+  RAISE NOTICE  '% Processing road % (% of % - %%%)', clock_timestamp(), road.id, i, all_rows, ((i / all_rows) * 100)::integer;
+  PERFORM OSM_RefreshRoadRelations(road.id);
+  RAISE NOTICE '%  Refreshed relations, refreshing road data...', clock_timestamp();
+  PERFORM OSM_RefreshRoadData(road.id);
 END LOOP;
 
+RAISE NOTICE '% Updating road data timestamps...', clock_timestamp();
 PERFORM OSM_UpdateRoadDataTimestamps();
+RAISE NOTICE '% All done!', clock_timestamp();
 END;
 $$ LANGUAGE plpgsql;
 
