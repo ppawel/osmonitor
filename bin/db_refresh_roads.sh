@@ -7,4 +7,5 @@ AUTH_FILE=$ROOT_DIR/authFile
 
 cd $ROOT_DIR/sql
 
-psql -1 -c 'SELECT OSM_RefreshChangedRoads()' -U $user $database
+psql -1 -c 'SELECT OSM_MarkRoadsThatNeedRefresh()' -U $user $database
+#psql -1 -c 'SELECT OSM_RefreshChangedRoads()' -U $user $database

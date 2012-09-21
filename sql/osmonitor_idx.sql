@@ -57,3 +57,15 @@ CREATE INDEX idx_osmonitor_road_data_distance_calc_index
   ON osmonitor_road_data
   USING btree
   (road_id, way_id, node_sequence_id);
+
+DROP INDEX IF EXISTS idx_relations_tags;
+CREATE INDEX idx_relations_tags
+  ON relations
+  USING gist
+  (tags);
+
+DROP INDEX IF EXISTS idx_osmonitor_actions_id_data_type;
+CREATE INDEX idx_osmonitor_actions_id_data_type
+  ON osmonitor_actions
+  USING btree
+  (id, data_type;

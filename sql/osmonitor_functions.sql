@@ -255,13 +255,13 @@ DROP FUNCTION IF EXISTS OSM_Preprocess();
 CREATE FUNCTION OSM_Preprocess() RETURNS void AS $$
 DECLARE
   data_timestamp timestamp;
-  ref CURSOR FOR SELECT id, tstamp FROM ways WHERE tstamp > OSM_GetConfigDateValue('last_preprocessing_data_timestamp') ORDER BY tstamp;
+  ref CURSOR FOR SELECT id, tstamp FROM ways WHERE tstamp > OSM_GetConfigDateValue('last_preprocessing_data_timestamp') ORDER BY tstamp LIMIT 66666;
   all_rows float;
   i int;
 BEGIN
 SET enable_seqscan = off;
 i := 0;
-all_rows := (SELECT COUNT(*) FROM ways WHERE tstamp > OSM_GetConfigDateValue('last_preprocessing_data_timestamp'));
+all_rows := 66666;--(SELECT COUNT(*) FROM ways WHERE tstamp > OSM_GetConfigDateValue('last_preprocessing_data_timestamp')) LIMIT 66666;
 
 FOR way IN ref LOOP
   i := i + 1;
@@ -316,6 +316,47 @@ END LOOP;
 RAISE NOTICE '% Updating road data timestamps...', clock_timestamp();
 PERFORM OSM_UpdateRoadDataTimestamps();
 RAISE NOTICE '% All done!', clock_timestamp();
+END;
+$$ LANGUAGE plpgsql;
+
+--
+-- OSM_MarkRoadsThatNeedRefresh
+--
+-- Marks roads as needs_refresh based on osmonitor_actions table. Should be called after replication.
+--
+DROP FUNCTION IF EXISTS OSM_MarkRoadsThatNeedRefresh();
+CREATE FUNCTION OSM_MarkRoadsThatNeedRefresh() RETURNS void AS $$
+DECLARE
+  ref CURSOR FOR SELECT * FROM osmonitor_roads WHERE needs_refresh = false ORDER BY id;
+  all_rows float;
+  i int;
+  current_ways int;
+  changed int;
+BEGIN
+i := 0;
+all_rows := (SELECT COUNT(*) FROM osmonitor_roads WHERE needs_refresh = false);
+
+FOR road IN ref LOOP
+  i := i + 1;
+
+  changed := (SELECT COUNT(*)
+              FROM osmonitor_actions oa
+              INNER JOIN ways w ON (w.id = oa.id AND data_type = 'W')
+              WHERE w.refs @> ARRAY[road.ref]::text[]);
+
+  IF changed = 0 THEN
+    changed := (SELECT COUNT(*)
+              FROM osmonitor_actions oa
+              INNER JOIN relations r ON (r.id = oa.id AND data_type = 'R')
+              WHERE r.tags->'ref' = road.ref);
+  END IF;
+
+  RAISE NOTICE  '% Road % needs refresh? (% of % - %%%): changed = %', clock_timestamp(), road.id, i, all_rows, ((i / all_rows) * 100)::integer, changed;
+
+  IF changed > 0 THEN
+    UPDATE osmonitor_roads SET needs_refresh = true WHERE id = road.id;
+  END IF;
+END LOOP;
 END;
 $$ LANGUAGE plpgsql;
 
