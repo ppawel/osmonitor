@@ -1,5 +1,24 @@
 module OSMonitor
 
+class Entity
+  include OSMonitorLogger
+
+  attr_accessor :country
+  attr_accessor :input
+  attr_accessor :relation
+
+  def wikipedia
+    return nil if !@relation
+    key = 'wikipedia'
+    result = @relation.tags['wikipedia']
+    if !result
+      key = @relation.tags.keys.detect {|key| key.start_with?('wikipedia:')}
+      result = @relation.tags[key] if key
+    end
+    return key, result
+  end
+end
+
 class ReportRequest
   attr_accessor :report_type
   attr_accessor :country

@@ -6,17 +6,13 @@ require 'osmonitor/core'
 module OSMonitor
 module RoadReport
 
-class Road
-  include OSMonitorLogger
+class Road < OSMonitor::Entity
 
   def self.parse_ref(ref)
     ref.scan(/^([^\d\.]*)(.*)$/)
     return $1, $2
   end
 
-  attr_accessor :country
-  attr_accessor :input
-  attr_accessor :relation
   attr_accessor :other_relations
   attr_accessor :ways
   attr_accessor :nodes

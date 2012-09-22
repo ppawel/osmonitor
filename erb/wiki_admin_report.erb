@@ -7,7 +7,6 @@
   color = 'PaleGoldenrod' if status.get_issues(:WARNING).size > 0
   color = 'LightSalmon' if status.get_issues(:ERROR).size > 0
   admin_level = status.entity.input['admin_level'].to_i
-  wikipedia = status.entity.relation.tags['wikipedia'] if status.entity.relation
   name = status.entity.input['name']
 %>
 
@@ -38,8 +37,8 @@
 <tr>
 <% end %>
 <td>
-<% if wikipedia %>
-[[wikipedia:<%= wikipedia %>|<%= name %>]]
+<% if status.entity.wikipedia %>
+[[<%= status.entity.wikipedia[0] %>:<%= status.entity.wikipedia[1] %>|<%= name %>]]
 <% else %>
 <%= name %>
 <% end %>

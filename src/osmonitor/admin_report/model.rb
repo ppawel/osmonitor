@@ -13,12 +13,9 @@ end
 module OSMonitor
 module AdminReport
 
-class Boundary
+class Boundary < OSMonitor::Entity
   include OSMonitorLogger
 
-  attr_accessor :country
-  attr_accessor :input
-  attr_accessor :relation
   attr_accessor :other_relations
   attr_accessor :ways
   attr_accessor :closed

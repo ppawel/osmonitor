@@ -13,8 +13,6 @@
   color = 'PaleGreen' if status.green?
   color = 'PaleGoldenrod' if status.get_issues(:WARNING).size > 0
   color = 'LightSalmon' if status.get_issues(:ERROR).size > 0
-  wikipedia = nil
-  wikipedia = status.entity.relation.tags['wikipedia'] if status.entity.relation
 %>
 <% if color %>
 <tr style="background-color:<%= color %>">
@@ -22,8 +20,8 @@
 <tr>
 <% end %>
 <td style="text-align: center">
-<% if wikipedia %>
-[[wikipedia:<%= wikipedia %>|<span style="padding: 1px .5em; color: blue; background-color: #ffcc00; font-weight: bold;"><%= status.entity.ref %></span>]]
+<% if status.entity.wikipedia %>
+[[<%= status.entity.wikipedia[0] %>:<%= status.entity.wikipedia[1] %>|<span style="padding: 1px .5em; color: blue; background-color: #ffcc00; font-weight: bold;"><%= status.entity.ref %></span>]]
 <% else %>
 <span style="padding: 1px .5em; color: black; background-color: #ffcc00; font-weight: bold;"><%= status.entity.ref %></span>
 <% end %>
@@ -40,7 +38,7 @@
 <% end %>
 </ul>
 </td>
-<td style="text-align: center"><b>[<%= create_osmonitor_url(report, status.entity) %> show in OSMonitor]</b></td>
+<td style="text-align: center"><!--<b>[<%= create_osmonitor_url(report, status.entity) %> show in OSMonitor]</b>--></td>
 </tr>
 <% end %>
 </table>
