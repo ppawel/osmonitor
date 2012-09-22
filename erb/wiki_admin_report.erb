@@ -7,6 +7,8 @@
   color = 'PaleGoldenrod' if status.get_issues(:WARNING).size > 0
   color = 'LightSalmon' if status.get_issues(:ERROR).size > 0
   admin_level = status.entity.input['admin_level'].to_i
+  wikipedia = status.entity.relation.tags['wikipedia'] if status.entity.relation
+  name = status.entity.input['name']
 %>
 
 <% if admin_level <= 4 and prev_admin_level != admin_level %>
@@ -21,9 +23,9 @@
 <center>
 <table class="wikitable" border="1" cellspacing="0" cellpadding="2" width="80%">
 <tr style="background-color:#E9E9E9">
-<th scope="col" width="2%">Name</th>
-<th scope="col" width="35%">Info</th>
-<th scope="col" width="43%">Report</th>
+<th scope="col" width="15%">Name</th>
+<th scope="col" width="40%">Info</th>
+<th scope="col" width="45%">Report</th>
 </tr>
 
 <% end %>
@@ -36,11 +38,15 @@
 <tr>
 <% end %>
 <td>
-<%= status.entity.input['name'] %>
+<% if wikipedia %>
+[[wikipedia:<%= wikipedia %>|<%= name %>]]
+<% else %>
+<%= name %>
+<% end %>
 </td>
 <td><div style="color: #666666; font-size: smaller;">
 <% if status.entity.relation %>
-<b>Relation:</b> {{relation|<%= status.entity.relation.id %>}}<br><b>Wikipedia:</b> <% if status.entity.relation.tags.has_key?('wikipedia') %>[[wikipedia:<%= status.entity.relation.tags['wikipedia'] %>]]<% end %> <% if status.entity.relation.tags.has_key?('wikipedia:pl') %>[[wikipedia:pl:<%= status.entity.relation.tags['wikipedia:pl'] %>]]<% end %>
+<b>Relation:</b> {{relation|<%= status.entity.relation.id %>}}
 <% end %>
 <% if status.entity.relation and status.entity.relation.tags['note'] %><br><b>Note:</b> <%= status.entity.relation.tags['note'] %><% end %>
 </div>
