@@ -54,13 +54,13 @@ class AdminManager
     FROM ways w
     INNER JOIN relation_members rm ON (rm.member_id = w.id)
     WHERE rm.relation_id = #{boundary.relation.id} AND rm.member_type = 'W'"
-puts sql
+
     @conn.query(sql).each do |row|
       process_tags(row)
       boundary.ways << Way.new(row['id'].to_i, row['member_role'], row['tags'], row['way_wkb'])
     end
 
-    @log.debug ' Loaded ways, now checking if it''s closed...'
+    @@log.debug ' Loaded ways, now checking if it''s closed...'
 
     # Check if ways form a closed line.
 
