@@ -19,8 +19,8 @@ class AdminManager
   def load_boundary(country, input, all_input)
     boundary = Boundary.new(country, input)
 
-    load_relations(boundary, all_input)
-    load_ways(boundary) if boundary.relation
+    log_time ' load_relations' do load_relations(boundary, all_input) end
+    log_time ' load_ways' do load_ways(boundary) if boundary.relation end
 
     boundary
   end
@@ -59,8 +59,6 @@ class AdminManager
       process_tags(row)
       boundary.ways << Way.new(row['id'].to_i, row['member_role'], row['tags'], row['way_wkb'])
     end
-
-    @@log.debug ' Loaded ways, now checking if it''s closed...'
 
     # Check if ways form a closed line.
 
