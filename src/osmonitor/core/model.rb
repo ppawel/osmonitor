@@ -15,7 +15,7 @@ class Entity
       key = @relation.tags.keys.detect {|key| key.start_with?('wikipedia:')}
       result = @relation.tags[key] if key
     end
-    return key, result
+    return key, result if result
   end
 end
 
