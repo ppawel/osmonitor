@@ -46,7 +46,7 @@ parser = XML::Parser.file("#{teryt_dir}/TERC.xml")
 terc_doc = parser.parse
 
 puts 'id,parent_id,admin_level,name,relation_name'
-puts '1,,2,Polska'
+puts '1,,2,Polska,Polska'
 
 terc_doc.find('/teryt/catalog/row', 't:http://teryt/').each do |el|
   # el is a <row> element, for example:

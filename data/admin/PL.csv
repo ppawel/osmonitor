@@ -1,5 +1,5 @@
 id,parent_id,admin_level,name,relation_name
-1,,2,Polska
+1,,2,Polska,Polska
 02,1,4,dolnośląskie,województwo dolnośląskie
 0201,02,6,bolesławiecki,powiat bolesławiecki
 0202,02,6,dzierżoniowski,powiat dzierżoniowski
