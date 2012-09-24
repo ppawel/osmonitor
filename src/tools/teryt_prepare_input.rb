@@ -24,12 +24,15 @@ def get_admin_level(row)
   gmi = row.find_first("col[@name='GMI']").content
   return '4' if pow.empty?
   return '6' if gmi.empty?
-  return '8' if gmi.empty?
-  return '9'
+  return '8'
 end
 
 def get_name(row)
   row.find_first("col[@name='NAZWA']").content
+end
+
+def get_name_prefix(row)
+  row.find_first("col[@name='NAZDOD']").content
 end
 
 if ARGV.size == 0
@@ -42,7 +45,7 @@ teryt_dir = ARGV[0]
 parser = XML::Parser.file("#{teryt_dir}/TERC.xml")
 terc_doc = parser.parse
 
-puts 'id,parent_id,admin_level,name'
+puts 'id,parent_id,admin_level,name,relation_name'
 puts '1,,2,Polska'
 
 terc_doc.find('/teryt/catalog/row', 't:http://teryt/').each do |el|
@@ -63,5 +66,5 @@ terc_doc.find('/teryt/catalog/row', 't:http://teryt/').each do |el|
   name = get_name(el)
   name = UnicodeUtils.downcase(name) if admin_level == 4 # DOLNOŚLĄSKIE, MAZOWIECKIE, POMORSKIE - don't scream at me!
 
-  puts "#{get_id(el)},#{get_parent_id(el)},#{get_admin_level(el)},#{name}"
+  puts "#{get_id(el)},#{get_parent_id(el)},#{get_admin_level(el)},#{name},#{get_name_prefix(el)} #{name}"
 end
