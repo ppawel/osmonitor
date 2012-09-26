@@ -16,11 +16,17 @@ CREATE INDEX idx_relation_members_relation_id
 --  USING btree
 --  (node_id );
 
-DROP INDEX IF EXISTS idx_way_nodes_way_id;
-CREATE INDEX idx_way_nodes_way_id
-  ON way_nodes
-  USING btree
-  (way_id);
+--DROP INDEX IF EXISTS idx_way_nodes_node_id_way_id;
+--CREATE INDEX idx_way_nodes_node_id_way_id
+--  ON way_nodes
+--  USING btree
+--  (node_id, way_id);
+
+--DROP INDEX IF EXISTS idx_way_nodes_way_id;
+--CREATE INDEX idx_way_nodes_way_id
+--  ON way_nodes
+--  USING btree
+--  (way_id);
 
 DROP INDEX IF EXISTS idx_ways_refs;
 CREATE INDEX idx_ways_refs
@@ -68,4 +74,4 @@ DROP INDEX IF EXISTS idx_osmonitor_actions_id_data_type;
 CREATE INDEX idx_osmonitor_actions_id_data_type
   ON osmonitor_actions
   USING btree
-  (id, data_type;
+  (id, data_type);

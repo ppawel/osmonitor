@@ -11,4 +11,7 @@ INSERT INTO osmonitor_config_options (option_key, geom_value) VALUES ('boundary_
 INSERT INTO osmonitor_config_options (option_key, date_value) VALUES ('last_preprocessing', '1990-01-01');
 
 -- Data timestamp during last OSM_Preprocess() invocation.
-INSERT INTO osmonitor_config_options (option_key, date_value) VALUES ('last_preprocessing_data_timestamp', '1990-01-01');
+INSERT INTO osmonitor_config_options (option_key, date_value) VALUES ('last_preprocessing_data_timestamp_ways', '1990-01-01');
+
+-- Data timestamp during last OSM_PreprocessRelations() invocation.
+INSERT INTO osmonitor_config_options (option_key, date_value) VALUES ('last_preprocessing_data_timestamp_relations', '1990-01-01');

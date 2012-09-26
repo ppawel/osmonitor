@@ -1,6 +1,8 @@
 -- Way "ref" tag values are put in this column because matching ref against hstore string values like "A1; S3" is slow.
 ALTER TABLE ways ADD COLUMN refs text[];
 
+ALTER TABLE relations ADD COLUMN country text;
+
 DROP TABLE IF EXISTS osmonitor_config_options;
 CREATE TABLE osmonitor_config_options (
   option_key text NOT NULL PRIMARY KEY,
@@ -16,23 +18,20 @@ CREATE TABLE osmonitor_road_relations (
   UNIQUE (road_id, relation_id)
 );
 
-DROP TABLE IF EXISTS osmonitor_road_data;
+DROP TABLE IF EXISTS osmonitor_road_ways;
 CREATE TABLE osmonitor_road_data (
-  road_id text,
-  way_last_update_user_id INTEGER,
-  way_last_update_user_name TEXT,
-  way_last_update_timestamp timestamp without time zone,
-  way_last_update_changeset_id INTEGER,
+  road_id text NOT NULL,
+  way_last_update_user_id INTEGER NOT NULL,
+  way_last_update_user_name TEXT NOT NULL,
+  way_last_update_timestamp timestamp without time zone NOT NULL,
+  way_last_update_changeset_id INTEGER NOT NULL,
   relation_id INTEGER,
   member_role text,
   relation_sequence_id INTEGER,
-  node_sequence_id INTEGER,
-  way_id BIGINT,
-  way_tags hstore,
-  way_geom text,
-  node_geom text,
-  node_id BIGINT,
-  node_dist_to_next double precision
+  way_id BIGINT NOT NULL,
+  way_tags hstore NOT NULL,
+  way_linestring geometry NOT NULL,
+  way_nodes bigint[] NOT NULL
 );
 
 DROP TABLE IF EXISTS osmonitor_roads;

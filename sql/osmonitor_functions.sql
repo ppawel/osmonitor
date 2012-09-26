@@ -124,7 +124,7 @@ BEGIN
   *
   FROM
     ((SELECT
-  road.id AS road_id,
+      road.id AS road_id,
       way_user.id AS way_last_update_user_id,
       way_user.name AS way_last_update_user_name,
       w.tstamp AS way_last_update_timestamp,
@@ -172,7 +172,7 @@ BEGIN
   (SELECT ST_Contains(OSM_GetConfigGeomValue('boundary_' || road.country), w.linestring)) = True)) query
   ORDER BY way_id, node_sequence_id, relation_sequence_id NULLS LAST, relation_id NULLS LAST;
 
-  RAISE NOTICE '% OSM_RefreshRoadData(%): inserted new data', clock_timestamp(), road.id;
+  RAISE NOTICE '% OSM_RefreshRoadData(%): inserted new data, recalculating distances...', clock_timestamp(), road.id;
 
   -- Recalculate distances between nodes for this road.
   UPDATE osmonitor_road_data orr
@@ -186,6 +186,8 @@ BEGIN
   WHERE orr.road_id = $1;
 
   UPDATE osmonitor_roads SET needs_refresh = false WHERE id = $1;
+
+  RAISE NOTICE '% OSM_RefreshRoadData(%): updating road data timestamp...', clock_timestamp(), road.id;
 
   road_data_timestamp := (SELECT MAX(q.tstamp)
     FROM (SELECT MAX(way_last_update_timestamp) AS tstamp
@@ -255,17 +257,15 @@ DROP FUNCTION IF EXISTS OSM_Preprocess();
 CREATE FUNCTION OSM_Preprocess() RETURNS void AS $$
 DECLARE
   data_timestamp timestamp;
-  ref CURSOR FOR SELECT id, tstamp FROM ways WHERE tstamp > OSM_GetConfigDateValue('last_preprocessing_data_timestamp') ORDER BY tstamp LIMIT 66666;
-  all_rows float;
+  ref CURSOR FOR SELECT id, tstamp FROM ways WHERE tstamp > OSM_GetConfigDateValue('last_preprocessing_data_timestamp') ORDER BY tstamp LIMIT 6666666;
   i int;
 BEGIN
 SET enable_seqscan = off;
 i := 0;
-all_rows := 66666;--(SELECT COUNT(*) FROM ways WHERE tstamp > OSM_GetConfigDateValue('last_preprocessing_data_timestamp')) LIMIT 66666;
 
 FOR way IN ref LOOP
   i := i + 1;
-  raise notice '% Processing way % (% of % - %%%)', clock_timestamp(), way.id, i, all_rows, ((i / all_rows) * 100)::integer;
+  raise notice '% Processing way % (%)', clock_timestamp(), way.id, way.tstamp;
 
   UPDATE
     ways w
@@ -281,10 +281,53 @@ FOR way IN ref LOOP
   data_timestamp := way.tstamp;
 END LOOP;
 
---data_timestamp := (SELECT OSM_GetDataTimestamp());
-raise notice 'Finished, data timestamp is %', data_timestamp;
-UPDATE osmonitor_config_options SET date_value = data_timestamp WHERE option_key = 'last_preprocessing_data_timestamp';
+raise notice 'Finished, last preprocessed data timestamp is %', data_timestamp;
 
+IF data_timestamp IS NOT NULL THEN
+  UPDATE osmonitor_config_options SET date_value = data_timestamp WHERE option_key = 'last_preprocessing_data_timestamp';
+END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+------
+------ OSM_PreprocessRelations
+------
+------ Preprocesses some stuff so Ruby does not have to work so hard on reports.
+------
+DROP FUNCTION IF EXISTS OSM_PreprocessRelations();
+CREATE FUNCTION OSM_PreprocessRelations() RETURNS void AS $$
+DECLARE
+  data_timestamp timestamp;
+  query_relations CURSOR FOR
+    SELECT id, tstamp
+    FROM relations
+    WHERE tags @> 'type=>route,route=>road'::hstore AND tstamp > OSM_GetConfigDateValue('last_preprocessing_data_timestamp_relations')
+    ORDER BY tstamp;
+  query_boundaries CURSOR FOR SELECT * FROM osmonitor_config_options WHERE option_key ILIKE 'boundary_%';
+  i int;
+  covered boolean;
+
+BEGIN
+  i := 0;
+
+  FOR relation IN query_relations LOOP
+    i := i + 1;
+
+    RAISE NOTICE '% Processing relation % (%)', clock_timestamp(), relation.id, relation.tstamp;
+
+    FOR boundary IN query_boundaries LOOP
+      covered := (SELECT OSM_IsMostlyCoveredBy(boundary.option_key, relation.id));
+      RAISE NOTICE '% = %', boundary.option_key, covered;
+      IF covered THEN
+        UPDATE relations r SET country = REPLACE('boundary_', '', boundary.option_key) WHERE r.id = relation.id;
+        data_timestamp := relation.tstamp;
+      END IF;
+    END LOOP;
+  END LOOP;
+
+  IF data_timestamp IS NOT NULL THEN
+    UPDATE osmonitor_config_options SET date_value = data_timestamp WHERE option_key = 'last_preprocessing_data_timestamp_relations';
+  END IF;
 END;
 $$ LANGUAGE plpgsql;
 
