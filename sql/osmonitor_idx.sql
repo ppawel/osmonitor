@@ -74,4 +74,4 @@ DROP INDEX IF EXISTS idx_osmonitor_actions_id_data_type;
 CREATE INDEX idx_osmonitor_actions_id_data_type
   ON osmonitor_actions
   USING btree
-  (id, data_type;
+  (id, data_type);
