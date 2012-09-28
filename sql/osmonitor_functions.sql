@@ -255,17 +255,13 @@ DROP FUNCTION IF EXISTS OSM_Preprocess();
 CREATE FUNCTION OSM_Preprocess() RETURNS void AS $$
 DECLARE
   data_timestamp timestamp;
-  ref CURSOR FOR SELECT id, tstamp FROM ways WHERE tstamp > OSM_GetConfigDateValue('last_preprocessing_data_timestamp') ORDER BY tstamp LIMIT 66666;
-  all_rows float;
-  i int;
+  ref CURSOR FOR SELECT id, tstamp FROM ways WHERE refs IS NULL OR tstamp > OSM_GetConfigDateValue('last_preprocessing_data_timestamp') ORDER BY tstamp;
+
 BEGIN
 SET enable_seqscan = off;
-i := 0;
-all_rows := 66666;--(SELECT COUNT(*) FROM ways WHERE tstamp > OSM_GetConfigDateValue('last_preprocessing_data_timestamp')) LIMIT 66666;
 
 FOR way IN ref LOOP
-  i := i + 1;
-  raise notice '% Processing way % (% of % - %%%)', clock_timestamp(), way.id, i, all_rows, ((i / all_rows) * 100)::integer;
+  raise notice '% Processing way % (%)', clock_timestamp(), way.id, way.tstamp;
 
   UPDATE
     ways w
@@ -357,6 +353,9 @@ FOR road IN ref LOOP
     UPDATE osmonitor_roads SET needs_refresh = true WHERE id = road.id;
   END IF;
 END LOOP;
+
+TRUNCATE osmonitor_actions;
+
 END;
 $$ LANGUAGE plpgsql;
 
