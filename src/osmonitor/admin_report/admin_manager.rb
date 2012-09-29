@@ -37,9 +37,9 @@ class AdminManager
 
     # Check if the relation is not already reserved for some other id
     # See also https://github.com/ppawel/osmonitor/issues/33
-    if boundary.relation and boundary.relation.tags['teryt:terc'] != boundary.input['id'] and
-      all_input.detect {|row| row['id'] == boundary.relation.tags['teryt:terc'] and row['id'] != boundary.input['id']}
-      boundary.relation = nil
+    if boundary.relation.tags['teryt:terc'] != boundary.input['id'] and
+        all_input.detect {|row| row['id'] == boundary.relation.tags['teryt:terc'] and row['id'] != boundary.input['id']}
+      boundary.relation = relations[1]
     end
   end
 

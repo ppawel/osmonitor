@@ -38,9 +38,13 @@ def get_name(row)
 end
 
 def get_name_prefix(row)
+  nazdod = row.find_first("col[@name='NAZDOD']").content
   rodz = row.find_first("col[@name='RODZ']").content
   return 'gmina' if rodz == '1' or rodz == '2' or rodz == '3'
-  row.find_first("col[@name='NAZDOD']").content
+  return 'miasto' if rodz == '4'
+  return 'powiat' if nazdod == 'powiat'
+  return nazdod if get_admin_level(row) == '4'
+  ''
 end
 
 if ARGV.size == 0
@@ -74,5 +78,9 @@ terc_doc.find('/teryt/catalog/row', 't:http://teryt/').each do |el|
   name = get_name(el)
   name = UnicodeUtils.downcase(name) if admin_level == 4 # DOLNOŚLĄSKIE, MAZOWIECKIE, POMORSKIE - don't scream at me!
 
-  puts "#{get_id(el)},#{get_parent_id(el)},#{get_admin_level(el)},#{name},#{get_name_prefix(el)} #{name}"
+  name_prefix = get_name_prefix(el)
+  relation_name = name
+  relation_name = "#{name_prefix} #{name}" if !name_prefix.empty?
+
+  puts "#{get_id(el)},#{get_parent_id(el)},#{get_admin_level(el)},#{name},#{relation_name}"
 end

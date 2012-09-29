@@ -15,9 +15,9 @@ module OSMonitor
         LOWER(r.tags->\'name\') = \'#{UnicodeUtils.downcase(boundary.input[\'name\'])}\' OR
         LOWER(r.tags->\'name\') ilike \'Miasto #{UnicodeUtils.downcase(boundary.input[\'name\'])}\') AND (r.tags->\'admin_level\' = \'6\' OR NOT r.tags?\'admin_level\')"',
 
-  '7' => '"r.tags->\'admin_level\' = \'7\' AND LOWER(r.tags->\'name\') ~ \'(\s*)?#{UnicodeUtils.downcase(boundary.input[\'name\'])}\'"',
+  '7' => '"r.tags->\'admin_level\' = \'7\' AND LOWER(r.tags->\'name\') ~ \'(\s*)?#{UnicodeUtils.downcase(boundary.input[\'name\'])}$\'"',
 
-  '8' => '"r.tags->\'admin_level\' = \'8\' AND LOWER(r.tags->\'name\') ~ \'(\s*)?#{UnicodeUtils.downcase(boundary.input[\'name\'])}\'"',
+  '8' => '"r.tags->\'admin_level\' = \'8\' AND LOWER(r.tags->\'name\') ~ \'(\s*)?#{UnicodeUtils.downcase(boundary.input[\'name\'])}$\'"',
 }
 
 # ROAD REPORT

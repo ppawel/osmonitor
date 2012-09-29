@@ -7,7 +7,7 @@ id,parent_id,admin_level,name,relation_name
 0201032,0201,7,Gromadka,gmina Gromadka
 0201043,0201,7,Nowogrodziec,gmina Nowogrodziec
 0201044,0201,8,Nowogrodziec,miasto Nowogrodziec
-0201045,0201,8,Nowogrodziec,obszar wiejski Nowogrodziec
+0201045,0201,8,Nowogrodziec,Nowogrodziec
 0201052,0201,7,Osiecznica,gmina Osiecznica
 0201062,0201,7,Warta Bolesławiecka,gmina Warta Bolesławiecka
 0202,02,6,dzierżoniowski,powiat dzierżoniowski
@@ -19,7 +19,7 @@ id,parent_id,admin_level,name,relation_name
 0202062,0202,7,Łagiewniki,gmina Łagiewniki
 0202073,0202,7,Niemcza,gmina Niemcza
 0202074,0202,8,Niemcza,miasto Niemcza
-0202075,0202,8,Niemcza,obszar wiejski Niemcza
+0202075,0202,8,Niemcza,Niemcza
 0203,02,6,głogowski,powiat głogowski
 0203011,0203,7,Głogów,gmina Głogów
 0203022,0203,7,Głogów,gmina Głogów
@@ -30,17 +30,17 @@ id,parent_id,admin_level,name,relation_name
 0204,02,6,górowski,powiat górowski
 0204013,0204,7,Góra,gmina Góra
 0204014,0204,8,Góra,miasto Góra
-0204015,0204,8,Góra,obszar wiejski Góra
+0204015,0204,8,Góra,Góra
 0204022,0204,7,Jemielno,gmina Jemielno
 0204032,0204,7,Niechlów,gmina Niechlów
 0204043,0204,7,Wąsosz,gmina Wąsosz
 0204044,0204,8,Wąsosz,miasto Wąsosz
-0204045,0204,8,Wąsosz,obszar wiejski Wąsosz
+0204045,0204,8,Wąsosz,Wąsosz
 0205,02,6,jaworski,powiat jaworski
 0205011,0205,7,Jawor,gmina Jawor
 0205023,0205,7,Bolków,gmina Bolków
 0205024,0205,8,Bolków,miasto Bolków
-0205025,0205,8,Bolków,obszar wiejski Bolków
+0205025,0205,8,Bolków,Bolków
 0205032,0205,7,Męcinka,gmina Męcinka
 0205042,0205,7,Mściwojów,gmina Mściwojów
 0205052,0205,7,Paszowice,gmina Paszowice
@@ -60,7 +60,7 @@ id,parent_id,admin_level,name,relation_name
 0207022,0207,7,Kamienna Góra,gmina Kamienna Góra
 0207033,0207,7,Lubawka,gmina Lubawka
 0207034,0207,8,Lubawka,miasto Lubawka
-0207035,0207,8,Lubawka,obszar wiejski Lubawka
+0207035,0207,8,Lubawka,Lubawka
 0207042,0207,7,Marciszów,gmina Marciszów
 0208,02,6,kłodzki,powiat kłodzki
 0208011,0208,7,Duszniki-Zdrój,gmina Duszniki-Zdrój
@@ -70,25 +70,25 @@ id,parent_id,admin_level,name,relation_name
 0208051,0208,7,Polanica-Zdrój,gmina Polanica-Zdrój
 0208063,0208,7,Bystrzyca Kłodzka,gmina Bystrzyca Kłodzka
 0208064,0208,8,Bystrzyca Kłodzka,miasto Bystrzyca Kłodzka
-0208065,0208,8,Bystrzyca Kłodzka,obszar wiejski Bystrzyca Kłodzka
+0208065,0208,8,Bystrzyca Kłodzka,Bystrzyca Kłodzka
 0208072,0208,7,Kłodzko,gmina Kłodzko
 0208083,0208,7,Lądek-Zdrój,gmina Lądek-Zdrój
 0208084,0208,8,Lądek-Zdrój,miasto Lądek-Zdrój
-0208085,0208,8,Lądek-Zdrój,obszar wiejski Lądek-Zdrój
+0208085,0208,8,Lądek-Zdrój,Lądek-Zdrój
 0208092,0208,7,Lewin Kłodzki,gmina Lewin Kłodzki
 0208103,0208,7,Międzylesie,gmina Międzylesie
 0208104,0208,8,Międzylesie,miasto Międzylesie
-0208105,0208,8,Międzylesie,obszar wiejski Międzylesie
+0208105,0208,8,Międzylesie,Międzylesie
 0208112,0208,7,Nowa Ruda,gmina Nowa Ruda
 0208123,0208,7,Radków,gmina Radków
 0208124,0208,8,Radków,miasto Radków
-0208125,0208,8,Radków,obszar wiejski Radków
+0208125,0208,8,Radków,Radków
 0208133,0208,7,Stronie Śląskie,gmina Stronie Śląskie
 0208134,0208,8,Stronie Śląskie,miasto Stronie Śląskie
-0208135,0208,8,Stronie Śląskie,obszar wiejski Stronie Śląskie
+0208135,0208,8,Stronie Śląskie,Stronie Śląskie
 0208143,0208,7,Szczytna,gmina Szczytna
 0208144,0208,8,Szczytna,miasto Szczytna
-0208145,0208,8,Szczytna,obszar wiejski Szczytna
+0208145,0208,8,Szczytna,Szczytna
 0209,02,6,legnicki,powiat legnicki
 0209011,0209,7,Chojnów,gmina Chojnów
 0209022,0209,7,Chojnów,gmina Chojnów
@@ -98,18 +98,18 @@ id,parent_id,admin_level,name,relation_name
 0209062,0209,7,Miłkowice,gmina Miłkowice
 0209073,0209,7,Prochowice,gmina Prochowice
 0209074,0209,8,Prochowice,miasto Prochowice
-0209075,0209,8,Prochowice,obszar wiejski Prochowice
+0209075,0209,8,Prochowice,Prochowice
 0209082,0209,7,Ruja,gmina Ruja
 0210,02,6,lubański,powiat lubański
 0210011,0210,7,Lubań,gmina Lubań
 0210021,0210,7,Świeradów-Zdrój,gmina Świeradów-Zdrój
 0210033,0210,7,Leśna,gmina Leśna
 0210034,0210,8,Leśna,miasto Leśna
-0210035,0210,8,Leśna,obszar wiejski Leśna
+0210035,0210,8,Leśna,Leśna
 0210042,0210,7,Lubań,gmina Lubań
 0210053,0210,7,Olszyna,gmina Olszyna
 0210054,0210,8,Olszyna,miasto Olszyna
-0210055,0210,8,Olszyna,obszar wiejski Olszyna
+0210055,0210,8,Olszyna,Olszyna
 0210062,0210,7,Platerówka,gmina Platerówka
 0210072,0210,7,Siekierczyn,gmina Siekierczyn
 0211,02,6,lubiński,powiat lubiński
@@ -118,65 +118,65 @@ id,parent_id,admin_level,name,relation_name
 0211032,0211,7,Rudna,gmina Rudna
 0211043,0211,7,Ścinawa,gmina Ścinawa
 0211044,0211,8,Ścinawa,miasto Ścinawa
-0211045,0211,8,Ścinawa,obszar wiejski Ścinawa
+0211045,0211,8,Ścinawa,Ścinawa
 0212,02,6,lwówecki,powiat lwówecki
 0212013,0212,7,Gryfów Śląski,gmina Gryfów Śląski
 0212014,0212,8,Gryfów Śląski,miasto Gryfów Śląski
-0212015,0212,8,Gryfów Śląski,obszar wiejski Gryfów Śląski
+0212015,0212,8,Gryfów Śląski,Gryfów Śląski
 0212023,0212,7,Lubomierz,gmina Lubomierz
 0212024,0212,8,Lubomierz,miasto Lubomierz
-0212025,0212,8,Lubomierz,obszar wiejski Lubomierz
+0212025,0212,8,Lubomierz,Lubomierz
 0212033,0212,7,Lwówek Śląski,gmina Lwówek Śląski
 0212034,0212,8,Lwówek Śląski,miasto Lwówek Śląski
-0212035,0212,8,Lwówek Śląski,obszar wiejski Lwówek Śląski
+0212035,0212,8,Lwówek Śląski,Lwówek Śląski
 0212043,0212,7,Mirsk,gmina Mirsk
 0212044,0212,8,Mirsk,miasto Mirsk
-0212045,0212,8,Mirsk,obszar wiejski Mirsk
+0212045,0212,8,Mirsk,Mirsk
 0212053,0212,7,Wleń,gmina Wleń
 0212054,0212,8,Wleń,miasto Wleń
-0212055,0212,8,Wleń,obszar wiejski Wleń
+0212055,0212,8,Wleń,Wleń
 0213,02,6,milicki,powiat milicki
 0213012,0213,7,Cieszków,gmina Cieszków
 0213022,0213,7,Krośnice,gmina Krośnice
 0213033,0213,7,Milicz,gmina Milicz
 0213034,0213,8,Milicz,miasto Milicz
-0213035,0213,8,Milicz,obszar wiejski Milicz
+0213035,0213,8,Milicz,Milicz
 0214,02,6,oleśnicki,powiat oleśnicki
 0214011,0214,7,Oleśnica,gmina Oleśnica
 0214023,0214,7,Bierutów,gmina Bierutów
 0214024,0214,8,Bierutów,miasto Bierutów
-0214025,0214,8,Bierutów,obszar wiejski Bierutów
+0214025,0214,8,Bierutów,Bierutów
 0214032,0214,7,Dobroszyce,gmina Dobroszyce
 0214042,0214,7,Dziadowa Kłoda,gmina Dziadowa Kłoda
 0214053,0214,7,Międzybórz,gmina Międzybórz
 0214054,0214,8,Międzybórz,miasto Międzybórz
-0214055,0214,8,Międzybórz,obszar wiejski Międzybórz
+0214055,0214,8,Międzybórz,Międzybórz
 0214062,0214,7,Oleśnica,gmina Oleśnica
 0214073,0214,7,Syców,gmina Syców
 0214074,0214,8,Syców,miasto Syców
-0214075,0214,8,Syców,obszar wiejski Syców
+0214075,0214,8,Syców,Syców
 0214083,0214,7,Twardogóra,gmina Twardogóra
 0214084,0214,8,Twardogóra,miasto Twardogóra
-0214085,0214,8,Twardogóra,obszar wiejski Twardogóra
+0214085,0214,8,Twardogóra,Twardogóra
 0215,02,6,oławski,powiat oławski
 0215011,0215,7,Oława,gmina Oława
 0215022,0215,7,Domaniów,gmina Domaniów
 0215033,0215,7,Jelcz-Laskowice,gmina Jelcz-Laskowice
 0215034,0215,8,Jelcz-Laskowice,miasto Jelcz-Laskowice
-0215035,0215,8,Jelcz-Laskowice,obszar wiejski Jelcz-Laskowice
+0215035,0215,8,Jelcz-Laskowice,Jelcz-Laskowice
 0215042,0215,7,Oława,gmina Oława
 0216,02,6,polkowicki,powiat polkowicki
 0216013,0216,7,Chocianów,gmina Chocianów
 0216014,0216,8,Chocianów,miasto Chocianów
-0216015,0216,8,Chocianów,obszar wiejski Chocianów
+0216015,0216,8,Chocianów,Chocianów
 0216022,0216,7,Gaworzyce,gmina Gaworzyce
 0216032,0216,7,Grębocice,gmina Grębocice
 0216043,0216,7,Polkowice,gmina Polkowice
 0216044,0216,8,Polkowice,miasto Polkowice
-0216045,0216,8,Polkowice,obszar wiejski Polkowice
+0216045,0216,8,Polkowice,Polkowice
 0216053,0216,7,Przemków,gmina Przemków
 0216054,0216,8,Przemków,miasto Przemków
-0216055,0216,8,Przemków,obszar wiejski Przemków
+0216055,0216,8,Przemków,Przemków
 0216062,0216,7,Radwanice,gmina Radwanice
 0217,02,6,strzeliński,powiat strzeliński
 0217012,0217,7,Borów,gmina Borów
@@ -184,17 +184,17 @@ id,parent_id,admin_level,name,relation_name
 0217032,0217,7,Przeworno,gmina Przeworno
 0217043,0217,7,Strzelin,gmina Strzelin
 0217044,0217,8,Strzelin,miasto Strzelin
-0217045,0217,8,Strzelin,obszar wiejski Strzelin
+0217045,0217,8,Strzelin,Strzelin
 0217053,0217,7,Wiązów,gmina Wiązów
 0217054,0217,8,Wiązów,miasto Wiązów
-0217055,0217,8,Wiązów,obszar wiejski Wiązów
+0217055,0217,8,Wiązów,Wiązów
 0218,02,6,średzki,powiat średzki
 0218012,0218,7,Kostomłoty,gmina Kostomłoty
 0218022,0218,7,Malczyce,gmina Malczyce
 0218032,0218,7,Miękinia,gmina Miękinia
 0218043,0218,7,Środa Śląska,gmina Środa Śląska
 0218044,0218,8,Środa Śląska,miasto Środa Śląska
-0218045,0218,8,Środa Śląska,obszar wiejski Środa Śląska
+0218045,0218,8,Środa Śląska,Środa Śląska
 0218052,0218,7,Udanin,gmina Udanin
 0219,02,6,świdnicki,powiat świdnicki
 0219011,0219,7,Świdnica,gmina Świdnica
@@ -202,30 +202,30 @@ id,parent_id,admin_level,name,relation_name
 0219032,0219,7,Dobromierz,gmina Dobromierz
 0219043,0219,7,Jaworzyna Śląska,gmina Jaworzyna Śląska
 0219044,0219,8,Jaworzyna Śląska,miasto Jaworzyna Śląska
-0219045,0219,8,Jaworzyna Śląska,obszar wiejski Jaworzyna Śląska
+0219045,0219,8,Jaworzyna Śląska,Jaworzyna Śląska
 0219052,0219,7,Marcinowice,gmina Marcinowice
 0219063,0219,7,Strzegom,gmina Strzegom
 0219064,0219,8,Strzegom,miasto Strzegom
-0219065,0219,8,Strzegom,obszar wiejski Strzegom
+0219065,0219,8,Strzegom,Strzegom
 0219072,0219,7,Świdnica,gmina Świdnica
 0219083,0219,7,Żarów,gmina Żarów
 0219084,0219,8,Żarów,miasto Żarów
-0219085,0219,8,Żarów,obszar wiejski Żarów
+0219085,0219,8,Żarów,Żarów
 0220,02,6,trzebnicki,powiat trzebnicki
 0220013,0220,7,Oborniki Śląskie,gmina Oborniki Śląskie
 0220014,0220,8,Oborniki Śląskie,miasto Oborniki Śląskie
-0220015,0220,8,Oborniki Śląskie,obszar wiejski Oborniki Śląskie
+0220015,0220,8,Oborniki Śląskie,Oborniki Śląskie
 0220023,0220,7,Prusice,gmina Prusice
 0220024,0220,8,Prusice,miasto Prusice
-0220025,0220,8,Prusice,obszar wiejski Prusice
+0220025,0220,8,Prusice,Prusice
 0220033,0220,7,Trzebnica,gmina Trzebnica
 0220034,0220,8,Trzebnica,miasto Trzebnica
-0220035,0220,8,Trzebnica,obszar wiejski Trzebnica
+0220035,0220,8,Trzebnica,Trzebnica
 0220042,0220,7,Wisznia Mała,gmina Wisznia Mała
 0220052,0220,7,Zawonia,gmina Zawonia
 0220063,0220,7,Żmigród,gmina Żmigród
 0220064,0220,8,Żmigród,miasto Żmigród
-0220065,0220,8,Żmigród,obszar wiejski Żmigród
+0220065,0220,8,Żmigród,Żmigród
 0221,02,6,wałbrzyski,powiat wałbrzyski
 0221011,0221,7,Boguszów-Gorce,gmina Boguszów-Gorce
 0221021,0221,7,Jedlina-Zdrój,gmina Jedlina-Zdrój
@@ -233,66 +233,66 @@ id,parent_id,admin_level,name,relation_name
 0221042,0221,7,Czarny Bór,gmina Czarny Bór
 0221053,0221,7,Głuszyca,gmina Głuszyca
 0221054,0221,8,Głuszyca,miasto Głuszyca
-0221055,0221,8,Głuszyca,obszar wiejski Głuszyca
+0221055,0221,8,Głuszyca,Głuszyca
 0221063,0221,7,Mieroszów,gmina Mieroszów
 0221064,0221,8,Mieroszów,miasto Mieroszów
-0221065,0221,8,Mieroszów,obszar wiejski Mieroszów
+0221065,0221,8,Mieroszów,Mieroszów
 0221072,0221,7,Stare Bogaczowice,gmina Stare Bogaczowice
 0221082,0221,7,Walim,gmina Walim
 0221091,0221,7,Wałbrzych,gmina Wałbrzych
 0222,02,6,wołowski,powiat wołowski
 0222013,0222,7,Brzeg Dolny,gmina Brzeg Dolny
 0222014,0222,8,Brzeg Dolny,miasto Brzeg Dolny
-0222015,0222,8,Brzeg Dolny,obszar wiejski Brzeg Dolny
+0222015,0222,8,Brzeg Dolny,Brzeg Dolny
 0222022,0222,7,Wińsko,gmina Wińsko
 0222033,0222,7,Wołów,gmina Wołów
 0222034,0222,8,Wołów,miasto Wołów
-0222035,0222,8,Wołów,obszar wiejski Wołów
+0222035,0222,8,Wołów,Wołów
 0223,02,6,wrocławski,powiat wrocławski
 0223012,0223,7,Czernica,gmina Czernica
 0223022,0223,7,Długołęka,gmina Długołęka
 0223032,0223,7,Jordanów Śląski,gmina Jordanów Śląski
 0223043,0223,7,Kąty Wrocławskie,gmina Kąty Wrocławskie
 0223044,0223,8,Kąty Wrocławskie,miasto Kąty Wrocławskie
-0223045,0223,8,Kąty Wrocławskie,obszar wiejski Kąty Wrocławskie
+0223045,0223,8,Kąty Wrocławskie,Kąty Wrocławskie
 0223052,0223,7,Kobierzyce,gmina Kobierzyce
 0223062,0223,7,Mietków,gmina Mietków
 0223073,0223,7,Sobótka,gmina Sobótka
 0223074,0223,8,Sobótka,miasto Sobótka
-0223075,0223,8,Sobótka,obszar wiejski Sobótka
+0223075,0223,8,Sobótka,Sobótka
 0223083,0223,7,Siechnice,gmina Siechnice
 0223084,0223,8,Siechnice,miasto Siechnice
-0223085,0223,8,Siechnice,obszar wiejski Siechnice
+0223085,0223,8,Siechnice,Siechnice
 0223092,0223,7,Żórawina,gmina Żórawina
 0224,02,6,ząbkowicki,powiat ząbkowicki
 0224013,0224,7,Bardo,gmina Bardo
 0224014,0224,8,Bardo,miasto Bardo
-0224015,0224,8,Bardo,obszar wiejski Bardo
+0224015,0224,8,Bardo,Bardo
 0224022,0224,7,Ciepłowody,gmina Ciepłowody
 0224032,0224,7,Kamieniec Ząbkowicki,gmina Kamieniec Ząbkowicki
 0224042,0224,7,Stoszowice,gmina Stoszowice
 0224053,0224,7,Ząbkowice Śląskie,gmina Ząbkowice Śląskie
 0224054,0224,8,Ząbkowice Śląskie,miasto Ząbkowice Śląskie
-0224055,0224,8,Ząbkowice Śląskie,obszar wiejski Ząbkowice Śląskie
+0224055,0224,8,Ząbkowice Śląskie,Ząbkowice Śląskie
 0224063,0224,7,Ziębice,gmina Ziębice
 0224064,0224,8,Ziębice,miasto Ziębice
-0224065,0224,8,Ziębice,obszar wiejski Ziębice
+0224065,0224,8,Ziębice,Ziębice
 0224073,0224,7,Złoty Stok,gmina Złoty Stok
 0224074,0224,8,Złoty Stok,miasto Złoty Stok
-0224075,0224,8,Złoty Stok,obszar wiejski Złoty Stok
+0224075,0224,8,Złoty Stok,Złoty Stok
 0225,02,6,zgorzelecki,powiat zgorzelecki
 0225011,0225,7,Zawidów,gmina Zawidów
 0225021,0225,7,Zgorzelec,gmina Zgorzelec
 0225033,0225,7,Bogatynia,gmina Bogatynia
 0225034,0225,8,Bogatynia,miasto Bogatynia
-0225035,0225,8,Bogatynia,obszar wiejski Bogatynia
+0225035,0225,8,Bogatynia,Bogatynia
 0225043,0225,7,Pieńsk,gmina Pieńsk
 0225044,0225,8,Pieńsk,miasto Pieńsk
-0225045,0225,8,Pieńsk,obszar wiejski Pieńsk
+0225045,0225,8,Pieńsk,Pieńsk
 0225052,0225,7,Sulików,gmina Sulików
 0225063,0225,7,Węgliniec,gmina Węgliniec
 0225064,0225,8,Węgliniec,miasto Węgliniec
-0225065,0225,8,Węgliniec,obszar wiejski Węgliniec
+0225065,0225,8,Węgliniec,Węgliniec
 0225072,0225,7,Zgorzelec,gmina Zgorzelec
 0226,02,6,złotoryjski,powiat złotoryjski
 0226011,0226,7,Wojcieszów,gmina Wojcieszów
@@ -300,20 +300,20 @@ id,parent_id,admin_level,name,relation_name
 0226032,0226,7,Pielgrzymka,gmina Pielgrzymka
 0226043,0226,7,Świerzawa,gmina Świerzawa
 0226044,0226,8,Świerzawa,miasto Świerzawa
-0226045,0226,8,Świerzawa,obszar wiejski Świerzawa
+0226045,0226,8,Świerzawa,Świerzawa
 0226052,0226,7,Zagrodno,gmina Zagrodno
 0226062,0226,7,Złotoryja,gmina Złotoryja
-0261,02,6,Jelenia Góra,miasto na prawach powiatu Jelenia Góra
+0261,02,6,Jelenia Góra,Jelenia Góra
 0261011,0261,7,Jelenia Góra,gmina Jelenia Góra
-0262,02,6,Legnica,miasto na prawach powiatu Legnica
+0262,02,6,Legnica,Legnica
 0262011,0262,7,Legnica,gmina Legnica
-0264,02,6,Wrocław,miasto na prawach powiatu Wrocław
+0264,02,6,Wrocław,Wrocław
 0264011,0264,7,Wrocław,gmina Wrocław
-0264029,0264,,Wrocław-Fabryczna,delegatura Wrocław-Fabryczna
-0264039,0264,,Wrocław-Krzyki,delegatura Wrocław-Krzyki
-0264049,0264,,Wrocław-Psie Pole,delegatura Wrocław-Psie Pole
-0264059,0264,,Wrocław-Stare Miasto,delegatura Wrocław-Stare Miasto
-0264069,0264,,Wrocław-Śródmieście,delegatura Wrocław-Śródmieście
+0264029,0264,,Wrocław-Fabryczna,Wrocław-Fabryczna
+0264039,0264,,Wrocław-Krzyki,Wrocław-Krzyki
+0264049,0264,,Wrocław-Psie Pole,Wrocław-Psie Pole
+0264059,0264,,Wrocław-Stare Miasto,Wrocław-Stare Miasto
+0264069,0264,,Wrocław-Śródmieście,Wrocław-Śródmieście
 04,1,4,kujawsko-pomorskie,województwo kujawsko-pomorskie
 0401,04,6,aleksandrowski,powiat aleksandrowski
 0401011,0401,7,Aleksandrów Kujawski,gmina Aleksandrów Kujawski
@@ -332,11 +332,11 @@ id,parent_id,admin_level,name,relation_name
 0402042,0402,7,Brzozie,gmina Brzozie
 0402053,0402,7,Górzno,gmina Górzno
 0402054,0402,8,Górzno,miasto Górzno
-0402055,0402,8,Górzno,obszar wiejski Górzno
+0402055,0402,8,Górzno,Górzno
 0402062,0402,7,Bartniczka,gmina Bartniczka
 0402073,0402,7,Jabłonowo Pomorskie,gmina Jabłonowo Pomorskie
 0402074,0402,8,Jabłonowo Pomorskie,miasto Jabłonowo Pomorskie
-0402075,0402,8,Jabłonowo Pomorskie,obszar wiejski Jabłonowo Pomorskie
+0402075,0402,8,Jabłonowo Pomorskie,Jabłonowo Pomorskie
 0402082,0402,7,Osiek,gmina Osiek
 0402092,0402,7,Świedziebnia,gmina Świedziebnia
 0402102,0402,7,Zbiczno,gmina Zbiczno
@@ -346,13 +346,13 @@ id,parent_id,admin_level,name,relation_name
 0403032,0403,7,Dobrcz,gmina Dobrcz
 0403043,0403,7,Koronowo,gmina Koronowo
 0403044,0403,8,Koronowo,miasto Koronowo
-0403045,0403,8,Koronowo,obszar wiejski Koronowo
+0403045,0403,8,Koronowo,Koronowo
 0403052,0403,7,Nowa Wieś Wielka,gmina Nowa Wieś Wielka
 0403062,0403,7,Osielsko,gmina Osielsko
 0403072,0403,7,Sicienko,gmina Sicienko
 0403083,0403,7,Solec Kujawski,gmina Solec Kujawski
 0403084,0403,8,Solec Kujawski,miasto Solec Kujawski
-0403085,0403,8,Solec Kujawski,obszar wiejski Solec Kujawski
+0403085,0403,8,Solec Kujawski,Solec Kujawski
 0404,04,6,chełmiński,powiat chełmiński
 0404011,0404,7,Chełmno,gmina Chełmno
 0404022,0404,7,Chełmno,gmina Chełmno
@@ -367,7 +367,7 @@ id,parent_id,admin_level,name,relation_name
 0405032,0405,7,Golub-Dobrzyń,gmina Golub-Dobrzyń
 0405043,0405,7,Kowalewo Pomorskie,gmina Kowalewo Pomorskie
 0405044,0405,8,Kowalewo Pomorskie,miasto Kowalewo Pomorskie
-0405045,0405,8,Kowalewo Pomorskie,obszar wiejski Kowalewo Pomorskie
+0405045,0405,8,Kowalewo Pomorskie,Kowalewo Pomorskie
 0405052,0405,7,Radomin,gmina Radomin
 0405062,0405,7,Zbójno,gmina Zbójno
 0406,04,6,grudziądzki,powiat grudziądzki
@@ -375,10 +375,10 @@ id,parent_id,admin_level,name,relation_name
 0406022,0406,7,Gruta,gmina Gruta
 0406033,0406,7,Łasin,gmina Łasin
 0406034,0406,8,Łasin,miasto Łasin
-0406035,0406,8,Łasin,obszar wiejski Łasin
+0406035,0406,8,Łasin,Łasin
 0406043,0406,7,Radzyń Chełmiński,gmina Radzyń Chełmiński
 0406044,0406,8,Radzyń Chełmiński,miasto Radzyń Chełmiński
-0406045,0406,8,Radzyń Chełmiński,obszar wiejski Radzyń Chełmiński
+0406045,0406,8,Radzyń Chełmiński,Radzyń Chełmiński
 0406052,0406,7,Rogóźno,gmina Rogóźno
 0406062,0406,7,Świecie nad Osą,gmina Świecie nad Osą
 0407,04,6,inowrocławski,powiat inowrocławski
@@ -386,17 +386,17 @@ id,parent_id,admin_level,name,relation_name
 0407022,0407,7,Dąbrowa Biskupia,gmina Dąbrowa Biskupia
 0407033,0407,7,Gniewkowo,gmina Gniewkowo
 0407034,0407,8,Gniewkowo,miasto Gniewkowo
-0407035,0407,8,Gniewkowo,obszar wiejski Gniewkowo
+0407035,0407,8,Gniewkowo,Gniewkowo
 0407042,0407,7,Inowrocław,gmina Inowrocław
 0407053,0407,7,Janikowo,gmina Janikowo
 0407054,0407,8,Janikowo,miasto Janikowo
-0407055,0407,8,Janikowo,obszar wiejski Janikowo
+0407055,0407,8,Janikowo,Janikowo
 0407063,0407,7,Kruszwica,gmina Kruszwica
 0407064,0407,8,Kruszwica,miasto Kruszwica
-0407065,0407,8,Kruszwica,obszar wiejski Kruszwica
+0407065,0407,8,Kruszwica,Kruszwica
 0407073,0407,7,Pakość,gmina Pakość
 0407074,0407,8,Pakość,miasto Pakość
-0407075,0407,8,Pakość,obszar wiejski Pakość
+0407075,0407,8,Pakość,Pakość
 0407082,0407,7,Rojewo,gmina Rojewo
 0407092,0407,7,Złotniki Kujawskie,gmina Złotniki Kujawskie
 0408,04,6,lipnowski,powiat lipnowski
@@ -405,12 +405,12 @@ id,parent_id,admin_level,name,relation_name
 0408032,0408,7,Chrostkowo,gmina Chrostkowo
 0408043,0408,7,Dobrzyń nad Wisłą,gmina Dobrzyń nad Wisłą
 0408044,0408,8,Dobrzyń nad Wisłą,miasto Dobrzyń nad Wisłą
-0408045,0408,8,Dobrzyń nad Wisłą,obszar wiejski Dobrzyń nad Wisłą
+0408045,0408,8,Dobrzyń nad Wisłą,Dobrzyń nad Wisłą
 0408052,0408,7,Kikół,gmina Kikół
 0408062,0408,7,Lipno,gmina Lipno
 0408073,0408,7,Skępe,gmina Skępe
 0408074,0408,8,Skępe,miasto Skępe
-0408075,0408,8,Skępe,obszar wiejski Skępe
+0408075,0408,8,Skępe,Skępe
 0408082,0408,7,Tłuchowo,gmina Tłuchowo
 0408092,0408,7,Wielgie,gmina Wielgie
 0409,04,6,mogileński,powiat mogileński
@@ -418,24 +418,24 @@ id,parent_id,admin_level,name,relation_name
 0409022,0409,7,Jeziora Wielkie,gmina Jeziora Wielkie
 0409033,0409,7,Mogilno,gmina Mogilno
 0409034,0409,8,Mogilno,miasto Mogilno
-0409035,0409,8,Mogilno,obszar wiejski Mogilno
+0409035,0409,8,Mogilno,Mogilno
 0409043,0409,7,Strzelno,gmina Strzelno
 0409044,0409,8,Strzelno,miasto Strzelno
-0409045,0409,8,Strzelno,obszar wiejski Strzelno
+0409045,0409,8,Strzelno,Strzelno
 0410,04,6,nakielski,powiat nakielski
 0410013,0410,7,Kcynia,gmina Kcynia
 0410014,0410,8,Kcynia,miasto Kcynia
-0410015,0410,8,Kcynia,obszar wiejski Kcynia
+0410015,0410,8,Kcynia,Kcynia
 0410023,0410,7,Mrocza,gmina Mrocza
 0410024,0410,8,Mrocza,miasto Mrocza
-0410025,0410,8,Mrocza,obszar wiejski Mrocza
+0410025,0410,8,Mrocza,Mrocza
 0410033,0410,7,Nakło nad Notecią,gmina Nakło nad Notecią
 0410034,0410,8,Nakło nad Notecią,miasto Nakło nad Notecią
-0410035,0410,8,Nakło nad Notecią,obszar wiejski Nakło nad Notecią
+0410035,0410,8,Nakło nad Notecią,Nakło nad Notecią
 0410042,0410,7,Sadki,gmina Sadki
 0410053,0410,7,Szubin,gmina Szubin
 0410054,0410,8,Szubin,miasto Szubin
-0410055,0410,8,Szubin,obszar wiejski Szubin
+0410055,0410,8,Szubin,Szubin
 0411,04,6,radziejowski,powiat radziejowski
 0411011,0411,7,Radziejów,gmina Radziejów
 0411022,0411,7,Bytoń,gmina Bytoń
@@ -443,7 +443,7 @@ id,parent_id,admin_level,name,relation_name
 0411042,0411,7,Osięciny,gmina Osięciny
 0411053,0411,7,Piotrków Kujawski,gmina Piotrków Kujawski
 0411054,0411,8,Piotrków Kujawski,miasto Piotrków Kujawski
-0411055,0411,8,Piotrków Kujawski,obszar wiejski Piotrków Kujawski
+0411055,0411,8,Piotrków Kujawski,Piotrków Kujawski
 0411062,0411,7,Radziejów,gmina Radziejów
 0411072,0411,7,Topólka,gmina Topólka
 0412,04,6,rypiński,powiat rypiński
@@ -456,14 +456,14 @@ id,parent_id,admin_level,name,relation_name
 0413,04,6,sępoleński,powiat sępoleński
 0413013,0413,7,Kamień Krajeński,gmina Kamień Krajeński
 0413014,0413,8,Kamień Krajeński,miasto Kamień Krajeński
-0413015,0413,8,Kamień Krajeński,obszar wiejski Kamień Krajeński
+0413015,0413,8,Kamień Krajeński,Kamień Krajeński
 0413023,0413,7,Sępólno Krajeńskie,gmina Sępólno Krajeńskie
 0413024,0413,8,Sępólno Krajeńskie,miasto Sępólno Krajeńskie
-0413025,0413,8,Sępólno Krajeńskie,obszar wiejski Sępólno Krajeńskie
+0413025,0413,8,Sępólno Krajeńskie,Sępólno Krajeńskie
 0413032,0413,7,Sośno,gmina Sośno
 0413043,0413,7,Więcbork,gmina Więcbork
 0413044,0413,8,Więcbork,miasto Więcbork
-0413045,0413,8,Więcbork,obszar wiejski Więcbork
+0413045,0413,8,Więcbork,Więcbork
 0414,04,6,świecki,powiat świecki
 0414012,0414,7,Bukowiec,gmina Bukowiec
 0414022,0414,7,Dragacz,gmina Dragacz
@@ -472,12 +472,12 @@ id,parent_id,admin_level,name,relation_name
 0414052,0414,7,Lniano,gmina Lniano
 0414063,0414,7,Nowe,gmina Nowe
 0414064,0414,8,Nowe,miasto Nowe
-0414065,0414,8,Nowe,obszar wiejski Nowe
+0414065,0414,8,Nowe,Nowe
 0414072,0414,7,Osie,gmina Osie
 0414082,0414,7,Pruszcz,gmina Pruszcz
 0414093,0414,7,Świecie,gmina Świecie
 0414094,0414,8,Świecie,miasto Świecie
-0414095,0414,8,Świecie,obszar wiejski Świecie
+0414095,0414,8,Świecie,Świecie
 0414102,0414,7,Świekatowo,gmina Świekatowo
 0414112,0414,7,Warlubie,gmina Warlubie
 0415,04,6,toruński,powiat toruński
@@ -498,7 +498,7 @@ id,parent_id,admin_level,name,relation_name
 0416052,0416,7,Śliwice,gmina Śliwice
 0416063,0416,7,Tuchola,gmina Tuchola
 0416064,0416,8,Tuchola,miasto Tuchola
-0416065,0416,8,Tuchola,obszar wiejski Tuchola
+0416065,0416,8,Tuchola,Tuchola
 0417,04,6,wąbrzeski,powiat wąbrzeski
 0417011,0417,7,Wąbrzeźno,gmina Wąbrzeźno
 0417022,0417,7,Dębowa Łąka,gmina Dębowa Łąka
@@ -511,46 +511,46 @@ id,parent_id,admin_level,name,relation_name
 0418032,0418,7,Boniewo,gmina Boniewo
 0418043,0418,7,Brześć Kujawski,gmina Brześć Kujawski
 0418044,0418,8,Brześć Kujawski,miasto Brześć Kujawski
-0418045,0418,8,Brześć Kujawski,obszar wiejski Brześć Kujawski
+0418045,0418,8,Brześć Kujawski,Brześć Kujawski
 0418052,0418,7,Choceń,gmina Choceń
 0418063,0418,7,Chodecz,gmina Chodecz
 0418064,0418,8,Chodecz,miasto Chodecz
-0418065,0418,8,Chodecz,obszar wiejski Chodecz
+0418065,0418,8,Chodecz,Chodecz
 0418072,0418,7,Fabianki,gmina Fabianki
 0418083,0418,7,Izbica Kujawska,gmina Izbica Kujawska
 0418084,0418,8,Izbica Kujawska,miasto Izbica Kujawska
-0418085,0418,8,Izbica Kujawska,obszar wiejski Izbica Kujawska
+0418085,0418,8,Izbica Kujawska,Izbica Kujawska
 0418092,0418,7,Kowal,gmina Kowal
 0418102,0418,7,Lubanie,gmina Lubanie
 0418113,0418,7,Lubień Kujawski,gmina Lubień Kujawski
 0418114,0418,8,Lubień Kujawski,miasto Lubień Kujawski
-0418115,0418,8,Lubień Kujawski,obszar wiejski Lubień Kujawski
+0418115,0418,8,Lubień Kujawski,Lubień Kujawski
 0418123,0418,7,Lubraniec,gmina Lubraniec
 0418124,0418,8,Lubraniec,miasto Lubraniec
-0418125,0418,8,Lubraniec,obszar wiejski Lubraniec
+0418125,0418,8,Lubraniec,Lubraniec
 0418132,0418,7,Włocławek,gmina Włocławek
 0419,04,6,żniński,powiat żniński
 0419013,0419,7,Barcin,gmina Barcin
 0419014,0419,8,Barcin,miasto Barcin
-0419015,0419,8,Barcin,obszar wiejski Barcin
+0419015,0419,8,Barcin,Barcin
 0419022,0419,7,Gąsawa,gmina Gąsawa
 0419033,0419,7,Janowiec Wielkopolski,gmina Janowiec Wielkopolski
 0419034,0419,8,Janowiec Wielkopolski,miasto Janowiec Wielkopolski
-0419035,0419,8,Janowiec Wielkopolski,obszar wiejski Janowiec Wielkopolski
+0419035,0419,8,Janowiec Wielkopolski,Janowiec Wielkopolski
 0419043,0419,7,Łabiszyn,gmina Łabiszyn
 0419044,0419,8,Łabiszyn,miasto Łabiszyn
-0419045,0419,8,Łabiszyn,obszar wiejski Łabiszyn
+0419045,0419,8,Łabiszyn,Łabiszyn
 0419052,0419,7,Rogowo,gmina Rogowo
 0419063,0419,7,Żnin,gmina Żnin
 0419064,0419,8,Żnin,miasto Żnin
-0419065,0419,8,Żnin,obszar wiejski Żnin
-0461,04,6,Bydgoszcz,miasto na prawach powiatu Bydgoszcz
+0419065,0419,8,Żnin,Żnin
+0461,04,6,Bydgoszcz,Bydgoszcz
 0461011,0461,7,Bydgoszcz,gmina Bydgoszcz
-0462,04,6,Grudziądz,miasto na prawach powiatu Grudziądz
+0462,04,6,Grudziądz,Grudziądz
 0462011,0462,7,Grudziądz,gmina Grudziądz
-0463,04,6,Toruń,miasto na prawach powiatu Toruń
+0463,04,6,Toruń,Toruń
 0463011,0463,7,Toruń,gmina Toruń
-0464,04,6,Włocławek,miasto na prawach powiatu Włocławek
+0464,04,6,Włocławek,Włocławek
 0464011,0464,7,Włocławek,gmina Włocławek
 06,1,4,lubelskie,województwo lubelskie
 0601,06,6,bialski,powiat bialski
@@ -580,18 +580,18 @@ id,parent_id,admin_level,name,relation_name
 0602042,0602,7,Biszcza,gmina Biszcza
 0602053,0602,7,Frampol,gmina Frampol
 0602054,0602,8,Frampol,miasto Frampol
-0602055,0602,8,Frampol,obszar wiejski Frampol
+0602055,0602,8,Frampol,Frampol
 0602062,0602,7,Goraj,gmina Goraj
 0602073,0602,7,Józefów,gmina Józefów
 0602074,0602,8,Józefów,miasto Józefów
-0602075,0602,8,Józefów,obszar wiejski Józefów
+0602075,0602,8,Józefów,Józefów
 0602082,0602,7,Księżpol,gmina Księżpol
 0602092,0602,7,Łukowa,gmina Łukowa
 0602102,0602,7,Obsza,gmina Obsza
 0602112,0602,7,Potok Górny,gmina Potok Górny
 0602123,0602,7,Tarnogród,gmina Tarnogród
 0602124,0602,8,Tarnogród,miasto Tarnogród
-0602125,0602,8,Tarnogród,obszar wiejski Tarnogród
+0602125,0602,8,Tarnogród,Tarnogród
 0602132,0602,7,Tereszpol,gmina Tereszpol
 0602142,0602,7,Turobin,gmina Turobin
 0603,06,6,chełmski,powiat chełmski
@@ -626,7 +626,7 @@ id,parent_id,admin_level,name,relation_name
 0605042,0605,7,Godziszów,gmina Godziszów
 0605053,0605,7,Janów Lubelski,gmina Janów Lubelski
 0605054,0605,8,Janów Lubelski,miasto Janów Lubelski
-0605055,0605,8,Janów Lubelski,obszar wiejski Janów Lubelski
+0605055,0605,8,Janów Lubelski,Janów Lubelski
 0605062,0605,7,Modliborzyce,gmina Modliborzyce
 0605072,0605,7,Potok Wielki,gmina Potok Wielki
 0606,06,6,krasnostawski,powiat krasnostawski
@@ -644,7 +644,7 @@ id,parent_id,admin_level,name,relation_name
 0607011,0607,7,Kraśnik,gmina Kraśnik
 0607023,0607,7,Annopol,gmina Annopol
 0607024,0607,8,Annopol,miasto Annopol
-0607025,0607,8,Annopol,obszar wiejski Annopol
+0607025,0607,8,Annopol,Annopol
 0607032,0607,7,Dzierzkowice,gmina Dzierzkowice
 0607042,0607,7,Gościeradów,gmina Gościeradów
 0607052,0607,7,Kraśnik,gmina Kraśnik
@@ -661,24 +661,24 @@ id,parent_id,admin_level,name,relation_name
 0608052,0608,7,Kamionka,gmina Kamionka
 0608063,0608,7,Kock,gmina Kock
 0608064,0608,8,Kock,miasto Kock
-0608065,0608,8,Kock,obszar wiejski Kock
+0608065,0608,8,Kock,Kock
 0608072,0608,7,Lubartów,gmina Lubartów
 0608082,0608,7,Michów,gmina Michów
 0608092,0608,7,Niedźwiada,gmina Niedźwiada
 0608103,0608,7,Ostrów Lubelski,gmina Ostrów Lubelski
 0608104,0608,8,Ostrów Lubelski,miasto Ostrów Lubelski
-0608105,0608,8,Ostrów Lubelski,obszar wiejski Ostrów Lubelski
+0608105,0608,8,Ostrów Lubelski,Ostrów Lubelski
 0608112,0608,7,Ostrówek,gmina Ostrówek
 0608122,0608,7,Serniki,gmina Serniki
 0608132,0608,7,Uścimów,gmina Uścimów
 0609,06,6,lubelski,powiat lubelski
 0609013,0609,7,Bełżyce,gmina Bełżyce
 0609014,0609,8,Bełżyce,miasto Bełżyce
-0609015,0609,8,Bełżyce,obszar wiejski Bełżyce
+0609015,0609,8,Bełżyce,Bełżyce
 0609022,0609,7,Borzechów,gmina Borzechów
 0609033,0609,7,Bychawa,gmina Bychawa
 0609034,0609,8,Bychawa,miasto Bychawa
-0609035,0609,8,Bychawa,obszar wiejski Bychawa
+0609035,0609,8,Bychawa,Bychawa
 0609042,0609,7,Garbów,gmina Garbów
 0609052,0609,7,Głusk,gmina Głusk
 0609062,0609,7,Jabłonna,gmina Jabłonna
@@ -697,7 +697,7 @@ id,parent_id,admin_level,name,relation_name
 0610022,0610,7,Ludwin,gmina Ludwin
 0610033,0610,7,Łęczna,gmina Łęczna
 0610034,0610,8,Łęczna,miasto Łęczna
-0610035,0610,8,Łęczna,obszar wiejski Łęczna
+0610035,0610,8,Łęczna,Łęczna
 0610042,0610,7,Milejów,gmina Milejów
 0610052,0610,7,Puchaczów,gmina Puchaczów
 0610062,0610,7,Spiczyn,gmina Spiczyn
@@ -720,10 +720,10 @@ id,parent_id,admin_level,name,relation_name
 0612042,0612,7,Łaziska,gmina Łaziska
 0612053,0612,7,Opole Lubelskie,gmina Opole Lubelskie
 0612054,0612,8,Opole Lubelskie,miasto Opole Lubelskie
-0612055,0612,8,Opole Lubelskie,obszar wiejski Opole Lubelskie
+0612055,0612,8,Opole Lubelskie,Opole Lubelskie
 0612063,0612,7,Poniatowa,gmina Poniatowa
 0612064,0612,8,Poniatowa,miasto Poniatowa
-0612065,0612,8,Poniatowa,obszar wiejski Poniatowa
+0612065,0612,8,Poniatowa,Poniatowa
 0612072,0612,7,Wilków,gmina Wilków
 0613,06,6,parczewski,powiat parczewski
 0613012,0613,7,Dębowa Kłoda,gmina Dębowa Kłoda
@@ -731,7 +731,7 @@ id,parent_id,admin_level,name,relation_name
 0613032,0613,7,Milanów,gmina Milanów
 0613043,0613,7,Parczew,gmina Parczew
 0613044,0613,8,Parczew,miasto Parczew
-0613045,0613,8,Parczew,obszar wiejski Parczew
+0613045,0613,8,Parczew,Parczew
 0613052,0613,7,Podedwórze,gmina Podedwórze
 0613062,0613,7,Siemień,gmina Siemień
 0613072,0613,7,Sosnowica,gmina Sosnowica
@@ -741,13 +741,13 @@ id,parent_id,admin_level,name,relation_name
 0614032,0614,7,Janowiec,gmina Janowiec
 0614043,0614,7,Kazimierz Dolny,gmina Kazimierz Dolny
 0614044,0614,8,Kazimierz Dolny,miasto Kazimierz Dolny
-0614045,0614,8,Kazimierz Dolny,obszar wiejski Kazimierz Dolny
+0614045,0614,8,Kazimierz Dolny,Kazimierz Dolny
 0614052,0614,7,Końskowola,gmina Końskowola
 0614062,0614,7,Kurów,gmina Kurów
 0614072,0614,7,Markuszów,gmina Markuszów
 0614083,0614,7,Nałęczów,gmina Nałęczów
 0614084,0614,8,Nałęczów,miasto Nałęczów
-0614085,0614,8,Nałęczów,obszar wiejski Nałęczów
+0614085,0614,8,Nałęczów,Nałęczów
 0614092,0614,7,Puławy,gmina Puławy
 0614102,0614,7,Wąwolnica,gmina Wąwolnica
 0614112,0614,7,Żyrzyn,gmina Żyrzyn
@@ -766,7 +766,7 @@ id,parent_id,admin_level,name,relation_name
 0616032,0616,7,Nowodwór,gmina Nowodwór
 0616043,0616,7,Ryki,gmina Ryki
 0616044,0616,8,Ryki,miasto Ryki
-0616045,0616,8,Ryki,obszar wiejski Ryki
+0616045,0616,8,Ryki,Ryki
 0616052,0616,7,Stężyca,gmina Stężyca
 0616062,0616,7,Ułęż,gmina Ułęż
 0617,06,6,świdnicki,powiat świdnicki
@@ -774,7 +774,7 @@ id,parent_id,admin_level,name,relation_name
 0617022,0617,7,Mełgiew,gmina Mełgiew
 0617033,0617,7,Piaski,gmina Piaski
 0617034,0617,8,Piaski,miasto Piaski
-0617035,0617,8,Piaski,obszar wiejski Piaski
+0617035,0617,8,Piaski,Piaski
 0617042,0617,7,Rybczewice,gmina Rybczewice
 0617052,0617,7,Trawniki,gmina Trawniki
 0618,06,6,tomaszowski,powiat tomaszowski
@@ -785,7 +785,7 @@ id,parent_id,admin_level,name,relation_name
 0618052,0618,7,Lubycza Królewska,gmina Lubycza Królewska
 0618063,0618,7,Łaszczów,gmina Łaszczów
 0618064,0618,8,Łaszczów,miasto Łaszczów
-0618065,0618,8,Łaszczów,obszar wiejski Łaszczów
+0618065,0618,8,Łaszczów,Łaszczów
 0618072,0618,7,Rachanie,gmina Rachanie
 0618082,0618,7,Susiec,gmina Susiec
 0618092,0618,7,Tarnawatka,gmina Tarnawatka
@@ -793,7 +793,7 @@ id,parent_id,admin_level,name,relation_name
 0618112,0618,7,Tomaszów Lubelski,gmina Tomaszów Lubelski
 0618123,0618,7,Tyszowce,gmina Tyszowce
 0618124,0618,8,Tyszowce,miasto Tyszowce
-0618125,0618,8,Tyszowce,obszar wiejski Tyszowce
+0618125,0618,8,Tyszowce,Tyszowce
 0618132,0618,7,Ulhówek,gmina Ulhówek
 0619,06,6,włodawski,powiat włodawski
 0619011,0619,7,Włodawa,gmina Włodawa
@@ -810,7 +810,7 @@ id,parent_id,admin_level,name,relation_name
 0620032,0620,7,Komarów-Osada,gmina Komarów-Osada
 0620043,0620,7,Krasnobród,gmina Krasnobród
 0620044,0620,8,Krasnobród,miasto Krasnobród
-0620045,0620,8,Krasnobród,obszar wiejski Krasnobród
+0620045,0620,8,Krasnobród,Krasnobród
 0620052,0620,7,Łabunie,gmina Łabunie
 0620062,0620,7,Miączyn,gmina Miączyn
 0620072,0620,7,Nielisz,gmina Nielisz
@@ -821,18 +821,18 @@ id,parent_id,admin_level,name,relation_name
 0620122,0620,7,Sułów,gmina Sułów
 0620133,0620,7,Szczebrzeszyn,gmina Szczebrzeszyn
 0620134,0620,8,Szczebrzeszyn,miasto Szczebrzeszyn
-0620135,0620,8,Szczebrzeszyn,obszar wiejski Szczebrzeszyn
+0620135,0620,8,Szczebrzeszyn,Szczebrzeszyn
 0620142,0620,7,Zamość,gmina Zamość
 0620153,0620,7,Zwierzyniec,gmina Zwierzyniec
 0620154,0620,8,Zwierzyniec,miasto Zwierzyniec
-0620155,0620,8,Zwierzyniec,obszar wiejski Zwierzyniec
-0661,06,6,Biała Podlaska,miasto na prawach powiatu Biała Podlaska
+0620155,0620,8,Zwierzyniec,Zwierzyniec
+0661,06,6,Biała Podlaska,Biała Podlaska
 0661011,0661,7,Biała Podlaska,gmina Biała Podlaska
-0662,06,6,Chełm,miasto na prawach powiatu Chełm
+0662,06,6,Chełm,Chełm
 0662011,0662,7,Chełm,gmina Chełm
-0663,06,6,Lublin,miasto na prawach powiatu Lublin
+0663,06,6,Lublin,Lublin
 0663011,0663,7,Lublin,gmina Lublin
-0664,06,6,Zamość,miasto na prawach powiatu Zamość
+0664,06,6,Zamość,Zamość
 0664011,0664,7,Zamość,gmina Zamość
 08,1,4,lubuskie,województwo lubuskie
 0801,08,6,gorzowski,powiat gorzowski
@@ -844,7 +844,7 @@ id,parent_id,admin_level,name,relation_name
 0801062,0801,7,Santok,gmina Santok
 0801073,0801,7,Witnica,gmina Witnica
 0801074,0801,8,Witnica,miasto Witnica
-0801075,0801,8,Witnica,obszar wiejski Witnica
+0801075,0801,8,Witnica,Witnica
 0802,08,6,krośnieński,powiat krośnieński
 0802011,0802,7,Gubin,gmina Gubin
 0802022,0802,7,Bobrowice,gmina Bobrowice
@@ -853,74 +853,74 @@ id,parent_id,admin_level,name,relation_name
 0802052,0802,7,Gubin,gmina Gubin
 0802063,0802,7,Krosno Odrzańskie,gmina Krosno Odrzańskie
 0802064,0802,8,Krosno Odrzańskie,miasto Krosno Odrzańskie
-0802065,0802,8,Krosno Odrzańskie,obszar wiejski Krosno Odrzańskie
+0802065,0802,8,Krosno Odrzańskie,Krosno Odrzańskie
 0802072,0802,7,Maszewo,gmina Maszewo
 0803,08,6,międzyrzecki,powiat międzyrzecki
 0803012,0803,7,Bledzew,gmina Bledzew
 0803023,0803,7,Międzyrzecz,gmina Międzyrzecz
 0803024,0803,8,Międzyrzecz,miasto Międzyrzecz
-0803025,0803,8,Międzyrzecz,obszar wiejski Międzyrzecz
+0803025,0803,8,Międzyrzecz,Międzyrzecz
 0803032,0803,7,Przytoczna,gmina Przytoczna
 0803042,0803,7,Pszczew,gmina Pszczew
 0803053,0803,7,Skwierzyna,gmina Skwierzyna
 0803054,0803,8,Skwierzyna,miasto Skwierzyna
-0803055,0803,8,Skwierzyna,obszar wiejski Skwierzyna
+0803055,0803,8,Skwierzyna,Skwierzyna
 0803063,0803,7,Trzciel,gmina Trzciel
 0803064,0803,8,Trzciel,miasto Trzciel
-0803065,0803,8,Trzciel,obszar wiejski Trzciel
+0803065,0803,8,Trzciel,Trzciel
 0804,08,6,nowosolski,powiat nowosolski
 0804011,0804,7,Nowa Sól,gmina Nowa Sól
 0804023,0804,7,Bytom Odrzański,gmina Bytom Odrzański
 0804024,0804,8,Bytom Odrzański,miasto Bytom Odrzański
-0804025,0804,8,Bytom Odrzański,obszar wiejski Bytom Odrzański
+0804025,0804,8,Bytom Odrzański,Bytom Odrzański
 0804032,0804,7,Kolsko,gmina Kolsko
 0804043,0804,7,Kożuchów,gmina Kożuchów
 0804044,0804,8,Kożuchów,miasto Kożuchów
-0804045,0804,8,Kożuchów,obszar wiejski Kożuchów
+0804045,0804,8,Kożuchów,Kożuchów
 0804052,0804,7,Nowa Sól,gmina Nowa Sól
 0804063,0804,7,Nowe Miasteczko,gmina Nowe Miasteczko
 0804064,0804,8,Nowe Miasteczko,miasto Nowe Miasteczko
-0804065,0804,8,Nowe Miasteczko,obszar wiejski Nowe Miasteczko
+0804065,0804,8,Nowe Miasteczko,Nowe Miasteczko
 0804072,0804,7,Otyń,gmina Otyń
 0804082,0804,7,Siedlisko,gmina Siedlisko
 0805,08,6,słubicki,powiat słubicki
 0805013,0805,7,Cybinka,gmina Cybinka
 0805014,0805,8,Cybinka,miasto Cybinka
-0805015,0805,8,Cybinka,obszar wiejski Cybinka
+0805015,0805,8,Cybinka,Cybinka
 0805022,0805,7,Górzyca,gmina Górzyca
 0805033,0805,7,Ośno Lubuskie,gmina Ośno Lubuskie
 0805034,0805,8,Ośno Lubuskie,miasto Ośno Lubuskie
-0805035,0805,8,Ośno Lubuskie,obszar wiejski Ośno Lubuskie
+0805035,0805,8,Ośno Lubuskie,Ośno Lubuskie
 0805043,0805,7,Rzepin,gmina Rzepin
 0805044,0805,8,Rzepin,miasto Rzepin
-0805045,0805,8,Rzepin,obszar wiejski Rzepin
+0805045,0805,8,Rzepin,Rzepin
 0805053,0805,7,Słubice,gmina Słubice
 0805054,0805,8,Słubice,miasto Słubice
-0805055,0805,8,Słubice,obszar wiejski Słubice
+0805055,0805,8,Słubice,Słubice
 0806,08,6,strzelecko-drezdenecki,powiat strzelecko-drezdenecki
 0806013,0806,7,Dobiegniew,gmina Dobiegniew
 0806014,0806,8,Dobiegniew,miasto Dobiegniew
-0806015,0806,8,Dobiegniew,obszar wiejski Dobiegniew
+0806015,0806,8,Dobiegniew,Dobiegniew
 0806023,0806,7,Drezdenko,gmina Drezdenko
 0806024,0806,8,Drezdenko,miasto Drezdenko
-0806025,0806,8,Drezdenko,obszar wiejski Drezdenko
+0806025,0806,8,Drezdenko,Drezdenko
 0806032,0806,7,Stare Kurowo,gmina Stare Kurowo
 0806043,0806,7,Strzelce Krajeńskie,gmina Strzelce Krajeńskie
 0806044,0806,8,Strzelce Krajeńskie,miasto Strzelce Krajeńskie
-0806045,0806,8,Strzelce Krajeńskie,obszar wiejski Strzelce Krajeńskie
+0806045,0806,8,Strzelce Krajeńskie,Strzelce Krajeńskie
 0806052,0806,7,Zwierzyn,gmina Zwierzyn
 0807,08,6,sulęciński,powiat sulęciński
 0807012,0807,7,Krzeszyce,gmina Krzeszyce
 0807023,0807,7,Lubniewice,gmina Lubniewice
 0807024,0807,8,Lubniewice,miasto Lubniewice
-0807025,0807,8,Lubniewice,obszar wiejski Lubniewice
+0807025,0807,8,Lubniewice,Lubniewice
 0807032,0807,7,Słońsk,gmina Słońsk
 0807043,0807,7,Sulęcin,gmina Sulęcin
 0807044,0807,8,Sulęcin,miasto Sulęcin
-0807045,0807,8,Sulęcin,obszar wiejski Sulęcin
+0807045,0807,8,Sulęcin,Sulęcin
 0807053,0807,7,Torzym,gmina Torzym
 0807054,0807,8,Torzym,miasto Torzym
-0807055,0807,8,Torzym,obszar wiejski Torzym
+0807055,0807,8,Torzym,Torzym
 0808,08,6,świebodziński,powiat świebodziński
 0808012,0808,7,Lubrza,gmina Lubrza
 0808022,0808,7,Łagów,gmina Łagów
@@ -928,27 +928,27 @@ id,parent_id,admin_level,name,relation_name
 0808042,0808,7,Szczaniec,gmina Szczaniec
 0808053,0808,7,Świebodzin,gmina Świebodzin
 0808054,0808,8,Świebodzin,miasto Świebodzin
-0808055,0808,8,Świebodzin,obszar wiejski Świebodzin
+0808055,0808,8,Świebodzin,Świebodzin
 0808063,0808,7,Zbąszynek,gmina Zbąszynek
 0808064,0808,8,Zbąszynek,miasto Zbąszynek
-0808065,0808,8,Zbąszynek,obszar wiejski Zbąszynek
+0808065,0808,8,Zbąszynek,Zbąszynek
 0809,08,6,zielonogórski,powiat zielonogórski
 0809013,0809,7,Babimost,gmina Babimost
 0809014,0809,8,Babimost,miasto Babimost
-0809015,0809,8,Babimost,obszar wiejski Babimost
+0809015,0809,8,Babimost,Babimost
 0809022,0809,7,Bojadła,gmina Bojadła
 0809033,0809,7,Czerwieńsk,gmina Czerwieńsk
 0809034,0809,8,Czerwieńsk,miasto Czerwieńsk
-0809035,0809,8,Czerwieńsk,obszar wiejski Czerwieńsk
+0809035,0809,8,Czerwieńsk,Czerwieńsk
 0809043,0809,7,Kargowa,gmina Kargowa
 0809044,0809,8,Kargowa,miasto Kargowa
-0809045,0809,8,Kargowa,obszar wiejski Kargowa
+0809045,0809,8,Kargowa,Kargowa
 0809053,0809,7,Nowogród Bobrzański,gmina Nowogród Bobrzański
 0809054,0809,8,Nowogród Bobrzański,miasto Nowogród Bobrzański
-0809055,0809,8,Nowogród Bobrzański,obszar wiejski Nowogród Bobrzański
+0809055,0809,8,Nowogród Bobrzański,Nowogród Bobrzański
 0809063,0809,7,Sulechów,gmina Sulechów
 0809064,0809,8,Sulechów,miasto Sulechów
-0809065,0809,8,Sulechów,obszar wiejski Sulechów
+0809065,0809,8,Sulechów,Sulechów
 0809072,0809,7,Świdnica,gmina Świdnica
 0809082,0809,7,Trzebiechów,gmina Trzebiechów
 0809092,0809,7,Zabór,gmina Zabór
@@ -959,14 +959,14 @@ id,parent_id,admin_level,name,relation_name
 0810032,0810,7,Brzeźnica,gmina Brzeźnica
 0810043,0810,7,Iłowa,gmina Iłowa
 0810044,0810,8,Iłowa,miasto Iłowa
-0810045,0810,8,Iłowa,obszar wiejski Iłowa
+0810045,0810,8,Iłowa,Iłowa
 0810053,0810,7,Małomice,gmina Małomice
 0810054,0810,8,Małomice,miasto Małomice
-0810055,0810,8,Małomice,obszar wiejski Małomice
+0810055,0810,8,Małomice,Małomice
 0810062,0810,7,Niegosławice,gmina Niegosławice
 0810073,0810,7,Szprotawa,gmina Szprotawa
 0810074,0810,8,Szprotawa,miasto Szprotawa
-0810075,0810,8,Szprotawa,obszar wiejski Szprotawa
+0810075,0810,8,Szprotawa,Szprotawa
 0810082,0810,7,Wymiarki,gmina Wymiarki
 0810092,0810,7,Żagań,gmina Żagań
 0811,08,6,żarski,powiat żarski
@@ -975,11 +975,11 @@ id,parent_id,admin_level,name,relation_name
 0811032,0811,7,Brody,gmina Brody
 0811043,0811,7,Jasień,gmina Jasień
 0811044,0811,8,Jasień,miasto Jasień
-0811045,0811,8,Jasień,obszar wiejski Jasień
+0811045,0811,8,Jasień,Jasień
 0811052,0811,7,Lipinki Łużyckie,gmina Lipinki Łużyckie
 0811063,0811,7,Lubsko,gmina Lubsko
 0811064,0811,8,Lubsko,miasto Lubsko
-0811065,0811,8,Lubsko,obszar wiejski Lubsko
+0811065,0811,8,Lubsko,Lubsko
 0811072,0811,7,Przewóz,gmina Przewóz
 0811082,0811,7,Trzebiel,gmina Trzebiel
 0811092,0811,7,Tuplice,gmina Tuplice
@@ -987,16 +987,16 @@ id,parent_id,admin_level,name,relation_name
 0812,08,6,wschowski,powiat wschowski
 0812013,0812,7,Sława,gmina Sława
 0812014,0812,8,Sława,miasto Sława
-0812015,0812,8,Sława,obszar wiejski Sława
+0812015,0812,8,Sława,Sława
 0812023,0812,7,Szlichtyngowa,gmina Szlichtyngowa
 0812024,0812,8,Szlichtyngowa,miasto Szlichtyngowa
-0812025,0812,8,Szlichtyngowa,obszar wiejski Szlichtyngowa
+0812025,0812,8,Szlichtyngowa,Szlichtyngowa
 0812033,0812,7,Wschowa,gmina Wschowa
 0812034,0812,8,Wschowa,miasto Wschowa
-0812035,0812,8,Wschowa,obszar wiejski Wschowa
-0861,08,6,Gorzów Wielkopolski,miasto na prawach powiatu Gorzów Wielkopolski
+0812035,0812,8,Wschowa,Wschowa
+0861,08,6,Gorzów Wielkopolski,Gorzów Wielkopolski
 0861011,0861,7,Gorzów Wielkopolski,gmina Gorzów Wielkopolski
-0862,08,6,Zielona Góra,miasto na prawach powiatu Zielona Góra
+0862,08,6,Zielona Góra,Zielona Góra
 0862011,0862,7,Zielona Góra,gmina Zielona Góra
 10,1,4,łódzkie,województwo łódzkie
 1001,10,6,bełchatowski,powiat bełchatowski
@@ -1009,14 +1009,14 @@ id,parent_id,admin_level,name,relation_name
 1001072,1001,7,Szczerców,gmina Szczerców
 1001083,1001,7,Zelów,gmina Zelów
 1001084,1001,8,Zelów,miasto Zelów
-1001085,1001,8,Zelów,obszar wiejski Zelów
+1001085,1001,8,Zelów,Zelów
 1002,10,6,kutnowski,powiat kutnowski
 1002011,1002,7,Kutno,gmina Kutno
 1002022,1002,7,Bedlno,gmina Bedlno
 1002032,1002,7,Dąbrowice,gmina Dąbrowice
 1002043,1002,7,Krośniewice,gmina Krośniewice
 1002044,1002,8,Krośniewice,miasto Krośniewice
-1002045,1002,8,Krośniewice,obszar wiejski Krośniewice
+1002045,1002,8,Krośniewice,Krośniewice
 1002052,1002,7,Krzyżanów,gmina Krzyżanów
 1002062,1002,7,Kutno,gmina Kutno
 1002072,1002,7,Łanięta,gmina Łanięta
@@ -1025,12 +1025,12 @@ id,parent_id,admin_level,name,relation_name
 1002102,1002,7,Strzelce,gmina Strzelce
 1002113,1002,7,Żychlin,gmina Żychlin
 1002114,1002,8,Żychlin,miasto Żychlin
-1002115,1002,8,Żychlin,obszar wiejski Żychlin
+1002115,1002,8,Żychlin,Żychlin
 1003,10,6,łaski,powiat łaski
 1003012,1003,7,Buczek,gmina Buczek
 1003023,1003,7,Łask,gmina Łask
 1003024,1003,8,Łask,miasto Łask
-1003025,1003,8,Łask,obszar wiejski Łask
+1003025,1003,8,Łask,Łask
 1003032,1003,7,Sędziejowice,gmina Sędziejowice
 1003042,1003,7,Widawa,gmina Widawa
 1003052,1003,7,Wodzierady,gmina Wodzierady
@@ -1059,23 +1059,23 @@ id,parent_id,admin_level,name,relation_name
 1006032,1006,7,Brójce,gmina Brójce
 1006073,1006,7,Koluszki,gmina Koluszki
 1006074,1006,8,Koluszki,miasto Koluszki
-1006075,1006,8,Koluszki,obszar wiejski Koluszki
+1006075,1006,8,Koluszki,Koluszki
 1006082,1006,7,Nowosolna,gmina Nowosolna
 1006103,1006,7,Rzgów,gmina Rzgów
 1006104,1006,8,Rzgów,miasto Rzgów
-1006105,1006,8,Rzgów,obszar wiejski Rzgów
+1006105,1006,8,Rzgów,Rzgów
 1006113,1006,7,Tuszyn,gmina Tuszyn
 1006114,1006,8,Tuszyn,miasto Tuszyn
-1006115,1006,8,Tuszyn,obszar wiejski Tuszyn
+1006115,1006,8,Tuszyn,Tuszyn
 1007,10,6,opoczyński,powiat opoczyński
 1007012,1007,7,Białaczów,gmina Białaczów
 1007023,1007,7,Drzewica,gmina Drzewica
 1007024,1007,8,Drzewica,miasto Drzewica
-1007025,1007,8,Drzewica,obszar wiejski Drzewica
+1007025,1007,8,Drzewica,Drzewica
 1007032,1007,7,Mniszków,gmina Mniszków
 1007043,1007,7,Opoczno,gmina Opoczno
 1007044,1007,8,Opoczno,miasto Opoczno
-1007045,1007,8,Opoczno,obszar wiejski Opoczno
+1007045,1007,8,Opoczno,Opoczno
 1007052,1007,7,Paradyż,gmina Paradyż
 1007062,1007,7,Poświętne,gmina Poświętne
 1007072,1007,7,Sławno,gmina Sławno
@@ -1091,12 +1091,12 @@ id,parent_id,admin_level,name,relation_name
 1009,10,6,pajęczański,powiat pajęczański
 1009013,1009,7,Działoszyn,gmina Działoszyn
 1009014,1009,8,Działoszyn,miasto Działoszyn
-1009015,1009,8,Działoszyn,obszar wiejski Działoszyn
+1009015,1009,8,Działoszyn,Działoszyn
 1009022,1009,7,Kiełczygłów,gmina Kiełczygłów
 1009032,1009,7,Nowa Brzeźnica,gmina Nowa Brzeźnica
 1009043,1009,7,Pajęczno,gmina Pajęczno
 1009044,1009,8,Pajęczno,miasto Pajęczno
-1009045,1009,8,Pajęczno,obszar wiejski Pajęczno
+1009045,1009,8,Pajęczno,Pajęczno
 1009052,1009,7,Rząśnia,gmina Rząśnia
 1009062,1009,7,Siemkowice,gmina Siemkowice
 1009072,1009,7,Strzelce Wielkie,gmina Strzelce Wielkie
@@ -1112,20 +1112,20 @@ id,parent_id,admin_level,name,relation_name
 1010082,1010,7,Rozprza,gmina Rozprza
 1010093,1010,7,Sulejów,gmina Sulejów
 1010094,1010,8,Sulejów,miasto Sulejów
-1010095,1010,8,Sulejów,obszar wiejski Sulejów
+1010095,1010,8,Sulejów,Sulejów
 1010102,1010,7,Wola Krzysztoporska,gmina Wola Krzysztoporska
 1010113,1010,7,Wolbórz,gmina Wolbórz
 1010114,1010,8,Wolbórz,miasto Wolbórz
-1010115,1010,8,Wolbórz,obszar wiejski Wolbórz
+1010115,1010,8,Wolbórz,Wolbórz
 1011,10,6,poddębicki,powiat poddębicki
 1011012,1011,7,Dalików,gmina Dalików
 1011022,1011,7,Pęczniew,gmina Pęczniew
 1011033,1011,7,Poddębice,gmina Poddębice
 1011034,1011,8,Poddębice,miasto Poddębice
-1011035,1011,8,Poddębice,obszar wiejski Poddębice
+1011035,1011,8,Poddębice,Poddębice
 1011043,1011,7,Uniejów,gmina Uniejów
 1011044,1011,8,Uniejów,miasto Uniejów
-1011045,1011,8,Uniejów,obszar wiejski Uniejów
+1011045,1011,8,Uniejów,Uniejów
 1011052,1011,7,Wartkowice,gmina Wartkowice
 1011062,1011,7,Zadzim,gmina Zadzim
 1012,10,6,radomszczański,powiat radomszczański
@@ -1135,7 +1135,7 @@ id,parent_id,admin_level,name,relation_name
 1012042,1012,7,Gomunice,gmina Gomunice
 1012053,1012,7,Kamieńsk,gmina Kamieńsk
 1012054,1012,8,Kamieńsk,miasto Kamieńsk
-1012055,1012,8,Kamieńsk,obszar wiejski Kamieńsk
+1012055,1012,8,Kamieńsk,Kamieńsk
 1012062,1012,7,Kobiele Wielkie,gmina Kobiele Wielkie
 1012072,1012,7,Kodrąb,gmina Kodrąb
 1012082,1012,7,Lgota Wielka,gmina Lgota Wielka
@@ -1143,7 +1143,7 @@ id,parent_id,admin_level,name,relation_name
 1012102,1012,7,Masłowice,gmina Masłowice
 1012113,1012,7,Przedbórz,gmina Przedbórz
 1012114,1012,8,Przedbórz,miasto Przedbórz
-1012115,1012,8,Przedbórz,obszar wiejski Przedbórz
+1012115,1012,8,Przedbórz,Przedbórz
 1012122,1012,7,Radomsko,gmina Radomsko
 1012132,1012,7,Wielgomłyny,gmina Wielgomłyny
 1012142,1012,7,Żytno,gmina Żytno
@@ -1151,7 +1151,7 @@ id,parent_id,admin_level,name,relation_name
 1013011,1013,7,Rawa Mazowiecka,gmina Rawa Mazowiecka
 1013023,1013,7,Biała Rawska,gmina Biała Rawska
 1013024,1013,8,Biała Rawska,miasto Biała Rawska
-1013025,1013,8,Biała Rawska,obszar wiejski Biała Rawska
+1013025,1013,8,Biała Rawska,Biała Rawska
 1013032,1013,7,Cielądz,gmina Cielądz
 1013042,1013,7,Rawa Mazowiecka,gmina Rawa Mazowiecka
 1013052,1013,7,Regnów,gmina Regnów
@@ -1160,7 +1160,7 @@ id,parent_id,admin_level,name,relation_name
 1014011,1014,7,Sieradz,gmina Sieradz
 1014023,1014,7,Błaszki,gmina Błaszki
 1014024,1014,8,Błaszki,miasto Błaszki
-1014025,1014,8,Błaszki,obszar wiejski Błaszki
+1014025,1014,8,Błaszki,Błaszki
 1014032,1014,7,Brąszewice,gmina Brąszewice
 1014042,1014,7,Brzeźnio,gmina Brzeźnio
 1014052,1014,7,Burzenin,gmina Burzenin
@@ -1169,11 +1169,11 @@ id,parent_id,admin_level,name,relation_name
 1014082,1014,7,Sieradz,gmina Sieradz
 1014093,1014,7,Warta,gmina Warta
 1014094,1014,8,Warta,miasto Warta
-1014095,1014,8,Warta,obszar wiejski Warta
+1014095,1014,8,Warta,Warta
 1014102,1014,7,Wróblew,gmina Wróblew
 1014113,1014,7,Złoczew,gmina Złoczew
 1014114,1014,8,Złoczew,miasto Złoczew
-1014115,1014,8,Złoczew,obszar wiejski Złoczew
+1014115,1014,8,Złoczew,Złoczew
 1015,10,6,skierniewicki,powiat skierniewicki
 1015012,1015,7,Bolimów,gmina Bolimów
 1015022,1015,7,Głuchów,gmina Głuchów
@@ -1207,7 +1207,7 @@ id,parent_id,admin_level,name,relation_name
 1017082,1017,7,Skomlin,gmina Skomlin
 1017093,1017,7,Wieluń,gmina Wieluń
 1017094,1017,8,Wieluń,miasto Wieluń
-1017095,1017,8,Wieluń,obszar wiejski Wieluń
+1017095,1017,8,Wieluń,Wieluń
 1017102,1017,7,Wierzchlas,gmina Wierzchlas
 1018,10,6,wieruszowski,powiat wieruszowski
 1018012,1018,7,Bolesławiec,gmina Bolesławiec
@@ -1218,12 +1218,12 @@ id,parent_id,admin_level,name,relation_name
 1018062,1018,7,Sokolniki,gmina Sokolniki
 1018073,1018,7,Wieruszów,gmina Wieruszów
 1018074,1018,8,Wieruszów,miasto Wieruszów
-1018075,1018,8,Wieruszów,obszar wiejski Wieruszów
+1018075,1018,8,Wieruszów,Wieruszów
 1019,10,6,zduńskowolski,powiat zduńskowolski
 1019011,1019,7,Zduńska Wola,gmina Zduńska Wola
 1019023,1019,7,Szadek,gmina Szadek
 1019024,1019,8,Szadek,miasto Szadek
-1019025,1019,8,Szadek,obszar wiejski Szadek
+1019025,1019,8,Szadek,Szadek
 1019032,1019,7,Zapolice,gmina Zapolice
 1019042,1019,7,Zduńska Wola,gmina Zduńska Wola
 1020,10,6,zgierski,powiat zgierski
@@ -1232,13 +1232,13 @@ id,parent_id,admin_level,name,relation_name
 1020031,1020,7,Zgierz,gmina Zgierz
 1020043,1020,7,Aleksandrów Łódzki,gmina Aleksandrów Łódzki
 1020044,1020,8,Aleksandrów Łódzki,miasto Aleksandrów Łódzki
-1020045,1020,8,Aleksandrów Łódzki,obszar wiejski Aleksandrów Łódzki
+1020045,1020,8,Aleksandrów Łódzki,Aleksandrów Łódzki
 1020052,1020,7,Głowno,gmina Głowno
 1020062,1020,7,Ozorków,gmina Ozorków
 1020072,1020,7,Parzęczew,gmina Parzęczew
 1020083,1020,7,Stryków,gmina Stryków
 1020084,1020,8,Stryków,miasto Stryków
-1020085,1020,8,Stryków,obszar wiejski Stryków
+1020085,1020,8,Stryków,Stryków
 1020092,1020,7,Zgierz,gmina Zgierz
 1021,10,6,brzeziński,powiat brzeziński
 1021011,1021,7,Brzeziny,gmina Brzeziny
@@ -1246,16 +1246,16 @@ id,parent_id,admin_level,name,relation_name
 1021032,1021,7,Dmosin,gmina Dmosin
 1021042,1021,7,Jeżów,gmina Jeżów
 1021052,1021,7,Rogów,gmina Rogów
-1061,10,6,Łódź,miasto na prawach powiatu Łódź
+1061,10,6,Łódź,Łódź
 1061011,1061,7,Łódź,gmina Łódź
-1061029,1061,,Łódź-Bałuty,delegatura Łódź-Bałuty
-1061039,1061,,Łódź-Górna,delegatura Łódź-Górna
-1061049,1061,,Łódź-Polesie,delegatura Łódź-Polesie
-1061059,1061,,Łódź-Śródmieście,delegatura Łódź-Śródmieście
-1061069,1061,,Łódź-Widzew,delegatura Łódź-Widzew
-1062,10,6,Piotrków Trybunalski,miasto na prawach powiatu Piotrków Trybunalski
+1061029,1061,,Łódź-Bałuty,Łódź-Bałuty
+1061039,1061,,Łódź-Górna,Łódź-Górna
+1061049,1061,,Łódź-Polesie,Łódź-Polesie
+1061059,1061,,Łódź-Śródmieście,Łódź-Śródmieście
+1061069,1061,,Łódź-Widzew,Łódź-Widzew
+1062,10,6,Piotrków Trybunalski,Piotrków Trybunalski
 1062011,1062,7,Piotrków Trybunalski,gmina Piotrków Trybunalski
-1063,10,6,Skierniewice,miasto na prawach powiatu Skierniewice
+1063,10,6,Skierniewice,Skierniewice
 1063011,1063,7,Skierniewice,gmina Skierniewice
 12,1,4,małopolskie,województwo małopolskie
 1201,12,6,bocheński,powiat bocheński
@@ -1266,7 +1266,7 @@ id,parent_id,admin_level,name,relation_name
 1201052,1201,7,Łapanów,gmina Łapanów
 1201063,1201,7,Nowy Wiśnicz,gmina Nowy Wiśnicz
 1201064,1201,8,Nowy Wiśnicz,miasto Nowy Wiśnicz
-1201065,1201,8,Nowy Wiśnicz,obszar wiejski Nowy Wiśnicz
+1201065,1201,8,Nowy Wiśnicz,Nowy Wiśnicz
 1201072,1201,7,Rzezawa,gmina Rzezawa
 1201082,1201,7,Trzciana,gmina Trzciana
 1201092,1201,7,Żegocina,gmina Żegocina
@@ -1274,10 +1274,10 @@ id,parent_id,admin_level,name,relation_name
 1202012,1202,7,Borzęcin,gmina Borzęcin
 1202023,1202,7,Brzesko,gmina Brzesko
 1202024,1202,8,Brzesko,miasto Brzesko
-1202025,1202,8,Brzesko,obszar wiejski Brzesko
+1202025,1202,8,Brzesko,Brzesko
 1202033,1202,7,Czchów,gmina Czchów
 1202034,1202,8,Czchów,miasto Czchów
-1202035,1202,8,Czchów,obszar wiejski Czchów
+1202035,1202,8,Czchów,Czchów
 1202042,1202,7,Dębno,gmina Dębno
 1202052,1202,7,Gnojnik,gmina Gnojnik
 1202062,1202,7,Iwkowa,gmina Iwkowa
@@ -1285,37 +1285,37 @@ id,parent_id,admin_level,name,relation_name
 1203,12,6,chrzanowski,powiat chrzanowski
 1203013,1203,7,Alwernia,gmina Alwernia
 1203014,1203,8,Alwernia,miasto Alwernia
-1203015,1203,8,Alwernia,obszar wiejski Alwernia
+1203015,1203,8,Alwernia,Alwernia
 1203022,1203,7,Babice,gmina Babice
 1203033,1203,7,Chrzanów,gmina Chrzanów
 1203034,1203,8,Chrzanów,miasto Chrzanów
-1203035,1203,8,Chrzanów,obszar wiejski Chrzanów
+1203035,1203,8,Chrzanów,Chrzanów
 1203043,1203,7,Libiąż,gmina Libiąż
 1203044,1203,8,Libiąż,miasto Libiąż
-1203045,1203,8,Libiąż,obszar wiejski Libiąż
+1203045,1203,8,Libiąż,Libiąż
 1203053,1203,7,Trzebinia,gmina Trzebinia
 1203054,1203,8,Trzebinia,miasto Trzebinia
-1203055,1203,8,Trzebinia,obszar wiejski Trzebinia
+1203055,1203,8,Trzebinia,Trzebinia
 1204,12,6,dąbrowski,powiat dąbrowski
 1204012,1204,7,Bolesław,gmina Bolesław
 1204023,1204,7,Dąbrowa Tarnowska,gmina Dąbrowa Tarnowska
 1204024,1204,8,Dąbrowa Tarnowska,miasto Dąbrowa Tarnowska
-1204025,1204,8,Dąbrowa Tarnowska,obszar wiejski Dąbrowa Tarnowska
+1204025,1204,8,Dąbrowa Tarnowska,Dąbrowa Tarnowska
 1204032,1204,7,Gręboszów,gmina Gręboszów
 1204042,1204,7,Mędrzechów,gmina Mędrzechów
 1204052,1204,7,Olesno,gmina Olesno
 1204062,1204,7,Radgoszcz,gmina Radgoszcz
 1204073,1204,7,Szczucin,gmina Szczucin
 1204074,1204,8,Szczucin,miasto Szczucin
-1204075,1204,8,Szczucin,obszar wiejski Szczucin
+1204075,1204,8,Szczucin,Szczucin
 1205,12,6,gorlicki,powiat gorlicki
 1205011,1205,7,Gorlice,gmina Gorlice
 1205023,1205,7,Biecz,gmina Biecz
 1205024,1205,8,Biecz,miasto Biecz
-1205025,1205,8,Biecz,obszar wiejski Biecz
+1205025,1205,8,Biecz,Biecz
 1205033,1205,7,Bobowa,gmina Bobowa
 1205034,1205,8,Bobowa,miasto Bobowa
-1205035,1205,8,Bobowa,obszar wiejski Bobowa
+1205035,1205,8,Bobowa,Bobowa
 1205042,1205,7,Gorlice,gmina Gorlice
 1205052,1205,7,Lipinki,gmina Lipinki
 1205062,1205,7,Łużna,gmina Łużna
@@ -1331,23 +1331,23 @@ id,parent_id,admin_level,name,relation_name
 1206052,1206,7,Kocmyrzów-Luborzyca,gmina Kocmyrzów-Luborzyca
 1206063,1206,7,Krzeszowice,gmina Krzeszowice
 1206064,1206,8,Krzeszowice,miasto Krzeszowice
-1206065,1206,8,Krzeszowice,obszar wiejski Krzeszowice
+1206065,1206,8,Krzeszowice,Krzeszowice
 1206072,1206,7,Liszki,gmina Liszki
 1206082,1206,7,Michałowice,gmina Michałowice
 1206092,1206,7,Mogilany,gmina Mogilany
 1206103,1206,7,Skała,gmina Skała
 1206104,1206,8,Skała,miasto Skała
-1206105,1206,8,Skała,obszar wiejski Skała
+1206105,1206,8,Skała,Skała
 1206113,1206,7,Skawina,gmina Skawina
 1206114,1206,8,Skawina,miasto Skawina
-1206115,1206,8,Skawina,obszar wiejski Skawina
+1206115,1206,8,Skawina,Skawina
 1206123,1206,7,Słomniki,gmina Słomniki
 1206124,1206,8,Słomniki,miasto Słomniki
-1206125,1206,8,Słomniki,obszar wiejski Słomniki
+1206125,1206,8,Słomniki,Słomniki
 1206132,1206,7,Sułoszowa,gmina Sułoszowa
 1206143,1206,7,Świątniki Górne,gmina Świątniki Górne
 1206144,1206,8,Świątniki Górne,miasto Świątniki Górne
-1206145,1206,8,Świątniki Górne,obszar wiejski Świątniki Górne
+1206145,1206,8,Świątniki Górne,Świątniki Górne
 1206152,1206,7,Wielka Wieś,gmina Wielka Wieś
 1206162,1206,7,Zabierzów,gmina Zabierzów
 1206172,1206,7,Zielonki,gmina Zielonki
@@ -1371,23 +1371,23 @@ id,parent_id,admin_level,name,relation_name
 1208042,1208,7,Książ Wielki,gmina Książ Wielki
 1208053,1208,7,Miechów,gmina Miechów
 1208054,1208,8,Miechów,miasto Miechów
-1208055,1208,8,Miechów,obszar wiejski Miechów
+1208055,1208,8,Miechów,Miechów
 1208062,1208,7,Racławice,gmina Racławice
 1208072,1208,7,Słaboszów,gmina Słaboszów
 1209,12,6,myślenicki,powiat myślenicki
 1209013,1209,7,Dobczyce,gmina Dobczyce
 1209014,1209,8,Dobczyce,miasto Dobczyce
-1209015,1209,8,Dobczyce,obszar wiejski Dobczyce
+1209015,1209,8,Dobczyce,Dobczyce
 1209022,1209,7,Lubień,gmina Lubień
 1209033,1209,7,Myślenice,gmina Myślenice
 1209034,1209,8,Myślenice,miasto Myślenice
-1209035,1209,8,Myślenice,obszar wiejski Myślenice
+1209035,1209,8,Myślenice,Myślenice
 1209042,1209,7,Pcim,gmina Pcim
 1209052,1209,7,Raciechowice,gmina Raciechowice
 1209062,1209,7,Siepraw,gmina Siepraw
 1209073,1209,7,Sułkowice,gmina Sułkowice
 1209074,1209,8,Sułkowice,miasto Sułkowice
-1209075,1209,8,Sułkowice,obszar wiejski Sułkowice
+1209075,1209,8,Sułkowice,Sułkowice
 1209082,1209,7,Tokarnia,gmina Tokarnia
 1209092,1209,7,Wiśniowa,gmina Wiśniowa
 1210,12,6,nowosądecki,powiat nowosądecki
@@ -1399,27 +1399,27 @@ id,parent_id,admin_level,name,relation_name
 1210062,1210,7,Korzenna,gmina Korzenna
 1210073,1210,7,Krynica-Zdrój,gmina Krynica-Zdrój
 1210074,1210,8,Krynica-Zdrój,miasto Krynica-Zdrój
-1210075,1210,8,Krynica-Zdrój,obszar wiejski Krynica-Zdrój
+1210075,1210,8,Krynica-Zdrój,Krynica-Zdrój
 1210082,1210,7,Łabowa,gmina Łabowa
 1210092,1210,7,Łącko,gmina Łącko
 1210102,1210,7,Łososina Dolna,gmina Łososina Dolna
 1210113,1210,7,Muszyna,gmina Muszyna
 1210114,1210,8,Muszyna,miasto Muszyna
-1210115,1210,8,Muszyna,obszar wiejski Muszyna
+1210115,1210,8,Muszyna,Muszyna
 1210122,1210,7,Nawojowa,gmina Nawojowa
 1210133,1210,7,Piwniczna-Zdrój,gmina Piwniczna-Zdrój
 1210134,1210,8,Piwniczna-Zdrój,miasto Piwniczna-Zdrój
-1210135,1210,8,Piwniczna-Zdrój,obszar wiejski Piwniczna-Zdrój
+1210135,1210,8,Piwniczna-Zdrój,Piwniczna-Zdrój
 1210142,1210,7,Podegrodzie,gmina Podegrodzie
 1210152,1210,7,Rytro,gmina Rytro
 1210163,1210,7,Stary Sącz,gmina Stary Sącz
 1210164,1210,8,Stary Sącz,miasto Stary Sącz
-1210165,1210,8,Stary Sącz,obszar wiejski Stary Sącz
+1210165,1210,8,Stary Sącz,Stary Sącz
 1211,12,6,nowotarski,powiat nowotarski
 1211011,1211,7,Nowy Targ,gmina Nowy Targ
 1211023,1211,7,Szczawnica,gmina Szczawnica
 1211024,1211,8,Szczawnica,miasto Szczawnica
-1211025,1211,8,Szczawnica,obszar wiejski Szczawnica
+1211025,1211,8,Szczawnica,Szczawnica
 1211032,1211,7,Czarny Dunajec,gmina Czarny Dunajec
 1211042,1211,7,Czorsztyn,gmina Czorsztyn
 1211052,1211,7,Jabłonka,gmina Jabłonka
@@ -1431,7 +1431,7 @@ id,parent_id,admin_level,name,relation_name
 1211112,1211,7,Raba Wyżna,gmina Raba Wyżna
 1211123,1211,7,Rabka-Zdrój,gmina Rabka-Zdrój
 1211124,1211,8,Rabka-Zdrój,miasto Rabka-Zdrój
-1211125,1211,8,Rabka-Zdrój,obszar wiejski Rabka-Zdrój
+1211125,1211,8,Rabka-Zdrój,Rabka-Zdrój
 1211132,1211,7,Spytkowice,gmina Spytkowice
 1211142,1211,7,Szaflary,gmina Szaflary
 1212,12,6,olkuski,powiat olkuski
@@ -1440,39 +1440,39 @@ id,parent_id,admin_level,name,relation_name
 1212042,1212,7,Klucze,gmina Klucze
 1212053,1212,7,Olkusz,gmina Olkusz
 1212054,1212,8,Olkusz,miasto Olkusz
-1212055,1212,8,Olkusz,obszar wiejski Olkusz
+1212055,1212,8,Olkusz,Olkusz
 1212062,1212,7,Trzyciąż,gmina Trzyciąż
 1212073,1212,7,Wolbrom,gmina Wolbrom
 1212074,1212,8,Wolbrom,miasto Wolbrom
-1212075,1212,8,Wolbrom,obszar wiejski Wolbrom
+1212075,1212,8,Wolbrom,Wolbrom
 1213,12,6,oświęcimski,powiat oświęcimski
 1213011,1213,7,Oświęcim,gmina Oświęcim
 1213023,1213,7,Brzeszcze,gmina Brzeszcze
 1213024,1213,8,Brzeszcze,miasto Brzeszcze
-1213025,1213,8,Brzeszcze,obszar wiejski Brzeszcze
+1213025,1213,8,Brzeszcze,Brzeszcze
 1213033,1213,7,Chełmek,gmina Chełmek
 1213034,1213,8,Chełmek,miasto Chełmek
-1213035,1213,8,Chełmek,obszar wiejski Chełmek
+1213035,1213,8,Chełmek,Chełmek
 1213043,1213,7,Kęty,gmina Kęty
 1213044,1213,8,Kęty,miasto Kęty
-1213045,1213,8,Kęty,obszar wiejski Kęty
+1213045,1213,8,Kęty,Kęty
 1213052,1213,7,Osiek,gmina Osiek
 1213062,1213,7,Oświęcim,gmina Oświęcim
 1213072,1213,7,Polanka Wielka,gmina Polanka Wielka
 1213082,1213,7,Przeciszów,gmina Przeciszów
 1213093,1213,7,Zator,gmina Zator
 1213094,1213,8,Zator,miasto Zator
-1213095,1213,8,Zator,obszar wiejski Zator
+1213095,1213,8,Zator,Zator
 1214,12,6,proszowicki,powiat proszowicki
 1214012,1214,7,Koniusza,gmina Koniusza
 1214022,1214,7,Koszyce,gmina Koszyce
 1214033,1214,7,Nowe Brzesko,gmina Nowe Brzesko
 1214034,1214,8,Nowe Brzesko,miasto Nowe Brzesko
-1214035,1214,8,Nowe Brzesko,obszar wiejski Nowe Brzesko
+1214035,1214,8,Nowe Brzesko,Nowe Brzesko
 1214042,1214,7,Pałecznica,gmina Pałecznica
 1214053,1214,7,Proszowice,gmina Proszowice
 1214054,1214,8,Proszowice,miasto Proszowice
-1214055,1214,8,Proszowice,obszar wiejski Proszowice
+1214055,1214,8,Proszowice,Proszowice
 1214062,1214,7,Radziemice,gmina Radziemice
 1215,12,6,suski,powiat suski
 1215011,1215,7,Jordanów,gmina Jordanów
@@ -1482,40 +1482,40 @@ id,parent_id,admin_level,name,relation_name
 1215052,1215,7,Jordanów,gmina Jordanów
 1215063,1215,7,Maków Podhalański,gmina Maków Podhalański
 1215064,1215,8,Maków Podhalański,miasto Maków Podhalański
-1215065,1215,8,Maków Podhalański,obszar wiejski Maków Podhalański
+1215065,1215,8,Maków Podhalański,Maków Podhalański
 1215072,1215,7,Stryszawa,gmina Stryszawa
 1215082,1215,7,Zawoja,gmina Zawoja
 1215092,1215,7,Zembrzyce,gmina Zembrzyce
 1216,12,6,tarnowski,powiat tarnowski
 1216013,1216,7,Ciężkowice,gmina Ciężkowice
 1216014,1216,8,Ciężkowice,miasto Ciężkowice
-1216015,1216,8,Ciężkowice,obszar wiejski Ciężkowice
+1216015,1216,8,Ciężkowice,Ciężkowice
 1216022,1216,7,Gromnik,gmina Gromnik
 1216032,1216,7,Lisia Góra,gmina Lisia Góra
 1216042,1216,7,Pleśna,gmina Pleśna
 1216053,1216,7,Radłów,gmina Radłów
 1216054,1216,8,Radłów,miasto Radłów
-1216055,1216,8,Radłów,obszar wiejski Radłów
+1216055,1216,8,Radłów,Radłów
 1216063,1216,7,Ryglice,gmina Ryglice
 1216064,1216,8,Ryglice,miasto Ryglice
-1216065,1216,8,Ryglice,obszar wiejski Ryglice
+1216065,1216,8,Ryglice,Ryglice
 1216072,1216,7,Rzepiennik Strzyżewski,gmina Rzepiennik Strzyżewski
 1216082,1216,7,Skrzyszów,gmina Skrzyszów
 1216092,1216,7,Tarnów,gmina Tarnów
 1216103,1216,7,Tuchów,gmina Tuchów
 1216104,1216,8,Tuchów,miasto Tuchów
-1216105,1216,8,Tuchów,obszar wiejski Tuchów
+1216105,1216,8,Tuchów,Tuchów
 1216112,1216,7,Wierzchosławice,gmina Wierzchosławice
 1216122,1216,7,Wietrzychowice,gmina Wietrzychowice
 1216133,1216,7,Wojnicz,gmina Wojnicz
 1216134,1216,8,Wojnicz,miasto Wojnicz
-1216135,1216,8,Wojnicz,obszar wiejski Wojnicz
+1216135,1216,8,Wojnicz,Wojnicz
 1216143,1216,7,Zakliczyn,gmina Zakliczyn
 1216144,1216,8,Zakliczyn,miasto Zakliczyn
-1216145,1216,8,Zakliczyn,obszar wiejski Zakliczyn
+1216145,1216,8,Zakliczyn,Zakliczyn
 1216153,1216,7,Żabno,gmina Żabno
 1216154,1216,8,Żabno,miasto Żabno
-1216155,1216,8,Żabno,obszar wiejski Żabno
+1216155,1216,8,Żabno,Żabno
 1216162,1216,7,Szerzyny,gmina Szerzyny
 1217,12,6,tatrzański,powiat tatrzański
 1217011,1217,7,Zakopane,gmina Zakopane
@@ -1526,11 +1526,11 @@ id,parent_id,admin_level,name,relation_name
 1218,12,6,wadowicki,powiat wadowicki
 1218013,1218,7,Andrychów,gmina Andrychów
 1218014,1218,8,Andrychów,miasto Andrychów
-1218015,1218,8,Andrychów,obszar wiejski Andrychów
+1218015,1218,8,Andrychów,Andrychów
 1218022,1218,7,Brzeźnica,gmina Brzeźnica
 1218033,1218,7,Kalwaria Zebrzydowska,gmina Kalwaria Zebrzydowska
 1218034,1218,8,Kalwaria Zebrzydowska,miasto Kalwaria Zebrzydowska
-1218035,1218,8,Kalwaria Zebrzydowska,obszar wiejski Kalwaria Zebrzydowska
+1218035,1218,8,Kalwaria Zebrzydowska,Kalwaria Zebrzydowska
 1218042,1218,7,Lanckorona,gmina Lanckorona
 1218052,1218,7,Mucharz,gmina Mucharz
 1218062,1218,7,Spytkowice,gmina Spytkowice
@@ -1538,7 +1538,7 @@ id,parent_id,admin_level,name,relation_name
 1218082,1218,7,Tomice,gmina Tomice
 1218093,1218,7,Wadowice,gmina Wadowice
 1218094,1218,8,Wadowice,miasto Wadowice
-1218095,1218,8,Wadowice,obszar wiejski Wadowice
+1218095,1218,8,Wadowice,Wadowice
 1218102,1218,7,Wieprz,gmina Wieprz
 1219,12,6,wielicki,powiat wielicki
 1219012,1219,7,Biskupice,gmina Biskupice
@@ -1546,38 +1546,38 @@ id,parent_id,admin_level,name,relation_name
 1219032,1219,7,Kłaj,gmina Kłaj
 1219043,1219,7,Niepołomice,gmina Niepołomice
 1219044,1219,8,Niepołomice,miasto Niepołomice
-1219045,1219,8,Niepołomice,obszar wiejski Niepołomice
+1219045,1219,8,Niepołomice,Niepołomice
 1219053,1219,7,Wieliczka,gmina Wieliczka
 1219054,1219,8,Wieliczka,miasto Wieliczka
-1219055,1219,8,Wieliczka,obszar wiejski Wieliczka
-1261,12,6,Kraków,miasto na prawach powiatu Kraków
+1219055,1219,8,Wieliczka,Wieliczka
+1261,12,6,Kraków,Kraków
 1261011,1261,7,Kraków,gmina Kraków
-1261029,1261,,Kraków-Krowodrza,delegatura Kraków-Krowodrza
-1261039,1261,,Kraków-Nowa Huta,delegatura Kraków-Nowa Huta
-1261049,1261,,Kraków-Podgórze,delegatura Kraków-Podgórze
-1261059,1261,,Kraków-Śródmieście,delegatura Kraków-Śródmieście
-1262,12,6,Nowy Sącz,miasto na prawach powiatu Nowy Sącz
+1261029,1261,,Kraków-Krowodrza,Kraków-Krowodrza
+1261039,1261,,Kraków-Nowa Huta,Kraków-Nowa Huta
+1261049,1261,,Kraków-Podgórze,Kraków-Podgórze
+1261059,1261,,Kraków-Śródmieście,Kraków-Śródmieście
+1262,12,6,Nowy Sącz,Nowy Sącz
 1262011,1262,7,Nowy Sącz,gmina Nowy Sącz
-1263,12,6,Tarnów,miasto na prawach powiatu Tarnów
+1263,12,6,Tarnów,Tarnów
 1263011,1263,7,Tarnów,gmina Tarnów
 14,1,4,mazowieckie,województwo mazowieckie
 1401,14,6,białobrzeski,powiat białobrzeski
 1401013,1401,7,Białobrzegi,gmina Białobrzegi
 1401014,1401,8,Białobrzegi,miasto Białobrzegi
-1401015,1401,8,Białobrzegi,obszar wiejski Białobrzegi
+1401015,1401,8,Białobrzegi,Białobrzegi
 1401022,1401,7,Promna,gmina Promna
 1401032,1401,7,Radzanów,gmina Radzanów
 1401042,1401,7,Stara Błotnica,gmina Stara Błotnica
 1401052,1401,7,Stromiec,gmina Stromiec
 1401063,1401,7,Wyśmierzyce,gmina Wyśmierzyce
 1401064,1401,8,Wyśmierzyce,miasto Wyśmierzyce
-1401065,1401,8,Wyśmierzyce,obszar wiejski Wyśmierzyce
+1401065,1401,8,Wyśmierzyce,Wyśmierzyce
 1402,14,6,ciechanowski,powiat ciechanowski
 1402011,1402,7,Ciechanów,gmina Ciechanów
 1402022,1402,7,Ciechanów,gmina Ciechanów
 1402033,1402,7,Glinojeck,gmina Glinojeck
 1402034,1402,8,Glinojeck,miasto Glinojeck
-1402035,1402,8,Glinojeck,obszar wiejski Glinojeck
+1402035,1402,8,Glinojeck,Glinojeck
 1402042,1402,7,Gołymin-Ośrodek,gmina Gołymin-Ośrodek
 1402052,1402,7,Grudusk,gmina Grudusk
 1402062,1402,7,Ojrzeń,gmina Ojrzeń
@@ -1596,13 +1596,13 @@ id,parent_id,admin_level,name,relation_name
 1403092,1403,7,Parysów,gmina Parysów
 1403103,1403,7,Pilawa,gmina Pilawa
 1403104,1403,8,Pilawa,miasto Pilawa
-1403105,1403,8,Pilawa,obszar wiejski Pilawa
+1403105,1403,8,Pilawa,Pilawa
 1403112,1403,7,Sobolew,gmina Sobolew
 1403122,1403,7,Trojanów,gmina Trojanów
 1403132,1403,7,Wilga,gmina Wilga
 1403143,1403,7,Żelechów,gmina Żelechów
 1403144,1403,8,Żelechów,miasto Żelechów
-1403145,1403,8,Żelechów,obszar wiejski Żelechów
+1403145,1403,8,Żelechów,Żelechów
 1404,14,6,gostyniński,powiat gostyniński
 1404011,1404,7,Gostynin,gmina Gostynin
 1404022,1404,7,Gostynin,gmina Gostynin
@@ -1615,7 +1615,7 @@ id,parent_id,admin_level,name,relation_name
 1405032,1405,7,Baranów,gmina Baranów
 1405043,1405,7,Grodzisk Mazowiecki,gmina Grodzisk Mazowiecki
 1405044,1405,8,Grodzisk Mazowiecki,miasto Grodzisk Mazowiecki
-1405045,1405,8,Grodzisk Mazowiecki,obszar wiejski Grodzisk Mazowiecki
+1405045,1405,8,Grodzisk Mazowiecki,Grodzisk Mazowiecki
 1405052,1405,7,Jaktorów,gmina Jaktorów
 1405062,1405,7,Żabia Wola,gmina Żabia Wola
 1406,14,6,grójecki,powiat grójecki
@@ -1625,18 +1625,18 @@ id,parent_id,admin_level,name,relation_name
 1406042,1406,7,Goszczyn,gmina Goszczyn
 1406053,1406,7,Grójec,gmina Grójec
 1406054,1406,8,Grójec,miasto Grójec
-1406055,1406,8,Grójec,obszar wiejski Grójec
+1406055,1406,8,Grójec,Grójec
 1406062,1406,7,Jasieniec,gmina Jasieniec
 1406073,1406,7,Mogielnica,gmina Mogielnica
 1406074,1406,8,Mogielnica,miasto Mogielnica
-1406075,1406,8,Mogielnica,obszar wiejski Mogielnica
+1406075,1406,8,Mogielnica,Mogielnica
 1406083,1406,7,Nowe Miasto nad Pilicą,gmina Nowe Miasto nad Pilicą
 1406084,1406,8,Nowe Miasto nad Pilicą,miasto Nowe Miasto nad Pilicą
-1406085,1406,8,Nowe Miasto nad Pilicą,obszar wiejski Nowe Miasto nad Pilicą
+1406085,1406,8,Nowe Miasto nad Pilicą,Nowe Miasto nad Pilicą
 1406092,1406,7,Pniewy,gmina Pniewy
 1406113,1406,7,Warka,gmina Warka
 1406114,1406,8,Warka,miasto Warka
-1406115,1406,8,Warka,obszar wiejski Warka
+1406115,1406,8,Warka,Warka
 1407,14,6,kozienicki,powiat kozienicki
 1407012,1407,7,Garbatka-Letnisko,gmina Garbatka-Letnisko
 1407022,1407,7,Głowaczów,gmina Głowaczów
@@ -1644,7 +1644,7 @@ id,parent_id,admin_level,name,relation_name
 1407042,1407,7,Grabów nad Pilicą,gmina Grabów nad Pilicą
 1407053,1407,7,Kozienice,gmina Kozienice
 1407054,1407,8,Kozienice,miasto Kozienice
-1407055,1407,8,Kozienice,obszar wiejski Kozienice
+1407055,1407,8,Kozienice,Kozienice
 1407062,1407,7,Magnuszew,gmina Magnuszew
 1407072,1407,7,Sieciechów,gmina Sieciechów
 1408,14,6,legionowski,powiat legionowski
@@ -1653,14 +1653,14 @@ id,parent_id,admin_level,name,relation_name
 1408032,1408,7,Nieporęt,gmina Nieporęt
 1408043,1408,7,Serock,gmina Serock
 1408044,1408,8,Serock,miasto Serock
-1408045,1408,8,Serock,obszar wiejski Serock
+1408045,1408,8,Serock,Serock
 1408052,1408,7,Wieliszew,gmina Wieliszew
 1409,14,6,lipski,powiat lipski
 1409012,1409,7,Chotcza,gmina Chotcza
 1409022,1409,7,Ciepielów,gmina Ciepielów
 1409033,1409,7,Lipsko,gmina Lipsko
 1409034,1409,8,Lipsko,miasto Lipsko
-1409035,1409,8,Lipsko,obszar wiejski Lipsko
+1409035,1409,8,Lipsko,Lipsko
 1409042,1409,7,Rzeczniów,gmina Rzeczniów
 1409052,1409,7,Sienno,gmina Sienno
 1409062,1409,7,Solec nad Wisłą,gmina Solec nad Wisłą
@@ -1668,7 +1668,7 @@ id,parent_id,admin_level,name,relation_name
 1410012,1410,7,Huszlew,gmina Huszlew
 1410023,1410,7,Łosice,gmina Łosice
 1410024,1410,8,Łosice,miasto Łosice
-1410025,1410,8,Łosice,obszar wiejski Łosice
+1410025,1410,8,Łosice,Łosice
 1410032,1410,7,Olszanka,gmina Olszanka
 1410042,1410,7,Platerów,gmina Platerów
 1410052,1410,7,Sarnaki,gmina Sarnaki
@@ -1682,7 +1682,7 @@ id,parent_id,admin_level,name,relation_name
 1411062,1411,7,Płoniawy-Bramura,gmina Płoniawy-Bramura
 1411073,1411,7,Różan,gmina Różan
 1411074,1411,8,Różan,miasto Różan
-1411075,1411,8,Różan,obszar wiejski Różan
+1411075,1411,8,Różan,Różan
 1411082,1411,7,Rzewnie,gmina Rzewnie
 1411092,1411,7,Sypniewo,gmina Sypniewo
 1411102,1411,7,Szelków,gmina Szelków
@@ -1693,11 +1693,11 @@ id,parent_id,admin_level,name,relation_name
 1412062,1412,7,Dobre,gmina Dobre
 1412073,1412,7,Halinów,gmina Halinów
 1412074,1412,8,Halinów,miasto Halinów
-1412075,1412,8,Halinów,obszar wiejski Halinów
+1412075,1412,8,Halinów,Halinów
 1412082,1412,7,Jakubów,gmina Jakubów
 1412093,1412,7,Kałuszyn,gmina Kałuszyn
 1412094,1412,8,Kałuszyn,miasto Kałuszyn
-1412095,1412,8,Kałuszyn,obszar wiejski Kałuszyn
+1412095,1412,8,Kałuszyn,Kałuszyn
 1412102,1412,7,Latowicz,gmina Latowicz
 1412112,1412,7,Mińsk Mazowiecki,gmina Mińsk Mazowiecki
 1412122,1412,7,Mrozy,gmina Mrozy
@@ -1721,11 +1721,11 @@ id,parent_id,admin_level,name,relation_name
 1414032,1414,7,Leoncin,gmina Leoncin
 1414043,1414,7,Nasielsk,gmina Nasielsk
 1414044,1414,8,Nasielsk,miasto Nasielsk
-1414045,1414,8,Nasielsk,obszar wiejski Nasielsk
+1414045,1414,8,Nasielsk,Nasielsk
 1414052,1414,7,Pomiechówek,gmina Pomiechówek
 1414063,1414,7,Zakroczym,gmina Zakroczym
 1414064,1414,8,Zakroczym,miasto Zakroczym
-1414065,1414,8,Zakroczym,obszar wiejski Zakroczym
+1414065,1414,8,Zakroczym,Zakroczym
 1415,14,6,ostrołęcki,powiat ostrołęcki
 1415012,1415,7,Baranowo,gmina Baranowo
 1415022,1415,7,Czarnia,gmina Czarnia
@@ -1736,7 +1736,7 @@ id,parent_id,admin_level,name,relation_name
 1415072,1415,7,Łyse,gmina Łyse
 1415083,1415,7,Myszyniec,gmina Myszyniec
 1415084,1415,8,Myszyniec,miasto Myszyniec
-1415085,1415,8,Myszyniec,obszar wiejski Myszyniec
+1415085,1415,8,Myszyniec,Myszyniec
 1415092,1415,7,Olszewo-Borki,gmina Olszewo-Borki
 1415102,1415,7,Rzekuń,gmina Rzekuń
 1415112,1415,7,Troszyn,gmina Troszyn
@@ -1746,7 +1746,7 @@ id,parent_id,admin_level,name,relation_name
 1416032,1416,7,Boguty-Pianki,gmina Boguty-Pianki
 1416043,1416,7,Brok,gmina Brok
 1416044,1416,8,Brok,miasto Brok
-1416045,1416,8,Brok,obszar wiejski Brok
+1416045,1416,8,Brok,Brok
 1416052,1416,7,Małkinia Górna,gmina Małkinia Górna
 1416062,1416,7,Nur,gmina Nur
 1416072,1416,7,Ostrów Mazowiecka,gmina Ostrów Mazowiecka
@@ -1760,7 +1760,7 @@ id,parent_id,admin_level,name,relation_name
 1417032,1417,7,Celestynów,gmina Celestynów
 1417043,1417,7,Karczew,gmina Karczew
 1417044,1417,8,Karczew,miasto Karczew
-1417045,1417,8,Karczew,obszar wiejski Karczew
+1417045,1417,8,Karczew,Karczew
 1417052,1417,7,Kołbiel,gmina Kołbiel
 1417062,1417,7,Osieck,gmina Osieck
 1417072,1417,7,Sobienie-Jeziory,gmina Sobienie-Jeziory
@@ -1768,18 +1768,18 @@ id,parent_id,admin_level,name,relation_name
 1418,14,6,piaseczyński,powiat piaseczyński
 1418013,1418,7,Góra Kalwaria,gmina Góra Kalwaria
 1418014,1418,8,Góra Kalwaria,miasto Góra Kalwaria
-1418015,1418,8,Góra Kalwaria,obszar wiejski Góra Kalwaria
+1418015,1418,8,Góra Kalwaria,Góra Kalwaria
 1418023,1418,7,Konstancin-Jeziorna,gmina Konstancin-Jeziorna
 1418024,1418,8,Konstancin-Jeziorna,miasto Konstancin-Jeziorna
-1418025,1418,8,Konstancin-Jeziorna,obszar wiejski Konstancin-Jeziorna
+1418025,1418,8,Konstancin-Jeziorna,Konstancin-Jeziorna
 1418032,1418,7,Lesznowola,gmina Lesznowola
 1418043,1418,7,Piaseczno,gmina Piaseczno
 1418044,1418,8,Piaseczno,miasto Piaseczno
-1418045,1418,8,Piaseczno,obszar wiejski Piaseczno
+1418045,1418,8,Piaseczno,Piaseczno
 1418052,1418,7,Prażmów,gmina Prażmów
 1418063,1418,7,Tarczyn,gmina Tarczyn
 1418064,1418,8,Tarczyn,miasto Tarczyn
-1418065,1418,8,Tarczyn,obszar wiejski Tarczyn
+1418065,1418,8,Tarczyn,Tarczyn
 1419,14,6,płocki,powiat płocki
 1419012,1419,7,Bielsk,gmina Bielsk
 1419022,1419,7,Bodzanów,gmina Bodzanów
@@ -1787,10 +1787,10 @@ id,parent_id,admin_level,name,relation_name
 1419042,1419,7,Bulkowo,gmina Bulkowo
 1419053,1419,7,Drobin,gmina Drobin
 1419054,1419,8,Drobin,miasto Drobin
-1419055,1419,8,Drobin,obszar wiejski Drobin
+1419055,1419,8,Drobin,Drobin
 1419063,1419,7,Gąbin,gmina Gąbin
 1419064,1419,8,Gąbin,miasto Gąbin
-1419065,1419,8,Gąbin,obszar wiejski Gąbin
+1419065,1419,8,Gąbin,Gąbin
 1419072,1419,7,Łąck,gmina Łąck
 1419082,1419,7,Mała Wieś,gmina Mała Wieś
 1419092,1419,7,Nowy Duninów,gmina Nowy Duninów
@@ -1801,7 +1801,7 @@ id,parent_id,admin_level,name,relation_name
 1419142,1419,7,Staroźreby,gmina Staroźreby
 1419153,1419,7,Wyszogród,gmina Wyszogród
 1419154,1419,8,Wyszogród,miasto Wyszogród
-1419155,1419,8,Wyszogród,obszar wiejski Wyszogród
+1419155,1419,8,Wyszogród,Wyszogród
 1420,14,6,płoński,powiat płoński
 1420011,1420,7,Płońsk,gmina Płońsk
 1420021,1420,7,Raciąż,gmina Raciąż
@@ -1820,7 +1820,7 @@ id,parent_id,admin_level,name,relation_name
 1421021,1421,7,Pruszków,gmina Pruszków
 1421033,1421,7,Brwinów,gmina Brwinów
 1421034,1421,8,Brwinów,miasto Brwinów
-1421035,1421,8,Brwinów,obszar wiejski Brwinów
+1421035,1421,8,Brwinów,Brwinów
 1421042,1421,7,Michałowice,gmina Michałowice
 1421052,1421,7,Nadarzyn,gmina Nadarzyn
 1421062,1421,7,Raszyn,gmina Raszyn
@@ -1828,7 +1828,7 @@ id,parent_id,admin_level,name,relation_name
 1422011,1422,7,Przasnysz,gmina Przasnysz
 1422023,1422,7,Chorzele,gmina Chorzele
 1422024,1422,8,Chorzele,miasto Chorzele
-1422025,1422,8,Chorzele,obszar wiejski Chorzele
+1422025,1422,8,Chorzele,Chorzele
 1422032,1422,7,Czernice Borowe,gmina Czernice Borowe
 1422042,1422,7,Jednorożec,gmina Jednorożec
 1422052,1422,7,Krasne,gmina Krasne
@@ -1842,7 +1842,7 @@ id,parent_id,admin_level,name,relation_name
 1423052,1423,7,Potworów,gmina Potworów
 1423063,1423,7,Przysucha,gmina Przysucha
 1423064,1423,8,Przysucha,miasto Przysucha
-1423065,1423,8,Przysucha,obszar wiejski Przysucha
+1423065,1423,8,Przysucha,Przysucha
 1423072,1423,7,Rusinów,gmina Rusinów
 1423082,1423,7,Wieniawa,gmina Wieniawa
 1424,14,6,pułtuski,powiat pułtuski
@@ -1851,7 +1851,7 @@ id,parent_id,admin_level,name,relation_name
 1424032,1424,7,Pokrzywnica,gmina Pokrzywnica
 1424043,1424,7,Pułtusk,gmina Pułtusk
 1424044,1424,8,Pułtusk,miasto Pułtusk
-1424045,1424,8,Pułtusk,obszar wiejski Pułtusk
+1424045,1424,8,Pułtusk,Pułtusk
 1424052,1424,7,Świercze,gmina Świercze
 1424062,1424,7,Winnica,gmina Winnica
 1424072,1424,7,Zatory,gmina Zatory
@@ -1860,7 +1860,7 @@ id,parent_id,admin_level,name,relation_name
 1425022,1425,7,Gózd,gmina Gózd
 1425033,1425,7,Iłża,gmina Iłża
 1425034,1425,8,Iłża,miasto Iłża
-1425035,1425,8,Iłża,obszar wiejski Iłża
+1425035,1425,8,Iłża,Iłża
 1425042,1425,7,Jastrzębia,gmina Jastrzębia
 1425052,1425,7,Jedlińsk,gmina Jedlińsk
 1425062,1425,7,Jedlnia-Letnisko,gmina Jedlnia-Letnisko
@@ -1869,7 +1869,7 @@ id,parent_id,admin_level,name,relation_name
 1425092,1425,7,Przytyk,gmina Przytyk
 1425103,1425,7,Skaryszew,gmina Skaryszew
 1425104,1425,8,Skaryszew,miasto Skaryszew
-1425105,1425,8,Skaryszew,obszar wiejski Skaryszew
+1425105,1425,8,Skaryszew,Skaryszew
 1425112,1425,7,Wierzbica,gmina Wierzbica
 1425122,1425,7,Wolanów,gmina Wolanów
 1425132,1425,7,Zakrzew,gmina Zakrzew
@@ -1880,7 +1880,7 @@ id,parent_id,admin_level,name,relation_name
 1426042,1426,7,Mokobody,gmina Mokobody
 1426053,1426,7,Mordy,gmina Mordy
 1426054,1426,8,Mordy,miasto Mordy
-1426055,1426,8,Mordy,obszar wiejski Mordy
+1426055,1426,8,Mordy,Mordy
 1426062,1426,7,Paprotnia,gmina Paprotnia
 1426072,1426,7,Przesmyki,gmina Przesmyki
 1426082,1426,7,Siedlce,gmina Siedlce
@@ -1913,7 +1913,7 @@ id,parent_id,admin_level,name,relation_name
 1429042,1429,7,Jabłonna Lacka,gmina Jabłonna Lacka
 1429053,1429,7,Kosów Lacki,gmina Kosów Lacki
 1429054,1429,8,Kosów Lacki,miasto Kosów Lacki
-1429055,1429,8,Kosów Lacki,obszar wiejski Kosów Lacki
+1429055,1429,8,Kosów Lacki,Kosów Lacki
 1429062,1429,7,Repki,gmina Repki
 1429072,1429,7,Sabnie,gmina Sabnie
 1429082,1429,7,Sokołów Podlaski,gmina Sokołów Podlaski
@@ -1925,20 +1925,20 @@ id,parent_id,admin_level,name,relation_name
 1430042,1430,7,Orońsko,gmina Orońsko
 1430053,1430,7,Szydłowiec,gmina Szydłowiec
 1430054,1430,8,Szydłowiec,miasto Szydłowiec
-1430055,1430,8,Szydłowiec,obszar wiejski Szydłowiec
+1430055,1430,8,Szydłowiec,Szydłowiec
 1432,14,6,warszawski zachodni,powiat warszawski zachodni
 1432013,1432,7,Błonie,gmina Błonie
 1432014,1432,8,Błonie,miasto Błonie
-1432015,1432,8,Błonie,obszar wiejski Błonie
+1432015,1432,8,Błonie,Błonie
 1432022,1432,7,Izabelin,gmina Izabelin
 1432032,1432,7,Kampinos,gmina Kampinos
 1432042,1432,7,Leszno,gmina Leszno
 1432053,1432,7,Łomianki,gmina Łomianki
 1432054,1432,8,Łomianki,miasto Łomianki
-1432055,1432,8,Łomianki,obszar wiejski Łomianki
+1432055,1432,8,Łomianki,Łomianki
 1432063,1432,7,Ożarów Mazowiecki,gmina Ożarów Mazowiecki
 1432064,1432,8,Ożarów Mazowiecki,miasto Ożarów Mazowiecki
-1432065,1432,8,Ożarów Mazowiecki,obszar wiejski Ożarów Mazowiecki
+1432065,1432,8,Ożarów Mazowiecki,Ożarów Mazowiecki
 1432072,1432,7,Stare Babice,gmina Stare Babice
 1433,14,6,węgrowski,powiat węgrowski
 1433011,1433,7,Węgrów,gmina Węgrów
@@ -1947,7 +1947,7 @@ id,parent_id,admin_level,name,relation_name
 1433042,1433,7,Liw,gmina Liw
 1433053,1433,7,Łochów,gmina Łochów
 1433054,1433,8,Łochów,miasto Łochów
-1433055,1433,8,Łochów,obszar wiejski Łochów
+1433055,1433,8,Łochów,Łochów
 1433062,1433,7,Miedzna,gmina Miedzna
 1433072,1433,7,Sadowne,gmina Sadowne
 1433082,1433,7,Stoczek,gmina Stoczek
@@ -1963,14 +1963,14 @@ id,parent_id,admin_level,name,relation_name
 1434082,1434,7,Poświętne,gmina Poświętne
 1434093,1434,7,Radzymin,gmina Radzymin
 1434094,1434,8,Radzymin,miasto Radzymin
-1434095,1434,8,Radzymin,obszar wiejski Radzymin
+1434095,1434,8,Radzymin,Radzymin
 1434102,1434,7,Strachówka,gmina Strachówka
 1434113,1434,7,Tłuszcz,gmina Tłuszcz
 1434114,1434,8,Tłuszcz,miasto Tłuszcz
-1434115,1434,8,Tłuszcz,obszar wiejski Tłuszcz
+1434115,1434,8,Tłuszcz,Tłuszcz
 1434123,1434,7,Wołomin,gmina Wołomin
 1434124,1434,8,Wołomin,miasto Wołomin
-1434125,1434,8,Wołomin,obszar wiejski Wołomin
+1434125,1434,8,Wołomin,Wołomin
 1435,14,6,wyszkowski,powiat wyszkowski
 1435012,1435,7,Brańszczyk,gmina Brańszczyk
 1435022,1435,7,Długosiodło,gmina Długosiodło
@@ -1978,7 +1978,7 @@ id,parent_id,admin_level,name,relation_name
 1435042,1435,7,Somianka,gmina Somianka
 1435053,1435,7,Wyszków,gmina Wyszków
 1435054,1435,8,Wyszków,miasto Wyszków
-1435055,1435,8,Wyszków,obszar wiejski Wyszków
+1435055,1435,8,Wyszków,Wyszków
 1435062,1435,7,Zabrodzie,gmina Zabrodzie
 1436,14,6,zwoleński,powiat zwoleński
 1436012,1436,7,Kazanów,gmina Kazanów
@@ -1987,77 +1987,77 @@ id,parent_id,admin_level,name,relation_name
 1436042,1436,7,Tczów,gmina Tczów
 1436053,1436,7,Zwoleń,gmina Zwoleń
 1436054,1436,8,Zwoleń,miasto Zwoleń
-1436055,1436,8,Zwoleń,obszar wiejski Zwoleń
+1436055,1436,8,Zwoleń,Zwoleń
 1437,14,6,żuromiński,powiat żuromiński
 1437013,1437,7,Bieżuń,gmina Bieżuń
 1437014,1437,8,Bieżuń,miasto Bieżuń
-1437015,1437,8,Bieżuń,obszar wiejski Bieżuń
+1437015,1437,8,Bieżuń,Bieżuń
 1437022,1437,7,Kuczbork-Osada,gmina Kuczbork-Osada
 1437032,1437,7,Lubowidz,gmina Lubowidz
 1437042,1437,7,Lutocin,gmina Lutocin
 1437052,1437,7,Siemiątkowo,gmina Siemiątkowo
 1437063,1437,7,Żuromin,gmina Żuromin
 1437064,1437,8,Żuromin,miasto Żuromin
-1437065,1437,8,Żuromin,obszar wiejski Żuromin
+1437065,1437,8,Żuromin,Żuromin
 1438,14,6,żyrardowski,powiat żyrardowski
 1438011,1438,7,Żyrardów,gmina Żyrardów
 1438023,1438,7,Mszczonów,gmina Mszczonów
 1438024,1438,8,Mszczonów,miasto Mszczonów
-1438025,1438,8,Mszczonów,obszar wiejski Mszczonów
+1438025,1438,8,Mszczonów,Mszczonów
 1438032,1438,7,Puszcza Mariańska,gmina Puszcza Mariańska
 1438042,1438,7,Radziejowice,gmina Radziejowice
 1438052,1438,7,Wiskitki,gmina Wiskitki
-1461,14,6,Ostrołęka,miasto na prawach powiatu Ostrołęka
+1461,14,6,Ostrołęka,Ostrołęka
 1461011,1461,7,Ostrołęka,gmina Ostrołęka
-1462,14,6,Płock,miasto na prawach powiatu Płock
+1462,14,6,Płock,Płock
 1462011,1462,7,Płock,gmina Płock
-1463,14,6,Radom,miasto na prawach powiatu Radom
+1463,14,6,Radom,Radom
 1463011,1463,7,Radom,gmina Radom
-1464,14,6,Siedlce,miasto na prawach powiatu Siedlce
+1464,14,6,Siedlce,Siedlce
 1464011,1464,7,Siedlce,gmina Siedlce
-1465,14,6,Warszawa,miasto stołeczne, na prawach powiatu Warszawa
+1465,14,6,Warszawa,Warszawa
 1465011,1465,7,Warszawa,gmina Warszawa
-1465028,1465,,Bemowo,dzielnica Bemowo
-1465038,1465,,Białołęka,dzielnica Białołęka
-1465048,1465,,Bielany,dzielnica Bielany
-1465058,1465,,Mokotów,dzielnica Mokotów
-1465068,1465,,Ochota,dzielnica Ochota
-1465078,1465,,Praga-Południe,dzielnica Praga-Południe
-1465088,1465,,Praga-Północ,dzielnica Praga-Północ
-1465098,1465,,Rembertów,dzielnica Rembertów
-1465108,1465,,Śródmieście,dzielnica Śródmieście
-1465118,1465,,Targówek,dzielnica Targówek
-1465128,1465,,Ursus,dzielnica Ursus
-1465138,1465,,Ursynów,dzielnica Ursynów
-1465148,1465,,Wawer,dzielnica Wawer
-1465158,1465,,Wesoła,dzielnica Wesoła
-1465168,1465,,Wilanów,dzielnica Wilanów
-1465178,1465,,Włochy,dzielnica Włochy
-1465188,1465,,Wola,dzielnica Wola
-1465198,1465,,Żoliborz,dzielnica Żoliborz
+1465028,1465,,Bemowo,Bemowo
+1465038,1465,,Białołęka,Białołęka
+1465048,1465,,Bielany,Bielany
+1465058,1465,,Mokotów,Mokotów
+1465068,1465,,Ochota,Ochota
+1465078,1465,,Praga-Południe,Praga-Południe
+1465088,1465,,Praga-Północ,Praga-Północ
+1465098,1465,,Rembertów,Rembertów
+1465108,1465,,Śródmieście,Śródmieście
+1465118,1465,,Targówek,Targówek
+1465128,1465,,Ursus,Ursus
+1465138,1465,,Ursynów,Ursynów
+1465148,1465,,Wawer,Wawer
+1465158,1465,,Wesoła,Wesoła
+1465168,1465,,Wilanów,Wilanów
+1465178,1465,,Włochy,Włochy
+1465188,1465,,Wola,Wola
+1465198,1465,,Żoliborz,Żoliborz
 16,1,4,opolskie,województwo opolskie
 1601,16,6,brzeski,powiat brzeski
 1601011,1601,7,Brzeg,gmina Brzeg
 1601022,1601,7,Skarbimierz,gmina Skarbimierz
 1601033,1601,7,Grodków,gmina Grodków
 1601034,1601,8,Grodków,miasto Grodków
-1601035,1601,8,Grodków,obszar wiejski Grodków
+1601035,1601,8,Grodków,Grodków
 1601043,1601,7,Lewin Brzeski,gmina Lewin Brzeski
 1601044,1601,8,Lewin Brzeski,miasto Lewin Brzeski
-1601045,1601,8,Lewin Brzeski,obszar wiejski Lewin Brzeski
+1601045,1601,8,Lewin Brzeski,Lewin Brzeski
 1601052,1601,7,Lubsza,gmina Lubsza
 1601062,1601,7,Olszanka,gmina Olszanka
 1602,16,6,głubczycki,powiat głubczycki
 1602013,1602,7,Baborów,gmina Baborów
 1602014,1602,8,Baborów,miasto Baborów
-1602015,1602,8,Baborów,obszar wiejski Baborów
+1602015,1602,8,Baborów,Baborów
 1602022,1602,7,Branice,gmina Branice
 1602033,1602,7,Głubczyce,gmina Głubczyce
 1602034,1602,8,Głubczyce,miasto Głubczyce
-1602035,1602,8,Głubczyce,obszar wiejski Głubczyce
+1602035,1602,8,Głubczyce,Głubczyce
 1602043,1602,7,Kietrz,gmina Kietrz
 1602044,1602,8,Kietrz,miasto Kietrz
-1602045,1602,8,Kietrz,obszar wiejski Kietrz
+1602045,1602,8,Kietrz,Kietrz
 1603,16,6,kędzierzyńsko-kozielski,powiat kędzierzyńsko-kozielski
 1603011,1603,7,Kędzierzyn-Koźle,gmina Kędzierzyn-Koźle
 1603022,1603,7,Bierawa,gmina Bierawa
@@ -2068,67 +2068,67 @@ id,parent_id,admin_level,name,relation_name
 1604,16,6,kluczborski,powiat kluczborski
 1604013,1604,7,Byczyna,gmina Byczyna
 1604014,1604,8,Byczyna,miasto Byczyna
-1604015,1604,8,Byczyna,obszar wiejski Byczyna
+1604015,1604,8,Byczyna,Byczyna
 1604023,1604,7,Kluczbork,gmina Kluczbork
 1604024,1604,8,Kluczbork,miasto Kluczbork
-1604025,1604,8,Kluczbork,obszar wiejski Kluczbork
+1604025,1604,8,Kluczbork,Kluczbork
 1604032,1604,7,Lasowice Wielkie,gmina Lasowice Wielkie
 1604043,1604,7,Wołczyn,gmina Wołczyn
 1604044,1604,8,Wołczyn,miasto Wołczyn
-1604045,1604,8,Wołczyn,obszar wiejski Wołczyn
+1604045,1604,8,Wołczyn,Wołczyn
 1605,16,6,krapkowicki,powiat krapkowicki
 1605013,1605,7,Gogolin,gmina Gogolin
 1605014,1605,8,Gogolin,miasto Gogolin
-1605015,1605,8,Gogolin,obszar wiejski Gogolin
+1605015,1605,8,Gogolin,Gogolin
 1605023,1605,7,Krapkowice,gmina Krapkowice
 1605024,1605,8,Krapkowice,miasto Krapkowice
-1605025,1605,8,Krapkowice,obszar wiejski Krapkowice
+1605025,1605,8,Krapkowice,Krapkowice
 1605032,1605,7,Strzeleczki,gmina Strzeleczki
 1605042,1605,7,Walce,gmina Walce
 1605053,1605,7,Zdzieszowice,gmina Zdzieszowice
 1605054,1605,8,Zdzieszowice,miasto Zdzieszowice
-1605055,1605,8,Zdzieszowice,obszar wiejski Zdzieszowice
+1605055,1605,8,Zdzieszowice,Zdzieszowice
 1606,16,6,namysłowski,powiat namysłowski
 1606012,1606,7,Domaszowice,gmina Domaszowice
 1606023,1606,7,Namysłów,gmina Namysłów
 1606024,1606,8,Namysłów,miasto Namysłów
-1606025,1606,8,Namysłów,obszar wiejski Namysłów
+1606025,1606,8,Namysłów,Namysłów
 1606032,1606,7,Pokój,gmina Pokój
 1606042,1606,7,Świerczów,gmina Świerczów
 1606052,1606,7,Wilków,gmina Wilków
 1607,16,6,nyski,powiat nyski
 1607013,1607,7,Głuchołazy,gmina Głuchołazy
 1607014,1607,8,Głuchołazy,miasto Głuchołazy
-1607015,1607,8,Głuchołazy,obszar wiejski Głuchołazy
+1607015,1607,8,Głuchołazy,Głuchołazy
 1607022,1607,7,Kamiennik,gmina Kamiennik
 1607033,1607,7,Korfantów,gmina Korfantów
 1607034,1607,8,Korfantów,miasto Korfantów
-1607035,1607,8,Korfantów,obszar wiejski Korfantów
+1607035,1607,8,Korfantów,Korfantów
 1607042,1607,7,Łambinowice,gmina Łambinowice
 1607053,1607,7,Nysa,gmina Nysa
 1607054,1607,8,Nysa,miasto Nysa
-1607055,1607,8,Nysa,obszar wiejski Nysa
+1607055,1607,8,Nysa,Nysa
 1607063,1607,7,Otmuchów,gmina Otmuchów
 1607064,1607,8,Otmuchów,miasto Otmuchów
-1607065,1607,8,Otmuchów,obszar wiejski Otmuchów
+1607065,1607,8,Otmuchów,Otmuchów
 1607073,1607,7,Paczków,gmina Paczków
 1607074,1607,8,Paczków,miasto Paczków
-1607075,1607,8,Paczków,obszar wiejski Paczków
+1607075,1607,8,Paczków,Paczków
 1607082,1607,7,Pakosławice,gmina Pakosławice
 1607092,1607,7,Skoroszyce,gmina Skoroszyce
 1608,16,6,oleski,powiat oleski
 1608013,1608,7,Dobrodzień,gmina Dobrodzień
 1608014,1608,8,Dobrodzień,miasto Dobrodzień
-1608015,1608,8,Dobrodzień,obszar wiejski Dobrodzień
+1608015,1608,8,Dobrodzień,Dobrodzień
 1608023,1608,7,Gorzów Śląski,gmina Gorzów Śląski
 1608024,1608,8,Gorzów Śląski,miasto Gorzów Śląski
-1608025,1608,8,Gorzów Śląski,obszar wiejski Gorzów Śląski
+1608025,1608,8,Gorzów Śląski,Gorzów Śląski
 1608033,1608,7,Olesno,gmina Olesno
 1608034,1608,8,Olesno,miasto Olesno
-1608035,1608,8,Olesno,obszar wiejski Olesno
+1608035,1608,8,Olesno,Olesno
 1608043,1608,7,Praszka,gmina Praszka
 1608044,1608,8,Praszka,miasto Praszka
-1608045,1608,8,Praszka,obszar wiejski Praszka
+1608045,1608,8,Praszka,Praszka
 1608052,1608,7,Radłów,gmina Radłów
 1608062,1608,7,Rudniki,gmina Rudniki
 1608072,1608,7,Zębowice,gmina Zębowice
@@ -2141,47 +2141,47 @@ id,parent_id,admin_level,name,relation_name
 1609062,1609,7,Murów,gmina Murów
 1609073,1609,7,Niemodlin,gmina Niemodlin
 1609074,1609,8,Niemodlin,miasto Niemodlin
-1609075,1609,8,Niemodlin,obszar wiejski Niemodlin
+1609075,1609,8,Niemodlin,Niemodlin
 1609083,1609,7,Ozimek,gmina Ozimek
 1609084,1609,8,Ozimek,miasto Ozimek
-1609085,1609,8,Ozimek,obszar wiejski Ozimek
+1609085,1609,8,Ozimek,Ozimek
 1609092,1609,7,Popielów,gmina Popielów
 1609103,1609,7,Prószków,gmina Prószków
 1609104,1609,8,Prószków,miasto Prószków
-1609105,1609,8,Prószków,obszar wiejski Prószków
+1609105,1609,8,Prószków,Prószków
 1609112,1609,7,Tarnów Opolski,gmina Tarnów Opolski
 1609122,1609,7,Tułowice,gmina Tułowice
 1609132,1609,7,Turawa,gmina Turawa
 1610,16,6,prudnicki,powiat prudnicki
 1610013,1610,7,Biała,gmina Biała
 1610014,1610,8,Biała,miasto Biała
-1610015,1610,8,Biała,obszar wiejski Biała
+1610015,1610,8,Biała,Biała
 1610023,1610,7,Głogówek,gmina Głogówek
 1610024,1610,8,Głogówek,miasto Głogówek
-1610025,1610,8,Głogówek,obszar wiejski Głogówek
+1610025,1610,8,Głogówek,Głogówek
 1610032,1610,7,Lubrza,gmina Lubrza
 1610043,1610,7,Prudnik,gmina Prudnik
 1610044,1610,8,Prudnik,miasto Prudnik
-1610045,1610,8,Prudnik,obszar wiejski Prudnik
+1610045,1610,8,Prudnik,Prudnik
 1611,16,6,strzelecki,powiat strzelecki
 1611012,1611,7,Izbicko,gmina Izbicko
 1611022,1611,7,Jemielnica,gmina Jemielnica
 1611033,1611,7,Kolonowskie,gmina Kolonowskie
 1611034,1611,8,Kolonowskie,miasto Kolonowskie
-1611035,1611,8,Kolonowskie,obszar wiejski Kolonowskie
+1611035,1611,8,Kolonowskie,Kolonowskie
 1611043,1611,7,Leśnica,gmina Leśnica
 1611044,1611,8,Leśnica,miasto Leśnica
-1611045,1611,8,Leśnica,obszar wiejski Leśnica
+1611045,1611,8,Leśnica,Leśnica
 1611053,1611,7,Strzelce Opolskie,gmina Strzelce Opolskie
 1611054,1611,8,Strzelce Opolskie,miasto Strzelce Opolskie
-1611055,1611,8,Strzelce Opolskie,obszar wiejski Strzelce Opolskie
+1611055,1611,8,Strzelce Opolskie,Strzelce Opolskie
 1611063,1611,7,Ujazd,gmina Ujazd
 1611064,1611,8,Ujazd,miasto Ujazd
-1611065,1611,8,Ujazd,obszar wiejski Ujazd
+1611065,1611,8,Ujazd,Ujazd
 1611073,1611,7,Zawadzkie,gmina Zawadzkie
 1611074,1611,8,Zawadzkie,miasto Zawadzkie
-1611075,1611,8,Zawadzkie,obszar wiejski Zawadzkie
-1661,16,6,Opole,miasto na prawach powiatu Opole
+1611075,1611,8,Zawadzkie,Zawadzkie
+1661,16,6,Opole,Opole
 1661011,1661,7,Opole,gmina Opole
 18,1,4,podkarpackie,województwo podkarpackie
 1801,18,6,bieszczadzki,powiat bieszczadzki
@@ -2189,11 +2189,11 @@ id,parent_id,admin_level,name,relation_name
 1801052,1801,7,Lutowiska,gmina Lutowiska
 1801083,1801,7,Ustrzyki Dolne,gmina Ustrzyki Dolne
 1801084,1801,8,Ustrzyki Dolne,miasto Ustrzyki Dolne
-1801085,1801,8,Ustrzyki Dolne,obszar wiejski Ustrzyki Dolne
+1801085,1801,8,Ustrzyki Dolne,Ustrzyki Dolne
 1802,18,6,brzozowski,powiat brzozowski
 1802013,1802,7,Brzozów,gmina Brzozów
 1802014,1802,8,Brzozów,miasto Brzozów
-1802015,1802,8,Brzozów,obszar wiejski Brzozów
+1802015,1802,8,Brzozów,Brzozów
 1802022,1802,7,Domaradz,gmina Domaradz
 1802032,1802,7,Dydnia,gmina Dydnia
 1802042,1802,7,Haczów,gmina Haczów
@@ -2203,13 +2203,13 @@ id,parent_id,admin_level,name,relation_name
 1803011,1803,7,Dębica,gmina Dębica
 1803023,1803,7,Brzostek,gmina Brzostek
 1803024,1803,8,Brzostek,miasto Brzostek
-1803025,1803,8,Brzostek,obszar wiejski Brzostek
+1803025,1803,8,Brzostek,Brzostek
 1803032,1803,7,Czarna,gmina Czarna
 1803042,1803,7,Dębica,gmina Dębica
 1803052,1803,7,Jodłowa,gmina Jodłowa
 1803063,1803,7,Pilzno,gmina Pilzno
 1803064,1803,8,Pilzno,miasto Pilzno
-1803065,1803,8,Pilzno,obszar wiejski Pilzno
+1803065,1803,8,Pilzno,Pilzno
 1803072,1803,7,Żyraków,gmina Żyraków
 1804,18,6,jarosławski,powiat jarosławski
 1804011,1804,7,Jarosław,gmina Jarosław
@@ -2220,7 +2220,7 @@ id,parent_id,admin_level,name,relation_name
 1804062,1804,7,Pawłosiów,gmina Pawłosiów
 1804073,1804,7,Pruchnik,gmina Pruchnik
 1804074,1804,8,Pruchnik,miasto Pruchnik
-1804075,1804,8,Pruchnik,obszar wiejski Pruchnik
+1804075,1804,8,Pruchnik,Pruchnik
 1804082,1804,7,Radymno,gmina Radymno
 1804092,1804,7,Rokietnica,gmina Rokietnica
 1804102,1804,7,Roźwienica,gmina Roźwienica
@@ -2232,7 +2232,7 @@ id,parent_id,admin_level,name,relation_name
 1805042,1805,7,Jasło,gmina Jasło
 1805053,1805,7,Kołaczyce,gmina Kołaczyce
 1805054,1805,8,Kołaczyce,miasto Kołaczyce
-1805055,1805,8,Kołaczyce,obszar wiejski Kołaczyce
+1805055,1805,8,Kołaczyce,Kołaczyce
 1805062,1805,7,Krempna,gmina Krempna
 1805072,1805,7,Nowy Żmigród,gmina Nowy Żmigród
 1805082,1805,7,Osiek Jasielski,gmina Osiek Jasielski
@@ -2242,7 +2242,7 @@ id,parent_id,admin_level,name,relation_name
 1806012,1806,7,Cmolas,gmina Cmolas
 1806023,1806,7,Kolbuszowa,gmina Kolbuszowa
 1806024,1806,8,Kolbuszowa,miasto Kolbuszowa
-1806025,1806,8,Kolbuszowa,obszar wiejski Kolbuszowa
+1806025,1806,8,Kolbuszowa,Kolbuszowa
 1806032,1806,7,Majdan Królewski,gmina Majdan Królewski
 1806042,1806,7,Niwiska,gmina Niwiska
 1806052,1806,7,Raniżów,gmina Raniżów
@@ -2251,19 +2251,19 @@ id,parent_id,admin_level,name,relation_name
 1807012,1807,7,Chorkówka,gmina Chorkówka
 1807023,1807,7,Dukla,gmina Dukla
 1807024,1807,8,Dukla,miasto Dukla
-1807025,1807,8,Dukla,obszar wiejski Dukla
+1807025,1807,8,Dukla,Dukla
 1807033,1807,7,Iwonicz-Zdrój,gmina Iwonicz-Zdrój
 1807034,1807,8,Iwonicz-Zdrój,miasto Iwonicz-Zdrój
-1807035,1807,8,Iwonicz-Zdrój,obszar wiejski Iwonicz-Zdrój
+1807035,1807,8,Iwonicz-Zdrój,Iwonicz-Zdrój
 1807043,1807,7,Jedlicze,gmina Jedlicze
 1807044,1807,8,Jedlicze,miasto Jedlicze
-1807045,1807,8,Jedlicze,obszar wiejski Jedlicze
+1807045,1807,8,Jedlicze,Jedlicze
 1807052,1807,7,Korczyna,gmina Korczyna
 1807062,1807,7,Krościenko Wyżne,gmina Krościenko Wyżne
 1807072,1807,7,Miejsce Piastowe,gmina Miejsce Piastowe
 1807083,1807,7,Rymanów,gmina Rymanów
 1807084,1807,8,Rymanów,miasto Rymanów
-1807085,1807,8,Rymanów,obszar wiejski Rymanów
+1807085,1807,8,Rymanów,Rymanów
 1807092,1807,7,Wojaszówka,gmina Wojaszówka
 1807102,1807,7,Jaśliska,gmina Jaśliska
 1808,18,6,leżajski,powiat leżajski
@@ -2273,20 +2273,20 @@ id,parent_id,admin_level,name,relation_name
 1808042,1808,7,Leżajsk,gmina Leżajsk
 1808053,1808,7,Nowa Sarzyna,gmina Nowa Sarzyna
 1808054,1808,8,Nowa Sarzyna,miasto Nowa Sarzyna
-1808055,1808,8,Nowa Sarzyna,obszar wiejski Nowa Sarzyna
+1808055,1808,8,Nowa Sarzyna,Nowa Sarzyna
 1809,18,6,lubaczowski,powiat lubaczowski
 1809011,1809,7,Lubaczów,gmina Lubaczów
 1809023,1809,7,Cieszanów,gmina Cieszanów
 1809024,1809,8,Cieszanów,miasto Cieszanów
-1809025,1809,8,Cieszanów,obszar wiejski Cieszanów
+1809025,1809,8,Cieszanów,Cieszanów
 1809032,1809,7,Horyniec-Zdrój,gmina Horyniec-Zdrój
 1809042,1809,7,Lubaczów,gmina Lubaczów
 1809053,1809,7,Narol,gmina Narol
 1809054,1809,8,Narol,miasto Narol
-1809055,1809,8,Narol,obszar wiejski Narol
+1809055,1809,8,Narol,Narol
 1809063,1809,7,Oleszyce,gmina Oleszyce
 1809064,1809,8,Oleszyce,miasto Oleszyce
-1809065,1809,8,Oleszyce,obszar wiejski Oleszyce
+1809065,1809,8,Oleszyce,Oleszyce
 1809072,1809,7,Stary Dzików,gmina Stary Dzików
 1809082,1809,7,Wielkie Oczy,gmina Wielkie Oczy
 1810,18,6,łańcucki,powiat łańcucki
@@ -2306,10 +2306,10 @@ id,parent_id,admin_level,name,relation_name
 1811062,1811,7,Padew Narodowa,gmina Padew Narodowa
 1811073,1811,7,Przecław,gmina Przecław
 1811074,1811,8,Przecław,miasto Przecław
-1811075,1811,8,Przecław,obszar wiejski Przecław
+1811075,1811,8,Przecław,Przecław
 1811083,1811,7,Radomyśl Wielki,gmina Radomyśl Wielki
 1811084,1811,8,Radomyśl Wielki,miasto Radomyśl Wielki
-1811085,1811,8,Radomyśl Wielki,obszar wiejski Radomyśl Wielki
+1811085,1811,8,Radomyśl Wielki,Radomyśl Wielki
 1811092,1811,7,Tuszów Narodowy,gmina Tuszów Narodowy
 1811102,1811,7,Wadowice Górne,gmina Wadowice Górne
 1812,18,6,niżański,powiat niżański
@@ -2319,13 +2319,13 @@ id,parent_id,admin_level,name,relation_name
 1812042,1812,7,Krzeszów,gmina Krzeszów
 1812053,1812,7,Nisko,gmina Nisko
 1812054,1812,8,Nisko,miasto Nisko
-1812055,1812,8,Nisko,obszar wiejski Nisko
+1812055,1812,8,Nisko,Nisko
 1812063,1812,7,Rudnik nad Sanem,gmina Rudnik nad Sanem
 1812064,1812,8,Rudnik nad Sanem,miasto Rudnik nad Sanem
-1812065,1812,8,Rudnik nad Sanem,obszar wiejski Rudnik nad Sanem
+1812065,1812,8,Rudnik nad Sanem,Rudnik nad Sanem
 1812073,1812,7,Ulanów,gmina Ulanów
 1812074,1812,8,Ulanów,miasto Ulanów
-1812075,1812,8,Ulanów,obszar wiejski Ulanów
+1812075,1812,8,Ulanów,Ulanów
 1813,18,6,przemyski,powiat przemyski
 1813012,1813,7,Bircza,gmina Bircza
 1813022,1813,7,Dubiecko,gmina Dubiecko
@@ -2344,11 +2344,11 @@ id,parent_id,admin_level,name,relation_name
 1814042,1814,7,Jawornik Polski,gmina Jawornik Polski
 1814053,1814,7,Kańczuga,gmina Kańczuga
 1814054,1814,8,Kańczuga,miasto Kańczuga
-1814055,1814,8,Kańczuga,obszar wiejski Kańczuga
+1814055,1814,8,Kańczuga,Kańczuga
 1814062,1814,7,Przeworsk,gmina Przeworsk
 1814073,1814,7,Sieniawa,gmina Sieniawa
 1814074,1814,8,Sieniawa,miasto Sieniawa
-1814075,1814,8,Sieniawa,obszar wiejski Sieniawa
+1814075,1814,8,Sieniawa,Sieniawa
 1814082,1814,7,Tryńcza,gmina Tryńcza
 1814092,1814,7,Zarzecze,gmina Zarzecze
 1815,18,6,ropczycko-sędziszowski,powiat ropczycko-sędziszowski
@@ -2356,36 +2356,36 @@ id,parent_id,admin_level,name,relation_name
 1815022,1815,7,Ostrów,gmina Ostrów
 1815033,1815,7,Ropczyce,gmina Ropczyce
 1815034,1815,8,Ropczyce,miasto Ropczyce
-1815035,1815,8,Ropczyce,obszar wiejski Ropczyce
+1815035,1815,8,Ropczyce,Ropczyce
 1815043,1815,7,Sędziszów Małopolski,gmina Sędziszów Małopolski
 1815044,1815,8,Sędziszów Małopolski,miasto Sędziszów Małopolski
-1815045,1815,8,Sędziszów Małopolski,obszar wiejski Sędziszów Małopolski
+1815045,1815,8,Sędziszów Małopolski,Sędziszów Małopolski
 1815052,1815,7,Wielopole Skrzyńskie,gmina Wielopole Skrzyńskie
 1816,18,6,rzeszowski,powiat rzeszowski
 1816011,1816,7,Dynów,gmina Dynów
 1816023,1816,7,Błażowa,gmina Błażowa
 1816024,1816,8,Błażowa,miasto Błażowa
-1816025,1816,8,Błażowa,obszar wiejski Błażowa
+1816025,1816,8,Błażowa,Błażowa
 1816033,1816,7,Boguchwała,gmina Boguchwała
 1816034,1816,8,Boguchwała,miasto Boguchwała
-1816035,1816,8,Boguchwała,obszar wiejski Boguchwała
+1816035,1816,8,Boguchwała,Boguchwała
 1816042,1816,7,Chmielnik,gmina Chmielnik
 1816052,1816,7,Dynów,gmina Dynów
 1816063,1816,7,Głogów Małopolski,gmina Głogów Małopolski
 1816064,1816,8,Głogów Małopolski,miasto Głogów Małopolski
-1816065,1816,8,Głogów Małopolski,obszar wiejski Głogów Małopolski
+1816065,1816,8,Głogów Małopolski,Głogów Małopolski
 1816072,1816,7,Hyżne,gmina Hyżne
 1816082,1816,7,Kamień,gmina Kamień
 1816092,1816,7,Krasne,gmina Krasne
 1816102,1816,7,Lubenia,gmina Lubenia
 1816113,1816,7,Sokołów Małopolski,gmina Sokołów Małopolski
 1816114,1816,8,Sokołów Małopolski,miasto Sokołów Małopolski
-1816115,1816,8,Sokołów Małopolski,obszar wiejski Sokołów Małopolski
+1816115,1816,8,Sokołów Małopolski,Sokołów Małopolski
 1816122,1816,7,Świlcza,gmina Świlcza
 1816132,1816,7,Trzebownisko,gmina Trzebownisko
 1816143,1816,7,Tyczyn,gmina Tyczyn
 1816144,1816,8,Tyczyn,miasto Tyczyn
-1816145,1816,8,Tyczyn,obszar wiejski Tyczyn
+1816145,1816,8,Tyczyn,Tyczyn
 1817,18,6,sanocki,powiat sanocki
 1817011,1817,7,Sanok,gmina Sanok
 1817022,1817,7,Besko,gmina Besko
@@ -2395,7 +2395,7 @@ id,parent_id,admin_level,name,relation_name
 1817062,1817,7,Tyrawa Wołoska,gmina Tyrawa Wołoska
 1817073,1817,7,Zagórz,gmina Zagórz
 1817074,1817,8,Zagórz,miasto Zagórz
-1817075,1817,8,Zagórz,obszar wiejski Zagórz
+1817075,1817,8,Zagórz,Zagórz
 1817082,1817,7,Zarszyn,gmina Zarszyn
 1818,18,6,stalowowolski,powiat stalowowolski
 1818011,1818,7,Stalowa Wola,gmina Stalowa Wola
@@ -2410,32 +2410,32 @@ id,parent_id,admin_level,name,relation_name
 1819032,1819,7,Niebylec,gmina Niebylec
 1819043,1819,7,Strzyżów,gmina Strzyżów
 1819044,1819,8,Strzyżów,miasto Strzyżów
-1819045,1819,8,Strzyżów,obszar wiejski Strzyżów
+1819045,1819,8,Strzyżów,Strzyżów
 1819052,1819,7,Wiśniowa,gmina Wiśniowa
 1820,18,6,tarnobrzeski,powiat tarnobrzeski
 1820013,1820,7,Baranów Sandomierski,gmina Baranów Sandomierski
 1820014,1820,8,Baranów Sandomierski,miasto Baranów Sandomierski
-1820015,1820,8,Baranów Sandomierski,obszar wiejski Baranów Sandomierski
+1820015,1820,8,Baranów Sandomierski,Baranów Sandomierski
 1820022,1820,7,Gorzyce,gmina Gorzyce
 1820032,1820,7,Grębów,gmina Grębów
 1820043,1820,7,Nowa Dęba,gmina Nowa Dęba
 1820044,1820,8,Nowa Dęba,miasto Nowa Dęba
-1820045,1820,8,Nowa Dęba,obszar wiejski Nowa Dęba
+1820045,1820,8,Nowa Dęba,Nowa Dęba
 1821,18,6,leski,powiat leski
 1821012,1821,7,Baligród,gmina Baligród
 1821022,1821,7,Cisna,gmina Cisna
 1821033,1821,7,Lesko,gmina Lesko
 1821034,1821,8,Lesko,miasto Lesko
-1821035,1821,8,Lesko,obszar wiejski Lesko
+1821035,1821,8,Lesko,Lesko
 1821042,1821,7,Olszanica,gmina Olszanica
 1821052,1821,7,Solina,gmina Solina
-1861,18,6,Krosno,miasto na prawach powiatu Krosno
+1861,18,6,Krosno,Krosno
 1861011,1861,7,Krosno,gmina Krosno
-1862,18,6,Przemyśl,miasto na prawach powiatu Przemyśl
+1862,18,6,Przemyśl,Przemyśl
 1862011,1862,7,Przemyśl,gmina Przemyśl
-1863,18,6,Rzeszów,miasto na prawach powiatu Rzeszów
+1863,18,6,Rzeszów,Rzeszów
 1863011,1863,7,Rzeszów,gmina Rzeszów
-1864,18,6,Tarnobrzeg,miasto na prawach powiatu Tarnobrzeg
+1864,18,6,Tarnobrzeg,Tarnobrzeg
 1864011,1864,7,Tarnobrzeg,gmina Tarnobrzeg
 20,1,4,podlaskie,województwo podlaskie
 2001,20,6,augustowski,powiat augustowski
@@ -2444,43 +2444,43 @@ id,parent_id,admin_level,name,relation_name
 2001032,2001,7,Bargłów Kościelny,gmina Bargłów Kościelny
 2001043,2001,7,Lipsk,gmina Lipsk
 2001044,2001,8,Lipsk,miasto Lipsk
-2001045,2001,8,Lipsk,obszar wiejski Lipsk
+2001045,2001,8,Lipsk,Lipsk
 2001052,2001,7,Nowinka,gmina Nowinka
 2001062,2001,7,Płaska,gmina Płaska
 2001072,2001,7,Sztabin,gmina Sztabin
 2002,20,6,białostocki,powiat białostocki
 2002013,2002,7,Choroszcz,gmina Choroszcz
 2002014,2002,8,Choroszcz,miasto Choroszcz
-2002015,2002,8,Choroszcz,obszar wiejski Choroszcz
+2002015,2002,8,Choroszcz,Choroszcz
 2002023,2002,7,Czarna Białostocka,gmina Czarna Białostocka
 2002024,2002,8,Czarna Białostocka,miasto Czarna Białostocka
-2002025,2002,8,Czarna Białostocka,obszar wiejski Czarna Białostocka
+2002025,2002,8,Czarna Białostocka,Czarna Białostocka
 2002032,2002,7,Dobrzyniewo Duże,gmina Dobrzyniewo Duże
 2002042,2002,7,Gródek,gmina Gródek
 2002052,2002,7,Juchnowiec Kościelny,gmina Juchnowiec Kościelny
 2002063,2002,7,Łapy,gmina Łapy
 2002064,2002,8,Łapy,miasto Łapy
-2002065,2002,8,Łapy,obszar wiejski Łapy
+2002065,2002,8,Łapy,Łapy
 2002073,2002,7,Michałowo,gmina Michałowo
 2002074,2002,8,Michałowo,miasto Michałowo
-2002075,2002,8,Michałowo,obszar wiejski Michałowo
+2002075,2002,8,Michałowo,Michałowo
 2002082,2002,7,Poświętne,gmina Poświętne
 2002093,2002,7,Supraśl,gmina Supraśl
 2002094,2002,8,Supraśl,miasto Supraśl
-2002095,2002,8,Supraśl,obszar wiejski Supraśl
+2002095,2002,8,Supraśl,Supraśl
 2002103,2002,7,Suraż,gmina Suraż
 2002104,2002,8,Suraż,miasto Suraż
-2002105,2002,8,Suraż,obszar wiejski Suraż
+2002105,2002,8,Suraż,Suraż
 2002112,2002,7,Turośń Kościelna,gmina Turośń Kościelna
 2002123,2002,7,Tykocin,gmina Tykocin
 2002124,2002,8,Tykocin,miasto Tykocin
-2002125,2002,8,Tykocin,obszar wiejski Tykocin
+2002125,2002,8,Tykocin,Tykocin
 2002133,2002,7,Wasilków,gmina Wasilków
 2002134,2002,8,Wasilków,miasto Wasilków
-2002135,2002,8,Wasilków,obszar wiejski Wasilków
+2002135,2002,8,Wasilków,Wasilków
 2002143,2002,7,Zabłudów,gmina Zabłudów
 2002144,2002,8,Zabłudów,miasto Zabłudów
-2002145,2002,8,Zabłudów,obszar wiejski Zabłudów
+2002145,2002,8,Zabłudów,Zabłudów
 2002152,2002,7,Zawady,gmina Zawady
 2003,20,6,bielski,powiat bielski
 2003011,2003,7,Bielsk Podlaski,gmina Bielsk Podlaski
@@ -2497,10 +2497,10 @@ id,parent_id,admin_level,name,relation_name
 2004032,2004,7,Radziłów,gmina Radziłów
 2004043,2004,7,Rajgród,gmina Rajgród
 2004044,2004,8,Rajgród,miasto Rajgród
-2004045,2004,8,Rajgród,obszar wiejski Rajgród
+2004045,2004,8,Rajgród,Rajgród
 2004053,2004,7,Szczuczyn,gmina Szczuczyn
 2004054,2004,8,Szczuczyn,miasto Szczuczyn
-2004055,2004,8,Szczuczyn,obszar wiejski Szczuczyn
+2004055,2004,8,Szczuczyn,Szczuczyn
 2004062,2004,7,Wąsosz,gmina Wąsosz
 2005,20,6,hajnowski,powiat hajnowski
 2005011,2005,7,Hajnówka,gmina Hajnówka
@@ -2511,7 +2511,7 @@ id,parent_id,admin_level,name,relation_name
 2005062,2005,7,Hajnówka,gmina Hajnówka
 2005073,2005,7,Kleszczele,gmina Kleszczele
 2005074,2005,8,Kleszczele,miasto Kleszczele
-2005075,2005,8,Kleszczele,obszar wiejski Kleszczele
+2005075,2005,8,Kleszczele,Kleszczele
 2005082,2005,7,Narew,gmina Narew
 2005092,2005,7,Narewka,gmina Narewka
 2006,20,6,kolneński,powiat kolneński
@@ -2521,17 +2521,17 @@ id,parent_id,admin_level,name,relation_name
 2006042,2006,7,Mały Płock,gmina Mały Płock
 2006053,2006,7,Stawiski,gmina Stawiski
 2006054,2006,8,Stawiski,miasto Stawiski
-2006055,2006,8,Stawiski,obszar wiejski Stawiski
+2006055,2006,8,Stawiski,Stawiski
 2006062,2006,7,Turośl,gmina Turośl
 2007,20,6,łomżyński,powiat łomżyński
 2007013,2007,7,Jedwabne,gmina Jedwabne
 2007014,2007,8,Jedwabne,miasto Jedwabne
-2007015,2007,8,Jedwabne,obszar wiejski Jedwabne
+2007015,2007,8,Jedwabne,Jedwabne
 2007022,2007,7,Łomża,gmina Łomża
 2007032,2007,7,Miastkowo,gmina Miastkowo
 2007043,2007,7,Nowogród,gmina Nowogród
 2007044,2007,8,Nowogród,miasto Nowogród
-2007045,2007,8,Nowogród,obszar wiejski Nowogród
+2007045,2007,8,Nowogród,Nowogród
 2007052,2007,7,Piątnica,gmina Piątnica
 2007062,2007,7,Przytuły,gmina Przytuły
 2007072,2007,7,Śniadowo,gmina Śniadowo
@@ -2540,16 +2540,16 @@ id,parent_id,admin_level,name,relation_name
 2008,20,6,moniecki,powiat moniecki
 2008013,2008,7,Goniądz,gmina Goniądz
 2008014,2008,8,Goniądz,miasto Goniądz
-2008015,2008,8,Goniądz,obszar wiejski Goniądz
+2008015,2008,8,Goniądz,Goniądz
 2008022,2008,7,Jasionówka,gmina Jasionówka
 2008032,2008,7,Jaświły,gmina Jaświły
 2008043,2008,7,Knyszyn,gmina Knyszyn
 2008044,2008,8,Knyszyn,miasto Knyszyn
-2008045,2008,8,Knyszyn,obszar wiejski Knyszyn
+2008045,2008,8,Knyszyn,Knyszyn
 2008052,2008,7,Krypno,gmina Krypno
 2008063,2008,7,Mońki,gmina Mońki
 2008064,2008,8,Mońki,miasto Mońki
-2008065,2008,8,Mońki,obszar wiejski Mońki
+2008065,2008,8,Mońki,Mońki
 2008072,2008,7,Trzcianne,gmina Trzcianne
 2009,20,6,sejneński,powiat sejneński
 2009011,2009,7,Sejny,gmina Sejny
@@ -2561,7 +2561,7 @@ id,parent_id,admin_level,name,relation_name
 2010011,2010,7,Siemiatycze,gmina Siemiatycze
 2010023,2010,7,Drohiczyn,gmina Drohiczyn
 2010024,2010,8,Drohiczyn,miasto Drohiczyn
-2010025,2010,8,Drohiczyn,obszar wiejski Drohiczyn
+2010025,2010,8,Drohiczyn,Drohiczyn
 2010032,2010,7,Dziadkowice,gmina Dziadkowice
 2010042,2010,7,Grodzisk,gmina Grodzisk
 2010052,2010,7,Mielnik,gmina Mielnik
@@ -2572,21 +2572,21 @@ id,parent_id,admin_level,name,relation_name
 2011,20,6,sokólski,powiat sokólski
 2011013,2011,7,Dąbrowa Białostocka,gmina Dąbrowa Białostocka
 2011014,2011,8,Dąbrowa Białostocka,miasto Dąbrowa Białostocka
-2011015,2011,8,Dąbrowa Białostocka,obszar wiejski Dąbrowa Białostocka
+2011015,2011,8,Dąbrowa Białostocka,Dąbrowa Białostocka
 2011022,2011,7,Janów,gmina Janów
 2011032,2011,7,Korycin,gmina Korycin
 2011043,2011,7,Krynki,gmina Krynki
 2011044,2011,8,Krynki,miasto Krynki
-2011045,2011,8,Krynki,obszar wiejski Krynki
+2011045,2011,8,Krynki,Krynki
 2011052,2011,7,Kuźnica,gmina Kuźnica
 2011062,2011,7,Nowy Dwór,gmina Nowy Dwór
 2011072,2011,7,Sidra,gmina Sidra
 2011083,2011,7,Sokółka,gmina Sokółka
 2011084,2011,8,Sokółka,miasto Sokółka
-2011085,2011,8,Sokółka,obszar wiejski Sokółka
+2011085,2011,8,Sokółka,Sokółka
 2011093,2011,7,Suchowola,gmina Suchowola
 2011094,2011,8,Suchowola,miasto Suchowola
-2011095,2011,8,Suchowola,obszar wiejski Suchowola
+2011095,2011,8,Suchowola,Suchowola
 2011102,2011,7,Szudziałowo,gmina Szudziałowo
 2012,20,6,suwalski,powiat suwalski
 2012012,2012,7,Bakałarzewo,gmina Bakałarzewo
@@ -2602,10 +2602,10 @@ id,parent_id,admin_level,name,relation_name
 2013011,2013,7,Wysokie Mazowieckie,gmina Wysokie Mazowieckie
 2013023,2013,7,Ciechanowiec,gmina Ciechanowiec
 2013024,2013,8,Ciechanowiec,miasto Ciechanowiec
-2013025,2013,8,Ciechanowiec,obszar wiejski Ciechanowiec
+2013025,2013,8,Ciechanowiec,Ciechanowiec
 2013033,2013,7,Czyżew,gmina Czyżew
 2013034,2013,8,Czyżew,miasto Czyżew
-2013035,2013,8,Czyżew,obszar wiejski Czyżew
+2013035,2013,8,Czyżew,Czyżew
 2013042,2013,7,Klukowo,gmina Klukowo
 2013052,2013,7,Kobylin-Borzymy,gmina Kobylin-Borzymy
 2013062,2013,7,Kulesze Kościelne,gmina Kulesze Kościelne
@@ -2613,7 +2613,7 @@ id,parent_id,admin_level,name,relation_name
 2013082,2013,7,Sokoły,gmina Sokoły
 2013093,2013,7,Szepietowo,gmina Szepietowo
 2013094,2013,8,Szepietowo,miasto Szepietowo
-2013095,2013,8,Szepietowo,obszar wiejski Szepietowo
+2013095,2013,8,Szepietowo,Szepietowo
 2013102,2013,7,Wysokie Mazowieckie,gmina Wysokie Mazowieckie
 2014,20,6,zambrowski,powiat zambrowski
 2014011,2014,7,Zambrów,gmina Zambrów
@@ -2621,24 +2621,24 @@ id,parent_id,admin_level,name,relation_name
 2014032,2014,7,Rutki,gmina Rutki
 2014042,2014,7,Szumowo,gmina Szumowo
 2014052,2014,7,Zambrów,gmina Zambrów
-2061,20,6,Białystok,miasto na prawach powiatu Białystok
+2061,20,6,Białystok,Białystok
 2061011,2061,7,Białystok,gmina Białystok
-2062,20,6,Łomża,miasto na prawach powiatu Łomża
+2062,20,6,Łomża,Łomża
 2062011,2062,7,Łomża,gmina Łomża
-2063,20,6,Suwałki,miasto na prawach powiatu Suwałki
+2063,20,6,Suwałki,Suwałki
 2063011,2063,7,Suwałki,gmina Suwałki
 22,1,4,pomorskie,województwo pomorskie
 2201,22,6,bytowski,powiat bytowski
 2201012,2201,7,Borzytuchom,gmina Borzytuchom
 2201023,2201,7,Bytów,gmina Bytów
 2201024,2201,8,Bytów,miasto Bytów
-2201025,2201,8,Bytów,obszar wiejski Bytów
+2201025,2201,8,Bytów,Bytów
 2201032,2201,7,Czarna Dąbrówka,gmina Czarna Dąbrówka
 2201042,2201,7,Kołczygłowy,gmina Kołczygłowy
 2201052,2201,7,Lipnica,gmina Lipnica
 2201063,2201,7,Miastko,gmina Miastko
 2201064,2201,8,Miastko,miasto Miastko
-2201065,2201,8,Miastko,obszar wiejski Miastko
+2201065,2201,8,Miastko,Miastko
 2201072,2201,7,Parchowo,gmina Parchowo
 2201082,2201,7,Studzienice,gmina Studzienice
 2201092,2201,7,Trzebielino,gmina Trzebielino
@@ -2647,21 +2647,21 @@ id,parent_id,admin_level,name,relation_name
 2202011,2202,7,Chojnice,gmina Chojnice
 2202023,2202,7,Brusy,gmina Brusy
 2202024,2202,8,Brusy,miasto Brusy
-2202025,2202,8,Brusy,obszar wiejski Brusy
+2202025,2202,8,Brusy,Brusy
 2202032,2202,7,Chojnice,gmina Chojnice
 2202043,2202,7,Czersk,gmina Czersk
 2202044,2202,8,Czersk,miasto Czersk
-2202045,2202,8,Czersk,obszar wiejski Czersk
+2202045,2202,8,Czersk,Czersk
 2202052,2202,7,Konarzyny,gmina Konarzyny
 2203,22,6,człuchowski,powiat człuchowski
 2203011,2203,7,Człuchów,gmina Człuchów
 2203023,2203,7,Czarne,gmina Czarne
 2203024,2203,8,Czarne,miasto Czarne
-2203025,2203,8,Czarne,obszar wiejski Czarne
+2203025,2203,8,Czarne,Czarne
 2203032,2203,7,Człuchów,gmina Człuchów
 2203043,2203,7,Debrzno,gmina Debrzno
 2203044,2203,8,Debrzno,miasto Debrzno
-2203045,2203,8,Debrzno,obszar wiejski Debrzno
+2203045,2203,8,Debrzno,Debrzno
 2203052,2203,7,Koczała,gmina Koczała
 2203062,2203,7,Przechlewo,gmina Przechlewo
 2203072,2203,7,Rzeczenica,gmina Rzeczenica
@@ -2678,7 +2678,7 @@ id,parent_id,admin_level,name,relation_name
 2205012,2205,7,Chmielno,gmina Chmielno
 2205023,2205,7,Kartuzy,gmina Kartuzy
 2205024,2205,8,Kartuzy,miasto Kartuzy
-2205025,2205,8,Kartuzy,obszar wiejski Kartuzy
+2205025,2205,8,Kartuzy,Kartuzy
 2205032,2205,7,Przodkowo,gmina Przodkowo
 2205042,2205,7,Sierakowice,gmina Sierakowice
 2205052,2205,7,Somonino,gmina Somonino
@@ -2686,7 +2686,7 @@ id,parent_id,admin_level,name,relation_name
 2205072,2205,7,Sulęczyno,gmina Sulęczyno
 2205083,2205,7,Żukowo,gmina Żukowo
 2205084,2205,8,Żukowo,miasto Żukowo
-2205085,2205,8,Żukowo,obszar wiejski Żukowo
+2205085,2205,8,Żukowo,Żukowo
 2206,22,6,kościerski,powiat kościerski
 2206011,2206,7,Kościerzyna,gmina Kościerzyna
 2206022,2206,7,Dziemiany,gmina Dziemiany
@@ -2702,7 +2702,7 @@ id,parent_id,admin_level,name,relation_name
 2207032,2207,7,Kwidzyn,gmina Kwidzyn
 2207043,2207,7,Prabuty,gmina Prabuty
 2207044,2207,8,Prabuty,miasto Prabuty
-2207045,2207,8,Prabuty,obszar wiejski Prabuty
+2207045,2207,8,Prabuty,Prabuty
 2207052,2207,7,Ryjewo,gmina Ryjewo
 2207062,2207,7,Sadlinki,gmina Sadlinki
 2208,22,6,lęborski,powiat lęborski
@@ -2718,13 +2718,13 @@ id,parent_id,admin_level,name,relation_name
 2209062,2209,7,Miłoradz,gmina Miłoradz
 2209073,2209,7,Nowy Staw,gmina Nowy Staw
 2209074,2209,8,Nowy Staw,miasto Nowy Staw
-2209075,2209,8,Nowy Staw,obszar wiejski Nowy Staw
+2209075,2209,8,Nowy Staw,Nowy Staw
 2209082,2209,7,Stare Pole,gmina Stare Pole
 2210,22,6,nowodworski,powiat nowodworski
 2210011,2210,7,Krynica Morska,gmina Krynica Morska
 2210023,2210,7,Nowy Dwór Gdański,gmina Nowy Dwór Gdański
 2210024,2210,8,Nowy Dwór Gdański,miasto Nowy Dwór Gdański
-2210025,2210,8,Nowy Dwór Gdański,obszar wiejski Nowy Dwór Gdański
+2210025,2210,8,Nowy Dwór Gdański,Nowy Dwór Gdański
 2210032,2210,7,Ostaszewo,gmina Ostaszewo
 2210042,2210,7,Stegna,gmina Stegna
 2210052,2210,7,Sztutowo,gmina Sztutowo
@@ -2743,7 +2743,7 @@ id,parent_id,admin_level,name,relation_name
 2212042,2212,7,Główczyce,gmina Główczyce
 2212053,2212,7,Kępice,gmina Kępice
 2212054,2212,8,Kępice,miasto Kępice
-2212055,2212,8,Kępice,obszar wiejski Kępice
+2212055,2212,8,Kępice,Kępice
 2212062,2212,7,Kobylnica,gmina Kobylnica
 2212072,2212,7,Potęgowo,gmina Potęgowo
 2212082,2212,7,Słupsk,gmina Słupsk
@@ -2760,7 +2760,7 @@ id,parent_id,admin_level,name,relation_name
 2213082,2213,7,Osiek,gmina Osiek
 2213093,2213,7,Skarszewy,gmina Skarszewy
 2213094,2213,8,Skarszewy,miasto Skarszewy
-2213095,2213,8,Skarszewy,obszar wiejski Skarszewy
+2213095,2213,8,Skarszewy,Skarszewy
 2213102,2213,7,Skórcz,gmina Skórcz
 2213112,2213,7,Smętowo Graniczne,gmina Smętowo Graniczne
 2213122,2213,7,Starogard Gdański,gmina Starogard Gdański
@@ -2769,11 +2769,11 @@ id,parent_id,admin_level,name,relation_name
 2214011,2214,7,Tczew,gmina Tczew
 2214023,2214,7,Gniew,gmina Gniew
 2214024,2214,8,Gniew,miasto Gniew
-2214025,2214,8,Gniew,obszar wiejski Gniew
+2214025,2214,8,Gniew,Gniew
 2214032,2214,7,Morzeszczyn,gmina Morzeszczyn
 2214043,2214,7,Pelplin,gmina Pelplin
 2214044,2214,8,Pelplin,miasto Pelplin
-2214045,2214,8,Pelplin,obszar wiejski Pelplin
+2214045,2214,8,Pelplin,Pelplin
 2214052,2214,7,Subkowy,gmina Subkowy
 2214062,2214,7,Tczew,gmina Tczew
 2215,22,6,wejherowski,powiat wejherowski
@@ -2790,20 +2790,20 @@ id,parent_id,admin_level,name,relation_name
 2216,22,6,sztumski,powiat sztumski
 2216013,2216,7,Dzierzgoń,gmina Dzierzgoń
 2216014,2216,8,Dzierzgoń,miasto Dzierzgoń
-2216015,2216,8,Dzierzgoń,obszar wiejski Dzierzgoń
+2216015,2216,8,Dzierzgoń,Dzierzgoń
 2216022,2216,7,Mikołajki Pomorskie,gmina Mikołajki Pomorskie
 2216032,2216,7,Stary Dzierzgoń,gmina Stary Dzierzgoń
 2216042,2216,7,Stary Targ,gmina Stary Targ
 2216053,2216,7,Sztum,gmina Sztum
 2216054,2216,8,Sztum,miasto Sztum
-2216055,2216,8,Sztum,obszar wiejski Sztum
-2261,22,6,Gdańsk,miasto na prawach powiatu Gdańsk
+2216055,2216,8,Sztum,Sztum
+2261,22,6,Gdańsk,Gdańsk
 2261011,2261,7,Gdańsk,gmina Gdańsk
-2262,22,6,Gdynia,miasto na prawach powiatu Gdynia
+2262,22,6,Gdynia,Gdynia
 2262011,2262,7,Gdynia,gmina Gdynia
-2263,22,6,Słupsk,miasto na prawach powiatu Słupsk
+2263,22,6,Słupsk,Słupsk
 2263011,2263,7,Słupsk,gmina Słupsk
-2264,22,6,Sopot,miasto na prawach powiatu Sopot
+2264,22,6,Sopot,Sopot
 2264011,2264,7,Sopot,gmina Sopot
 24,1,4,śląskie,województwo śląskie
 2401,24,6,będziński,powiat będziński
@@ -2815,7 +2815,7 @@ id,parent_id,admin_level,name,relation_name
 2401062,2401,7,Psary,gmina Psary
 2401073,2401,7,Siewierz,gmina Siewierz
 2401074,2401,8,Siewierz,miasto Siewierz
-2401075,2401,8,Siewierz,obszar wiejski Siewierz
+2401075,2401,8,Siewierz,Siewierz
 2401081,2401,7,Sławków,gmina Sławków
 2402,24,6,bielski,powiat bielski
 2402011,2402,7,Szczyrk,gmina Szczyrk
@@ -2823,14 +2823,14 @@ id,parent_id,admin_level,name,relation_name
 2402032,2402,7,Buczkowice,gmina Buczkowice
 2402043,2402,7,Czechowice-Dziedzice,gmina Czechowice-Dziedzice
 2402044,2402,8,Czechowice-Dziedzice,miasto Czechowice-Dziedzice
-2402045,2402,8,Czechowice-Dziedzice,obszar wiejski Czechowice-Dziedzice
+2402045,2402,8,Czechowice-Dziedzice,Czechowice-Dziedzice
 2402052,2402,7,Jasienica,gmina Jasienica
 2402062,2402,7,Jaworze,gmina Jaworze
 2402072,2402,7,Kozy,gmina Kozy
 2402082,2402,7,Porąbka,gmina Porąbka
 2402093,2402,7,Wilamowice,gmina Wilamowice
 2402094,2402,8,Wilamowice,miasto Wilamowice
-2402095,2402,8,Wilamowice,obszar wiejski Wilamowice
+2402095,2402,8,Wilamowice,Wilamowice
 2402102,2402,7,Wilkowice,gmina Wilkowice
 2403,24,6,cieszyński,powiat cieszyński
 2403011,2403,7,Cieszyn,gmina Cieszyn
@@ -2844,22 +2844,22 @@ id,parent_id,admin_level,name,relation_name
 2403092,2403,7,Istebna,gmina Istebna
 2403103,2403,7,Skoczów,gmina Skoczów
 2403104,2403,8,Skoczów,miasto Skoczów
-2403105,2403,8,Skoczów,obszar wiejski Skoczów
+2403105,2403,8,Skoczów,Skoczów
 2403113,2403,7,Strumień,gmina Strumień
 2403114,2403,8,Strumień,miasto Strumień
-2403115,2403,8,Strumień,obszar wiejski Strumień
+2403115,2403,8,Strumień,Strumień
 2403122,2403,7,Zebrzydowice,gmina Zebrzydowice
 2404,24,6,częstochowski,powiat częstochowski
 2404013,2404,7,Blachownia,gmina Blachownia
 2404014,2404,8,Blachownia,miasto Blachownia
-2404015,2404,8,Blachownia,obszar wiejski Blachownia
+2404015,2404,8,Blachownia,Blachownia
 2404022,2404,7,Dąbrowa Zielona,gmina Dąbrowa Zielona
 2404032,2404,7,Janów,gmina Janów
 2404042,2404,7,Kamienica Polska,gmina Kamienica Polska
 2404052,2404,7,Kłomnice,gmina Kłomnice
 2404063,2404,7,Koniecpol,gmina Koniecpol
 2404064,2404,8,Koniecpol,miasto Koniecpol
-2404065,2404,8,Koniecpol,obszar wiejski Koniecpol
+2404065,2404,8,Koniecpol,Koniecpol
 2404072,2404,7,Konopiska,gmina Konopiska
 2404082,2404,7,Kruszyna,gmina Kruszyna
 2404092,2404,7,Lelów,gmina Lelów
@@ -2878,18 +2878,18 @@ id,parent_id,admin_level,name,relation_name
 2405052,2405,7,Rudziniec,gmina Rudziniec
 2405063,2405,7,Sośnicowice,gmina Sośnicowice
 2405064,2405,8,Sośnicowice,miasto Sośnicowice
-2405065,2405,8,Sośnicowice,obszar wiejski Sośnicowice
+2405065,2405,8,Sośnicowice,Sośnicowice
 2405073,2405,7,Toszek,gmina Toszek
 2405074,2405,8,Toszek,miasto Toszek
-2405075,2405,8,Toszek,obszar wiejski Toszek
+2405075,2405,8,Toszek,Toszek
 2405082,2405,7,Wielowieś,gmina Wielowieś
 2406,24,6,kłobucki,powiat kłobucki
 2406013,2406,7,Kłobuck,gmina Kłobuck
 2406014,2406,8,Kłobuck,miasto Kłobuck
-2406015,2406,8,Kłobuck,obszar wiejski Kłobuck
+2406015,2406,8,Kłobuck,Kłobuck
 2406023,2406,7,Krzepice,gmina Krzepice
 2406024,2406,8,Krzepice,miasto Krzepice
-2406025,2406,8,Krzepice,obszar wiejski Krzepice
+2406025,2406,8,Krzepice,Krzepice
 2406032,2406,7,Lipie,gmina Lipie
 2406042,2406,7,Miedźno,gmina Miedźno
 2406052,2406,7,Opatów,gmina Opatów
@@ -2907,7 +2907,7 @@ id,parent_id,admin_level,name,relation_name
 2407072,2407,7,Pawonków,gmina Pawonków
 2407083,2407,7,Woźniki,gmina Woźniki
 2407084,2407,8,Woźniki,miasto Woźniki
-2407085,2407,8,Woźniki,obszar wiejski Woźniki
+2407085,2407,8,Woźniki,Woźniki
 2408,24,6,mikołowski,powiat mikołowski
 2408011,2408,7,Łaziska Górne,gmina Łaziska Górne
 2408021,2408,7,Mikołów,gmina Mikołów
@@ -2918,12 +2918,12 @@ id,parent_id,admin_level,name,relation_name
 2409011,2409,7,Myszków,gmina Myszków
 2409023,2409,7,Koziegłowy,gmina Koziegłowy
 2409024,2409,8,Koziegłowy,miasto Koziegłowy
-2409025,2409,8,Koziegłowy,obszar wiejski Koziegłowy
+2409025,2409,8,Koziegłowy,Koziegłowy
 2409032,2409,7,Niegowa,gmina Niegowa
 2409042,2409,7,Poraj,gmina Poraj
 2409053,2409,7,Żarki,gmina Żarki
 2409054,2409,8,Żarki,miasto Żarki
-2409055,2409,8,Żarki,obszar wiejski Żarki
+2409055,2409,8,Żarki,Żarki
 2410,24,6,pszczyński,powiat pszczyński
 2410012,2410,7,Goczałkowice-Zdrój,gmina Goczałkowice-Zdrój
 2410022,2410,7,Kobiór,gmina Kobiór
@@ -2931,25 +2931,25 @@ id,parent_id,admin_level,name,relation_name
 2410042,2410,7,Pawłowice,gmina Pawłowice
 2410053,2410,7,Pszczyna,gmina Pszczyna
 2410054,2410,8,Pszczyna,miasto Pszczyna
-2410055,2410,8,Pszczyna,obszar wiejski Pszczyna
+2410055,2410,8,Pszczyna,Pszczyna
 2410062,2410,7,Suszec,gmina Suszec
 2411,24,6,raciborski,powiat raciborski
 2411011,2411,7,Racibórz,gmina Racibórz
 2411022,2411,7,Kornowac,gmina Kornowac
 2411033,2411,7,Krzanowice,gmina Krzanowice
 2411034,2411,8,Krzanowice,miasto Krzanowice
-2411035,2411,8,Krzanowice,obszar wiejski Krzanowice
+2411035,2411,8,Krzanowice,Krzanowice
 2411042,2411,7,Krzyżanowice,gmina Krzyżanowice
 2411053,2411,7,Kuźnia Raciborska,gmina Kuźnia Raciborska
 2411054,2411,8,Kuźnia Raciborska,miasto Kuźnia Raciborska
-2411055,2411,8,Kuźnia Raciborska,obszar wiejski Kuźnia Raciborska
+2411055,2411,8,Kuźnia Raciborska,Kuźnia Raciborska
 2411062,2411,7,Nędza,gmina Nędza
 2411072,2411,7,Pietrowice Wielkie,gmina Pietrowice Wielkie
 2411082,2411,7,Rudnik,gmina Rudnik
 2412,24,6,rybnicki,powiat rybnicki
 2412013,2412,7,Czerwionka-Leszczyny,gmina Czerwionka-Leszczyny
 2412014,2412,8,Czerwionka-Leszczyny,miasto Czerwionka-Leszczyny
-2412015,2412,8,Czerwionka-Leszczyny,obszar wiejski Czerwionka-Leszczyny
+2412015,2412,8,Czerwionka-Leszczyny,Czerwionka-Leszczyny
 2412022,2412,7,Gaszowice,gmina Gaszowice
 2412032,2412,7,Jejkowice,gmina Jejkowice
 2412042,2412,7,Lyski,gmina Lyski
@@ -2987,16 +2987,16 @@ id,parent_id,admin_level,name,relation_name
 2416042,2416,7,Kroczyce,gmina Kroczyce
 2416053,2416,7,Łazy,gmina Łazy
 2416054,2416,8,Łazy,miasto Łazy
-2416055,2416,8,Łazy,obszar wiejski Łazy
+2416055,2416,8,Łazy,Łazy
 2416063,2416,7,Ogrodzieniec,gmina Ogrodzieniec
 2416064,2416,8,Ogrodzieniec,miasto Ogrodzieniec
-2416065,2416,8,Ogrodzieniec,obszar wiejski Ogrodzieniec
+2416065,2416,8,Ogrodzieniec,Ogrodzieniec
 2416073,2416,7,Pilica,gmina Pilica
 2416074,2416,8,Pilica,miasto Pilica
-2416075,2416,8,Pilica,obszar wiejski Pilica
+2416075,2416,8,Pilica,Pilica
 2416083,2416,7,Szczekociny,gmina Szczekociny
 2416084,2416,8,Szczekociny,miasto Szczekociny
-2416085,2416,8,Szczekociny,obszar wiejski Szczekociny
+2416085,2416,8,Szczekociny,Szczekociny
 2416092,2416,7,Włodowice,gmina Włodowice
 2416102,2416,7,Żarnowiec,gmina Żarnowiec
 2417,24,6,żywiecki,powiat żywiecki
@@ -3015,49 +3015,49 @@ id,parent_id,admin_level,name,relation_name
 2417132,2417,7,Świnna,gmina Świnna
 2417142,2417,7,Ujsoły,gmina Ujsoły
 2417152,2417,7,Węgierska Górka,gmina Węgierska Górka
-2461,24,6,Bielsko-Biała,miasto na prawach powiatu Bielsko-Biała
+2461,24,6,Bielsko-Biała,Bielsko-Biała
 2461011,2461,7,Bielsko-Biała,gmina Bielsko-Biała
-2462,24,6,Bytom,miasto na prawach powiatu Bytom
+2462,24,6,Bytom,Bytom
 2462011,2462,7,Bytom,gmina Bytom
-2463,24,6,Chorzów,miasto na prawach powiatu Chorzów
+2463,24,6,Chorzów,Chorzów
 2463011,2463,7,Chorzów,gmina Chorzów
-2464,24,6,Częstochowa,miasto na prawach powiatu Częstochowa
+2464,24,6,Częstochowa,Częstochowa
 2464011,2464,7,Częstochowa,gmina Częstochowa
-2465,24,6,Dąbrowa Górnicza,miasto na prawach powiatu Dąbrowa Górnicza
+2465,24,6,Dąbrowa Górnicza,Dąbrowa Górnicza
 2465011,2465,7,Dąbrowa Górnicza,gmina Dąbrowa Górnicza
-2466,24,6,Gliwice,miasto na prawach powiatu Gliwice
+2466,24,6,Gliwice,Gliwice
 2466011,2466,7,Gliwice,gmina Gliwice
-2467,24,6,Jastrzębie-Zdrój,miasto na prawach powiatu Jastrzębie-Zdrój
+2467,24,6,Jastrzębie-Zdrój,Jastrzębie-Zdrój
 2467011,2467,7,Jastrzębie-Zdrój,gmina Jastrzębie-Zdrój
-2468,24,6,Jaworzno,miasto na prawach powiatu Jaworzno
+2468,24,6,Jaworzno,Jaworzno
 2468011,2468,7,Jaworzno,gmina Jaworzno
-2469,24,6,Katowice,miasto na prawach powiatu Katowice
+2469,24,6,Katowice,Katowice
 2469011,2469,7,Katowice,gmina Katowice
-2470,24,6,Mysłowice,miasto na prawach powiatu Mysłowice
+2470,24,6,Mysłowice,Mysłowice
 2470011,2470,7,Mysłowice,gmina Mysłowice
-2471,24,6,Piekary Śląskie,miasto na prawach powiatu Piekary Śląskie
+2471,24,6,Piekary Śląskie,Piekary Śląskie
 2471011,2471,7,Piekary Śląskie,gmina Piekary Śląskie
-2472,24,6,Ruda Śląska,miasto na prawach powiatu Ruda Śląska
+2472,24,6,Ruda Śląska,Ruda Śląska
 2472011,2472,7,Ruda Śląska,gmina Ruda Śląska
-2473,24,6,Rybnik,miasto na prawach powiatu Rybnik
+2473,24,6,Rybnik,Rybnik
 2473011,2473,7,Rybnik,gmina Rybnik
-2474,24,6,Siemianowice Śląskie,miasto na prawach powiatu Siemianowice Śląskie
+2474,24,6,Siemianowice Śląskie,Siemianowice Śląskie
 2474011,2474,7,Siemianowice Śląskie,gmina Siemianowice Śląskie
-2475,24,6,Sosnowiec,miasto na prawach powiatu Sosnowiec
+2475,24,6,Sosnowiec,Sosnowiec
 2475011,2475,7,Sosnowiec,gmina Sosnowiec
-2476,24,6,Świętochłowice,miasto na prawach powiatu Świętochłowice
+2476,24,6,Świętochłowice,Świętochłowice
 2476011,2476,7,Świętochłowice,gmina Świętochłowice
-2477,24,6,Tychy,miasto na prawach powiatu Tychy
+2477,24,6,Tychy,Tychy
 2477011,2477,7,Tychy,gmina Tychy
-2478,24,6,Zabrze,miasto na prawach powiatu Zabrze
+2478,24,6,Zabrze,Zabrze
 2478011,2478,7,Zabrze,gmina Zabrze
-2479,24,6,Żory,miasto na prawach powiatu Żory
+2479,24,6,Żory,Żory
 2479011,2479,7,Żory,gmina Żory
 26,1,4,świętokrzyskie,województwo świętokrzyskie
 2601,26,6,buski,powiat buski
 2601013,2601,7,Busko-Zdrój,gmina Busko-Zdrój
 2601014,2601,8,Busko-Zdrój,miasto Busko-Zdrój
-2601015,2601,8,Busko-Zdrój,obszar wiejski Busko-Zdrój
+2601015,2601,8,Busko-Zdrój,Busko-Zdrój
 2601022,2601,7,Gnojno,gmina Gnojno
 2601032,2601,7,Nowy Korczyn,gmina Nowy Korczyn
 2601042,2601,7,Pacanów,gmina Pacanów
@@ -3069,15 +3069,15 @@ id,parent_id,admin_level,name,relation_name
 2602012,2602,7,Imielno,gmina Imielno
 2602023,2602,7,Jędrzejów,gmina Jędrzejów
 2602024,2602,8,Jędrzejów,miasto Jędrzejów
-2602025,2602,8,Jędrzejów,obszar wiejski Jędrzejów
+2602025,2602,8,Jędrzejów,Jędrzejów
 2602033,2602,7,Małogoszcz,gmina Małogoszcz
 2602034,2602,8,Małogoszcz,miasto Małogoszcz
-2602035,2602,8,Małogoszcz,obszar wiejski Małogoszcz
+2602035,2602,8,Małogoszcz,Małogoszcz
 2602042,2602,7,Nagłowice,gmina Nagłowice
 2602052,2602,7,Oksa,gmina Oksa
 2602063,2602,7,Sędziszów,gmina Sędziszów
 2602064,2602,8,Sędziszów,miasto Sędziszów
-2602065,2602,8,Sędziszów,obszar wiejski Sędziszów
+2602065,2602,8,Sędziszów,Sędziszów
 2602072,2602,7,Słupia,gmina Słupia
 2602082,2602,7,Sobków,gmina Sobków
 2602092,2602,7,Wodzisław,gmina Wodzisław
@@ -3086,25 +3086,25 @@ id,parent_id,admin_level,name,relation_name
 2603022,2603,7,Czarnocin,gmina Czarnocin
 2603033,2603,7,Kazimierza Wielka,gmina Kazimierza Wielka
 2603034,2603,8,Kazimierza Wielka,miasto Kazimierza Wielka
-2603035,2603,8,Kazimierza Wielka,obszar wiejski Kazimierza Wielka
+2603035,2603,8,Kazimierza Wielka,Kazimierza Wielka
 2603042,2603,7,Opatowiec,gmina Opatowiec
 2603053,2603,7,Skalbmierz,gmina Skalbmierz
 2603054,2603,8,Skalbmierz,miasto Skalbmierz
-2603055,2603,8,Skalbmierz,obszar wiejski Skalbmierz
+2603055,2603,8,Skalbmierz,Skalbmierz
 2604,26,6,kielecki,powiat kielecki
 2604012,2604,7,Bieliny,gmina Bieliny
 2604023,2604,7,Bodzentyn,gmina Bodzentyn
 2604024,2604,8,Bodzentyn,miasto Bodzentyn
-2604025,2604,8,Bodzentyn,obszar wiejski Bodzentyn
+2604025,2604,8,Bodzentyn,Bodzentyn
 2604033,2604,7,Chęciny,gmina Chęciny
 2604034,2604,8,Chęciny,miasto Chęciny
-2604035,2604,8,Chęciny,obszar wiejski Chęciny
+2604035,2604,8,Chęciny,Chęciny
 2604043,2604,7,Chmielnik,gmina Chmielnik
 2604044,2604,8,Chmielnik,miasto Chmielnik
-2604045,2604,8,Chmielnik,obszar wiejski Chmielnik
+2604045,2604,8,Chmielnik,Chmielnik
 2604053,2604,7,Daleszyce,gmina Daleszyce
 2604054,2604,8,Daleszyce,miasto Daleszyce
-2604055,2604,8,Daleszyce,obszar wiejski Daleszyce
+2604055,2604,8,Daleszyce,Daleszyce
 2604062,2604,7,Górno,gmina Górno
 2604072,2604,7,Łagów,gmina Łagów
 2604082,2604,7,Łopuszno,gmina Łopuszno
@@ -3124,24 +3124,24 @@ id,parent_id,admin_level,name,relation_name
 2605022,2605,7,Gowarczów,gmina Gowarczów
 2605033,2605,7,Końskie,gmina Końskie
 2605034,2605,8,Końskie,miasto Końskie
-2605035,2605,8,Końskie,obszar wiejski Końskie
+2605035,2605,8,Końskie,Końskie
 2605042,2605,7,Radoszyce,gmina Radoszyce
 2605052,2605,7,Ruda Maleniecka,gmina Ruda Maleniecka
 2605062,2605,7,Słupia (Konecka),gmina Słupia (Konecka)
 2605072,2605,7,Smyków,gmina Smyków
 2605083,2605,7,Stąporków,gmina Stąporków
 2605084,2605,8,Stąporków,miasto Stąporków
-2605085,2605,8,Stąporków,obszar wiejski Stąporków
+2605085,2605,8,Stąporków,Stąporków
 2606,26,6,opatowski,powiat opatowski
 2606012,2606,7,Baćkowice,gmina Baćkowice
 2606022,2606,7,Iwaniska,gmina Iwaniska
 2606032,2606,7,Lipnik,gmina Lipnik
 2606043,2606,7,Opatów,gmina Opatów
 2606044,2606,8,Opatów,miasto Opatów
-2606045,2606,8,Opatów,obszar wiejski Opatów
+2606045,2606,8,Opatów,Opatów
 2606053,2606,7,Ożarów,gmina Ożarów
 2606054,2606,8,Ożarów,miasto Ożarów
-2606055,2606,8,Ożarów,obszar wiejski Ożarów
+2606055,2606,8,Ożarów,Ożarów
 2606062,2606,7,Sadowie,gmina Sadowie
 2606072,2606,7,Tarłów,gmina Tarłów
 2606082,2606,7,Wojciechowice,gmina Wojciechowice
@@ -3151,20 +3151,20 @@ id,parent_id,admin_level,name,relation_name
 2607032,2607,7,Bodzechów,gmina Bodzechów
 2607043,2607,7,Ćmielów,gmina Ćmielów
 2607044,2607,8,Ćmielów,miasto Ćmielów
-2607045,2607,8,Ćmielów,obszar wiejski Ćmielów
+2607045,2607,8,Ćmielów,Ćmielów
 2607053,2607,7,Kunów,gmina Kunów
 2607054,2607,8,Kunów,miasto Kunów
-2607055,2607,8,Kunów,obszar wiejski Kunów
+2607055,2607,8,Kunów,Kunów
 2607062,2607,7,Waśniów,gmina Waśniów
 2608,26,6,pińczowski,powiat pińczowski
 2608013,2608,7,Działoszyce,gmina Działoszyce
 2608014,2608,8,Działoszyce,miasto Działoszyce
-2608015,2608,8,Działoszyce,obszar wiejski Działoszyce
+2608015,2608,8,Działoszyce,Działoszyce
 2608022,2608,7,Kije,gmina Kije
 2608032,2608,7,Michałów,gmina Michałów
 2608043,2608,7,Pińczów,gmina Pińczów
 2608044,2608,8,Pińczów,miasto Pińczów
-2608045,2608,8,Pińczów,obszar wiejski Pińczów
+2608045,2608,8,Pińczów,Pińczów
 2608052,2608,7,Złota,gmina Złota
 2609,26,6,sandomierski,powiat sandomierski
 2609011,2609,7,Sandomierz,gmina Sandomierz
@@ -3172,14 +3172,14 @@ id,parent_id,admin_level,name,relation_name
 2609032,2609,7,Klimontów,gmina Klimontów
 2609043,2609,7,Koprzywnica,gmina Koprzywnica
 2609044,2609,8,Koprzywnica,miasto Koprzywnica
-2609045,2609,8,Koprzywnica,obszar wiejski Koprzywnica
+2609045,2609,8,Koprzywnica,Koprzywnica
 2609052,2609,7,Łoniów,gmina Łoniów
 2609062,2609,7,Obrazów,gmina Obrazów
 2609072,2609,7,Samborzec,gmina Samborzec
 2609082,2609,7,Wilczyce,gmina Wilczyce
 2609093,2609,7,Zawichost,gmina Zawichost
 2609094,2609,8,Zawichost,miasto Zawichost
-2609095,2609,8,Zawichost,obszar wiejski Zawichost
+2609095,2609,8,Zawichost,Zawichost
 2610,26,6,skarżyski,powiat skarżyski
 2610011,2610,7,Skarżysko-Kamienna,gmina Skarżysko-Kamienna
 2610022,2610,7,Bliżyn,gmina Bliżyn
@@ -3187,7 +3187,7 @@ id,parent_id,admin_level,name,relation_name
 2610042,2610,7,Skarżysko Kościelne,gmina Skarżysko Kościelne
 2610053,2610,7,Suchedniów,gmina Suchedniów
 2610054,2610,8,Suchedniów,miasto Suchedniów
-2610055,2610,8,Suchedniów,obszar wiejski Suchedniów
+2610055,2610,8,Suchedniów,Suchedniów
 2611,26,6,starachowicki,powiat starachowicki
 2611011,2611,7,Starachowice,gmina Starachowice
 2611022,2611,7,Brody,gmina Brody
@@ -3195,21 +3195,21 @@ id,parent_id,admin_level,name,relation_name
 2611042,2611,7,Pawłów,gmina Pawłów
 2611053,2611,7,Wąchock,gmina Wąchock
 2611054,2611,8,Wąchock,miasto Wąchock
-2611055,2611,8,Wąchock,obszar wiejski Wąchock
+2611055,2611,8,Wąchock,Wąchock
 2612,26,6,staszowski,powiat staszowski
 2612012,2612,7,Bogoria,gmina Bogoria
 2612022,2612,7,Łubnice,gmina Łubnice
 2612032,2612,7,Oleśnica,gmina Oleśnica
 2612043,2612,7,Osiek,gmina Osiek
 2612044,2612,8,Osiek,miasto Osiek
-2612045,2612,8,Osiek,obszar wiejski Osiek
+2612045,2612,8,Osiek,Osiek
 2612053,2612,7,Połaniec,gmina Połaniec
 2612054,2612,8,Połaniec,miasto Połaniec
-2612055,2612,8,Połaniec,obszar wiejski Połaniec
+2612055,2612,8,Połaniec,Połaniec
 2612062,2612,7,Rytwiany,gmina Rytwiany
 2612073,2612,7,Staszów,gmina Staszów
 2612074,2612,8,Staszów,miasto Staszów
-2612075,2612,8,Staszów,obszar wiejski Staszów
+2612075,2612,8,Staszów,Staszów
 2612082,2612,7,Szydłów,gmina Szydłów
 2613,26,6,włoszczowski,powiat włoszczowski
 2613012,2613,7,Kluczewsko,gmina Kluczewsko
@@ -3219,8 +3219,8 @@ id,parent_id,admin_level,name,relation_name
 2613052,2613,7,Secemin,gmina Secemin
 2613063,2613,7,Włoszczowa,gmina Włoszczowa
 2613064,2613,8,Włoszczowa,miasto Włoszczowa
-2613065,2613,8,Włoszczowa,obszar wiejski Włoszczowa
-2661,26,6,Kielce,miasto na prawach powiatu Kielce
+2613065,2613,8,Włoszczowa,Włoszczowa
+2661,26,6,Kielce,Kielce
 2661011,2661,7,Kielce,gmina Kielce
 28,1,4,warmińsko-mazurskie,województwo warmińsko-mazurskie
 2801,28,6,bartoszycki,powiat bartoszycki
@@ -3229,21 +3229,21 @@ id,parent_id,admin_level,name,relation_name
 2801032,2801,7,Bartoszyce,gmina Bartoszyce
 2801043,2801,7,Bisztynek,gmina Bisztynek
 2801044,2801,8,Bisztynek,miasto Bisztynek
-2801045,2801,8,Bisztynek,obszar wiejski Bisztynek
+2801045,2801,8,Bisztynek,Bisztynek
 2801052,2801,7,Górowo Iławeckie,gmina Górowo Iławeckie
 2801063,2801,7,Sępopol,gmina Sępopol
 2801064,2801,8,Sępopol,miasto Sępopol
-2801065,2801,8,Sępopol,obszar wiejski Sępopol
+2801065,2801,8,Sępopol,Sępopol
 2802,28,6,braniewski,powiat braniewski
 2802011,2802,7,Braniewo,gmina Braniewo
 2802022,2802,7,Braniewo,gmina Braniewo
 2802033,2802,7,Frombork,gmina Frombork
 2802034,2802,8,Frombork,miasto Frombork
-2802035,2802,8,Frombork,obszar wiejski Frombork
+2802035,2802,8,Frombork,Frombork
 2802042,2802,7,Lelkowo,gmina Lelkowo
 2802053,2802,7,Pieniężno,gmina Pieniężno
 2802054,2802,8,Pieniężno,miasto Pieniężno
-2802055,2802,8,Pieniężno,obszar wiejski Pieniężno
+2802055,2802,8,Pieniężno,Pieniężno
 2802062,2802,7,Płoskinia,gmina Płoskinia
 2802072,2802,7,Wilczęta,gmina Wilczęta
 2803,28,6,działdowski,powiat działdowski
@@ -3252,7 +3252,7 @@ id,parent_id,admin_level,name,relation_name
 2803032,2803,7,Iłowo-Osada,gmina Iłowo-Osada
 2803043,2803,7,Lidzbark,gmina Lidzbark
 2803044,2803,8,Lidzbark,miasto Lidzbark
-2803045,2803,8,Lidzbark,obszar wiejski Lidzbark
+2803045,2803,8,Lidzbark,Lidzbark
 2803052,2803,7,Płośnica,gmina Płośnica
 2803062,2803,7,Rybno,gmina Rybno
 2804,28,6,elbląski,powiat elbląski
@@ -3263,14 +3263,14 @@ id,parent_id,admin_level,name,relation_name
 2804052,2804,7,Milejewo,gmina Milejewo
 2804063,2804,7,Młynary,gmina Młynary
 2804064,2804,8,Młynary,miasto Młynary
-2804065,2804,8,Młynary,obszar wiejski Młynary
+2804065,2804,8,Młynary,Młynary
 2804073,2804,7,Pasłęk,gmina Pasłęk
 2804074,2804,8,Pasłęk,miasto Pasłęk
-2804075,2804,8,Pasłęk,obszar wiejski Pasłęk
+2804075,2804,8,Pasłęk,Pasłęk
 2804082,2804,7,Rychliki,gmina Rychliki
 2804093,2804,7,Tolkmicko,gmina Tolkmicko
 2804094,2804,8,Tolkmicko,miasto Tolkmicko
-2804095,2804,8,Tolkmicko,obszar wiejski Tolkmicko
+2804095,2804,8,Tolkmicko,Tolkmicko
 2805,28,6,ełcki,powiat ełcki
 2805011,2805,7,Ełk,gmina Ełk
 2805022,2805,7,Ełk,gmina Ełk
@@ -3284,7 +3284,7 @@ id,parent_id,admin_level,name,relation_name
 2806062,2806,7,Miłki,gmina Miłki
 2806083,2806,7,Ryn,gmina Ryn
 2806084,2806,8,Ryn,miasto Ryn
-2806085,2806,8,Ryn,obszar wiejski Ryn
+2806085,2806,8,Ryn,Ryn
 2806102,2806,7,Wydminy,gmina Wydminy
 2807,28,6,iławski,powiat iławski
 2807011,2807,7,Iława,gmina Iława
@@ -3292,24 +3292,24 @@ id,parent_id,admin_level,name,relation_name
 2807032,2807,7,Iława,gmina Iława
 2807043,2807,7,Kisielice,gmina Kisielice
 2807044,2807,8,Kisielice,miasto Kisielice
-2807045,2807,8,Kisielice,obszar wiejski Kisielice
+2807045,2807,8,Kisielice,Kisielice
 2807052,2807,7,Lubawa,gmina Lubawa
 2807063,2807,7,Susz,gmina Susz
 2807064,2807,8,Susz,miasto Susz
-2807065,2807,8,Susz,obszar wiejski Susz
+2807065,2807,8,Susz,Susz
 2807073,2807,7,Zalewo,gmina Zalewo
 2807074,2807,8,Zalewo,miasto Zalewo
-2807075,2807,8,Zalewo,obszar wiejski Zalewo
+2807075,2807,8,Zalewo,Zalewo
 2808,28,6,kętrzyński,powiat kętrzyński
 2808011,2808,7,Kętrzyn,gmina Kętrzyn
 2808022,2808,7,Barciany,gmina Barciany
 2808032,2808,7,Kętrzyn,gmina Kętrzyn
 2808043,2808,7,Korsze,gmina Korsze
 2808044,2808,8,Korsze,miasto Korsze
-2808045,2808,8,Korsze,obszar wiejski Korsze
+2808045,2808,8,Korsze,Korsze
 2808053,2808,7,Reszel,gmina Reszel
 2808054,2808,8,Reszel,miasto Reszel
-2808055,2808,8,Reszel,obszar wiejski Reszel
+2808055,2808,8,Reszel,Reszel
 2808062,2808,7,Srokowo,gmina Srokowo
 2809,28,6,lidzbarski,powiat lidzbarski
 2809011,2809,7,Lidzbark Warmiński,gmina Lidzbark Warmiński
@@ -3318,12 +3318,12 @@ id,parent_id,admin_level,name,relation_name
 2809042,2809,7,Lubomino,gmina Lubomino
 2809053,2809,7,Orneta,gmina Orneta
 2809054,2809,8,Orneta,miasto Orneta
-2809055,2809,8,Orneta,obszar wiejski Orneta
+2809055,2809,8,Orneta,Orneta
 2810,28,6,mrągowski,powiat mrągowski
 2810011,2810,7,Mrągowo,gmina Mrągowo
 2810023,2810,7,Mikołajki,gmina Mikołajki
 2810024,2810,8,Mikołajki,miasto Mikołajki
-2810025,2810,8,Mikołajki,obszar wiejski Mikołajki
+2810025,2810,8,Mikołajki,Mikołajki
 2810032,2810,7,Mrągowo,gmina Mrągowo
 2810042,2810,7,Piecki,gmina Piecki
 2810052,2810,7,Sorkwity,gmina Sorkwity
@@ -3333,7 +3333,7 @@ id,parent_id,admin_level,name,relation_name
 2811032,2811,7,Kozłowo,gmina Kozłowo
 2811043,2811,7,Nidzica,gmina Nidzica
 2811044,2811,8,Nidzica,miasto Nidzica
-2811045,2811,8,Nidzica,obszar wiejski Nidzica
+2811045,2811,8,Nidzica,Nidzica
 2812,28,6,nowomiejski,powiat nowomiejski
 2812011,2812,7,Nowe Miasto Lubawskie,gmina Nowe Miasto Lubawskie
 2812022,2812,7,Biskupiec,gmina Biskupiec
@@ -3344,29 +3344,29 @@ id,parent_id,admin_level,name,relation_name
 2813032,2813,7,Kowale Oleckie,gmina Kowale Oleckie
 2813043,2813,7,Olecko,gmina Olecko
 2813044,2813,8,Olecko,miasto Olecko
-2813045,2813,8,Olecko,obszar wiejski Olecko
+2813045,2813,8,Olecko,Olecko
 2813052,2813,7,Świętajno,gmina Świętajno
 2813062,2813,7,Wieliczki,gmina Wieliczki
 2814,28,6,olsztyński,powiat olsztyński
 2814013,2814,7,Barczewo,gmina Barczewo
 2814014,2814,8,Barczewo,miasto Barczewo
-2814015,2814,8,Barczewo,obszar wiejski Barczewo
+2814015,2814,8,Barczewo,Barczewo
 2814023,2814,7,Biskupiec,gmina Biskupiec
 2814024,2814,8,Biskupiec,miasto Biskupiec
-2814025,2814,8,Biskupiec,obszar wiejski Biskupiec
+2814025,2814,8,Biskupiec,Biskupiec
 2814033,2814,7,Dobre Miasto,gmina Dobre Miasto
 2814034,2814,8,Dobre Miasto,miasto Dobre Miasto
-2814035,2814,8,Dobre Miasto,obszar wiejski Dobre Miasto
+2814035,2814,8,Dobre Miasto,Dobre Miasto
 2814042,2814,7,Dywity,gmina Dywity
 2814052,2814,7,Gietrzwałd,gmina Gietrzwałd
 2814063,2814,7,Jeziorany,gmina Jeziorany
 2814064,2814,8,Jeziorany,miasto Jeziorany
-2814065,2814,8,Jeziorany,obszar wiejski Jeziorany
+2814065,2814,8,Jeziorany,Jeziorany
 2814072,2814,7,Jonkowo,gmina Jonkowo
 2814082,2814,7,Kolno,gmina Kolno
 2814093,2814,7,Olsztynek,gmina Olsztynek
 2814094,2814,8,Olsztynek,miasto Olsztynek
-2814095,2814,8,Olsztynek,obszar wiejski Olsztynek
+2814095,2814,8,Olsztynek,Olsztynek
 2814102,2814,7,Purda,gmina Purda
 2814112,2814,7,Stawiguda,gmina Stawiguda
 2814122,2814,7,Świątki,gmina Świątki
@@ -3378,34 +3378,34 @@ id,parent_id,admin_level,name,relation_name
 2815052,2815,7,Małdyty,gmina Małdyty
 2815063,2815,7,Miłakowo,gmina Miłakowo
 2815064,2815,8,Miłakowo,miasto Miłakowo
-2815065,2815,8,Miłakowo,obszar wiejski Miłakowo
+2815065,2815,8,Miłakowo,Miłakowo
 2815073,2815,7,Miłomłyn,gmina Miłomłyn
 2815074,2815,8,Miłomłyn,miasto Miłomłyn
-2815075,2815,8,Miłomłyn,obszar wiejski Miłomłyn
+2815075,2815,8,Miłomłyn,Miłomłyn
 2815083,2815,7,Morąg,gmina Morąg
 2815084,2815,8,Morąg,miasto Morąg
-2815085,2815,8,Morąg,obszar wiejski Morąg
+2815085,2815,8,Morąg,Morąg
 2815092,2815,7,Ostróda,gmina Ostróda
 2816,28,6,piski,powiat piski
 2816013,2816,7,Biała Piska,gmina Biała Piska
 2816014,2816,8,Biała Piska,miasto Biała Piska
-2816015,2816,8,Biała Piska,obszar wiejski Biała Piska
+2816015,2816,8,Biała Piska,Biała Piska
 2816023,2816,7,Orzysz,gmina Orzysz
 2816024,2816,8,Orzysz,miasto Orzysz
-2816025,2816,8,Orzysz,obszar wiejski Orzysz
+2816025,2816,8,Orzysz,Orzysz
 2816033,2816,7,Pisz,gmina Pisz
 2816034,2816,8,Pisz,miasto Pisz
-2816035,2816,8,Pisz,obszar wiejski Pisz
+2816035,2816,8,Pisz,Pisz
 2816043,2816,7,Ruciane-Nida,gmina Ruciane-Nida
 2816044,2816,8,Ruciane-Nida,miasto Ruciane-Nida
-2816045,2816,8,Ruciane-Nida,obszar wiejski Ruciane-Nida
+2816045,2816,8,Ruciane-Nida,Ruciane-Nida
 2817,28,6,szczycieński,powiat szczycieński
 2817011,2817,7,Szczytno,gmina Szczytno
 2817022,2817,7,Dźwierzuty,gmina Dźwierzuty
 2817032,2817,7,Jedwabno,gmina Jedwabno
 2817043,2817,7,Pasym,gmina Pasym
 2817044,2817,8,Pasym,miasto Pasym
-2817045,2817,8,Pasym,obszar wiejski Pasym
+2817045,2817,8,Pasym,Pasym
 2817052,2817,7,Rozogi,gmina Rozogi
 2817062,2817,7,Szczytno,gmina Szczytno
 2817072,2817,7,Świętajno,gmina Świętajno
@@ -3415,16 +3415,16 @@ id,parent_id,admin_level,name,relation_name
 2818022,2818,7,Dubeninki,gmina Dubeninki
 2818033,2818,7,Gołdap,gmina Gołdap
 2818034,2818,8,Gołdap,miasto Gołdap
-2818035,2818,8,Gołdap,obszar wiejski Gołdap
+2818035,2818,8,Gołdap,Gołdap
 2819,28,6,węgorzewski,powiat węgorzewski
 2819012,2819,7,Budry,gmina Budry
 2819022,2819,7,Pozezdrze,gmina Pozezdrze
 2819033,2819,7,Węgorzewo,gmina Węgorzewo
 2819034,2819,8,Węgorzewo,miasto Węgorzewo
-2819035,2819,8,Węgorzewo,obszar wiejski Węgorzewo
-2861,28,6,Elbląg,miasto na prawach powiatu Elbląg
+2819035,2819,8,Węgorzewo,Węgorzewo
+2861,28,6,Elbląg,Elbląg
 2861011,2861,7,Elbląg,gmina Elbląg
-2862,28,6,Olsztyn,miasto na prawach powiatu Olsztyn
+2862,28,6,Olsztyn,Olsztyn
 2862011,2862,7,Olsztyn,gmina Olsztyn
 30,1,4,wielkopolskie,województwo wielkopolskie
 3001,30,6,chodzieski,powiat chodzieski
@@ -3433,83 +3433,83 @@ id,parent_id,admin_level,name,relation_name
 3001032,3001,7,Chodzież,gmina Chodzież
 3001043,3001,7,Margonin,gmina Margonin
 3001044,3001,8,Margonin,miasto Margonin
-3001045,3001,8,Margonin,obszar wiejski Margonin
+3001045,3001,8,Margonin,Margonin
 3001053,3001,7,Szamocin,gmina Szamocin
 3001054,3001,8,Szamocin,miasto Szamocin
-3001055,3001,8,Szamocin,obszar wiejski Szamocin
+3001055,3001,8,Szamocin,Szamocin
 3002,30,6,czarnkowsko-trzcianecki,powiat czarnkowsko-trzcianecki
 3002011,3002,7,Czarnków,gmina Czarnków
 3002022,3002,7,Czarnków,gmina Czarnków
 3002032,3002,7,Drawsko,gmina Drawsko
 3002043,3002,7,Krzyż Wielkopolski,gmina Krzyż Wielkopolski
 3002044,3002,8,Krzyż Wielkopolski,miasto Krzyż Wielkopolski
-3002045,3002,8,Krzyż Wielkopolski,obszar wiejski Krzyż Wielkopolski
+3002045,3002,8,Krzyż Wielkopolski,Krzyż Wielkopolski
 3002052,3002,7,Lubasz,gmina Lubasz
 3002062,3002,7,Połajewo,gmina Połajewo
 3002073,3002,7,Trzcianka,gmina Trzcianka
 3002074,3002,8,Trzcianka,miasto Trzcianka
-3002075,3002,8,Trzcianka,obszar wiejski Trzcianka
+3002075,3002,8,Trzcianka,Trzcianka
 3002083,3002,7,Wieleń,gmina Wieleń
 3002084,3002,8,Wieleń,miasto Wieleń
-3002085,3002,8,Wieleń,obszar wiejski Wieleń
+3002085,3002,8,Wieleń,Wieleń
 3003,30,6,gnieźnieński,powiat gnieźnieński
 3003011,3003,7,Gniezno,gmina Gniezno
 3003023,3003,7,Czerniejewo,gmina Czerniejewo
 3003024,3003,8,Czerniejewo,miasto Czerniejewo
-3003025,3003,8,Czerniejewo,obszar wiejski Czerniejewo
+3003025,3003,8,Czerniejewo,Czerniejewo
 3003032,3003,7,Gniezno,gmina Gniezno
 3003042,3003,7,Kiszkowo,gmina Kiszkowo
 3003053,3003,7,Kłecko,gmina Kłecko
 3003054,3003,8,Kłecko,miasto Kłecko
-3003055,3003,8,Kłecko,obszar wiejski Kłecko
+3003055,3003,8,Kłecko,Kłecko
 3003062,3003,7,Łubowo,gmina Łubowo
 3003072,3003,7,Mieleszyn,gmina Mieleszyn
 3003082,3003,7,Niechanowo,gmina Niechanowo
 3003093,3003,7,Trzemeszno,gmina Trzemeszno
 3003094,3003,8,Trzemeszno,miasto Trzemeszno
-3003095,3003,8,Trzemeszno,obszar wiejski Trzemeszno
+3003095,3003,8,Trzemeszno,Trzemeszno
 3003103,3003,7,Witkowo,gmina Witkowo
 3003104,3003,8,Witkowo,miasto Witkowo
-3003105,3003,8,Witkowo,obszar wiejski Witkowo
+3003105,3003,8,Witkowo,Witkowo
 3004,30,6,gostyński,powiat gostyński
 3004013,3004,7,Borek Wielkopolski,gmina Borek Wielkopolski
 3004014,3004,8,Borek Wielkopolski,miasto Borek Wielkopolski
-3004015,3004,8,Borek Wielkopolski,obszar wiejski Borek Wielkopolski
+3004015,3004,8,Borek Wielkopolski,Borek Wielkopolski
 3004023,3004,7,Gostyń,gmina Gostyń
 3004024,3004,8,Gostyń,miasto Gostyń
-3004025,3004,8,Gostyń,obszar wiejski Gostyń
+3004025,3004,8,Gostyń,Gostyń
 3004033,3004,7,Krobia,gmina Krobia
 3004034,3004,8,Krobia,miasto Krobia
-3004035,3004,8,Krobia,obszar wiejski Krobia
+3004035,3004,8,Krobia,Krobia
 3004042,3004,7,Pępowo,gmina Pępowo
 3004052,3004,7,Piaski,gmina Piaski
 3004063,3004,7,Pogorzela,gmina Pogorzela
 3004064,3004,8,Pogorzela,miasto Pogorzela
-3004065,3004,8,Pogorzela,obszar wiejski Pogorzela
+3004065,3004,8,Pogorzela,Pogorzela
 3004073,3004,7,Poniec,gmina Poniec
 3004074,3004,8,Poniec,miasto Poniec
-3004075,3004,8,Poniec,obszar wiejski Poniec
+3004075,3004,8,Poniec,Poniec
 3005,30,6,grodziski,powiat grodziski
 3005012,3005,7,Granowo,gmina Granowo
 3005023,3005,7,Grodzisk Wielkopolski,gmina Grodzisk Wielkopolski
 3005024,3005,8,Grodzisk Wielkopolski,miasto Grodzisk Wielkopolski
-3005025,3005,8,Grodzisk Wielkopolski,obszar wiejski Grodzisk Wielkopolski
+3005025,3005,8,Grodzisk Wielkopolski,Grodzisk Wielkopolski
 3005032,3005,7,Kamieniec,gmina Kamieniec
 3005043,3005,7,Rakoniewice,gmina Rakoniewice
 3005044,3005,8,Rakoniewice,miasto Rakoniewice
-3005045,3005,8,Rakoniewice,obszar wiejski Rakoniewice
+3005045,3005,8,Rakoniewice,Rakoniewice
 3005053,3005,7,Wielichowo,gmina Wielichowo
 3005054,3005,8,Wielichowo,miasto Wielichowo
-3005055,3005,8,Wielichowo,obszar wiejski Wielichowo
+3005055,3005,8,Wielichowo,Wielichowo
 3006,30,6,jarociński,powiat jarociński
 3006012,3006,7,Jaraczewo,gmina Jaraczewo
 3006023,3006,7,Jarocin,gmina Jarocin
 3006024,3006,8,Jarocin,miasto Jarocin
-3006025,3006,8,Jarocin,obszar wiejski Jarocin
+3006025,3006,8,Jarocin,Jarocin
 3006032,3006,7,Kotlin,gmina Kotlin
 3006043,3006,7,Żerków,gmina Żerków
 3006044,3006,8,Żerków,miasto Żerków
-3006045,3006,8,Żerków,obszar wiejski Żerków
+3006045,3006,8,Żerków,Żerków
 3007,30,6,kaliski,powiat kaliski
 3007012,3007,7,Blizanów,gmina Blizanów
 3007022,3007,7,Brzeziny,gmina Brzeziny
@@ -3521,7 +3521,7 @@ id,parent_id,admin_level,name,relation_name
 3007082,3007,7,Opatówek,gmina Opatówek
 3007093,3007,7,Stawiszyn,gmina Stawiszyn
 3007094,3007,8,Stawiszyn,miasto Stawiszyn
-3007095,3007,8,Stawiszyn,obszar wiejski Stawiszyn
+3007095,3007,8,Stawiszyn,Stawiszyn
 3007102,3007,7,Szczytniki,gmina Szczytniki
 3007112,3007,7,Żelazków,gmina Żelazków
 3008,30,6,kępiński,powiat kępiński
@@ -3529,7 +3529,7 @@ id,parent_id,admin_level,name,relation_name
 3008022,3008,7,Bralin,gmina Bralin
 3008033,3008,7,Kępno,gmina Kępno
 3008034,3008,8,Kępno,miasto Kępno
-3008035,3008,8,Kępno,obszar wiejski Kępno
+3008035,3008,8,Kępno,Kępno
 3008042,3008,7,Łęka Opatowska,gmina Łęka Opatowska
 3008052,3008,7,Perzów,gmina Perzów
 3008062,3008,7,Rychtal,gmina Rychtal
@@ -3540,79 +3540,79 @@ id,parent_id,admin_level,name,relation_name
 3009032,3009,7,Chodów,gmina Chodów
 3009043,3009,7,Dąbie,gmina Dąbie
 3009044,3009,8,Dąbie,miasto Dąbie
-3009045,3009,8,Dąbie,obszar wiejski Dąbie
+3009045,3009,8,Dąbie,Dąbie
 3009052,3009,7,Grzegorzew,gmina Grzegorzew
 3009063,3009,7,Kłodawa,gmina Kłodawa
 3009064,3009,8,Kłodawa,miasto Kłodawa
-3009065,3009,8,Kłodawa,obszar wiejski Kłodawa
+3009065,3009,8,Kłodawa,Kłodawa
 3009072,3009,7,Koło,gmina Koło
 3009082,3009,7,Kościelec,gmina Kościelec
 3009092,3009,7,Olszówka,gmina Olszówka
 3009102,3009,7,Osiek Mały,gmina Osiek Mały
 3009113,3009,7,Przedecz,gmina Przedecz
 3009114,3009,8,Przedecz,miasto Przedecz
-3009115,3009,8,Przedecz,obszar wiejski Przedecz
+3009115,3009,8,Przedecz,Przedecz
 3010,30,6,koniński,powiat koniński
 3010013,3010,7,Golina,gmina Golina
 3010014,3010,8,Golina,miasto Golina
-3010015,3010,8,Golina,obszar wiejski Golina
+3010015,3010,8,Golina,Golina
 3010022,3010,7,Grodziec,gmina Grodziec
 3010032,3010,7,Kazimierz Biskupi,gmina Kazimierz Biskupi
 3010043,3010,7,Kleczew,gmina Kleczew
 3010044,3010,8,Kleczew,miasto Kleczew
-3010045,3010,8,Kleczew,obszar wiejski Kleczew
+3010045,3010,8,Kleczew,Kleczew
 3010052,3010,7,Kramsk,gmina Kramsk
 3010062,3010,7,Krzymów,gmina Krzymów
 3010073,3010,7,Rychwał,gmina Rychwał
 3010074,3010,8,Rychwał,miasto Rychwał
-3010075,3010,8,Rychwał,obszar wiejski Rychwał
+3010075,3010,8,Rychwał,Rychwał
 3010082,3010,7,Rzgów,gmina Rzgów
 3010092,3010,7,Skulsk,gmina Skulsk
 3010103,3010,7,Sompolno,gmina Sompolno
 3010104,3010,8,Sompolno,miasto Sompolno
-3010105,3010,8,Sompolno,obszar wiejski Sompolno
+3010105,3010,8,Sompolno,Sompolno
 3010112,3010,7,Stare Miasto,gmina Stare Miasto
 3010123,3010,7,Ślesin,gmina Ślesin
 3010124,3010,8,Ślesin,miasto Ślesin
-3010125,3010,8,Ślesin,obszar wiejski Ślesin
+3010125,3010,8,Ślesin,Ślesin
 3010132,3010,7,Wierzbinek,gmina Wierzbinek
 3010142,3010,7,Wilczyn,gmina Wilczyn
 3011,30,6,kościański,powiat kościański
 3011011,3011,7,Kościan,gmina Kościan
 3011023,3011,7,Czempiń,gmina Czempiń
 3011024,3011,8,Czempiń,miasto Czempiń
-3011025,3011,8,Czempiń,obszar wiejski Czempiń
+3011025,3011,8,Czempiń,Czempiń
 3011032,3011,7,Kościan,gmina Kościan
 3011043,3011,7,Krzywiń,gmina Krzywiń
 3011044,3011,8,Krzywiń,miasto Krzywiń
-3011045,3011,8,Krzywiń,obszar wiejski Krzywiń
+3011045,3011,8,Krzywiń,Krzywiń
 3011053,3011,7,Śmigiel,gmina Śmigiel
 3011054,3011,8,Śmigiel,miasto Śmigiel
-3011055,3011,8,Śmigiel,obszar wiejski Śmigiel
+3011055,3011,8,Śmigiel,Śmigiel
 3012,30,6,krotoszyński,powiat krotoszyński
 3012011,3012,7,Sulmierzyce,gmina Sulmierzyce
 3012023,3012,7,Kobylin,gmina Kobylin
 3012024,3012,8,Kobylin,miasto Kobylin
-3012025,3012,8,Kobylin,obszar wiejski Kobylin
+3012025,3012,8,Kobylin,Kobylin
 3012033,3012,7,Koźmin Wielkopolski,gmina Koźmin Wielkopolski
 3012034,3012,8,Koźmin Wielkopolski,miasto Koźmin Wielkopolski
-3012035,3012,8,Koźmin Wielkopolski,obszar wiejski Koźmin Wielkopolski
+3012035,3012,8,Koźmin Wielkopolski,Koźmin Wielkopolski
 3012043,3012,7,Krotoszyn,gmina Krotoszyn
 3012044,3012,8,Krotoszyn,miasto Krotoszyn
-3012045,3012,8,Krotoszyn,obszar wiejski Krotoszyn
+3012045,3012,8,Krotoszyn,Krotoszyn
 3012052,3012,7,Rozdrażew,gmina Rozdrażew
 3012063,3012,7,Zduny,gmina Zduny
 3012064,3012,8,Zduny,miasto Zduny
-3012065,3012,8,Zduny,obszar wiejski Zduny
+3012065,3012,8,Zduny,Zduny
 3013,30,6,leszczyński,powiat leszczyński
 3013012,3013,7,Krzemieniewo,gmina Krzemieniewo
 3013022,3013,7,Lipno,gmina Lipno
 3013033,3013,7,Osieczna,gmina Osieczna
 3013034,3013,8,Osieczna,miasto Osieczna
-3013035,3013,8,Osieczna,obszar wiejski Osieczna
+3013035,3013,8,Osieczna,Osieczna
 3013043,3013,7,Rydzyna,gmina Rydzyna
 3013044,3013,8,Rydzyna,miasto Rydzyna
-3013045,3013,8,Rydzyna,obszar wiejski Rydzyna
+3013045,3013,8,Rydzyna,Rydzyna
 3013052,3013,7,Święciechowa,gmina Święciechowa
 3013062,3013,7,Wijewo,gmina Wijewo
 3013072,3013,7,Włoszakowice,gmina Włoszakowice
@@ -3621,46 +3621,46 @@ id,parent_id,admin_level,name,relation_name
 3014022,3014,7,Kwilcz,gmina Kwilcz
 3014033,3014,7,Międzychód,gmina Międzychód
 3014034,3014,8,Międzychód,miasto Międzychód
-3014035,3014,8,Międzychód,obszar wiejski Międzychód
+3014035,3014,8,Międzychód,Międzychód
 3014043,3014,7,Sieraków,gmina Sieraków
 3014044,3014,8,Sieraków,miasto Sieraków
-3014045,3014,8,Sieraków,obszar wiejski Sieraków
+3014045,3014,8,Sieraków,Sieraków
 3015,30,6,nowotomyski,powiat nowotomyski
 3015012,3015,7,Kuślin,gmina Kuślin
 3015023,3015,7,Lwówek,gmina Lwówek
 3015024,3015,8,Lwówek,miasto Lwówek
-3015025,3015,8,Lwówek,obszar wiejski Lwówek
+3015025,3015,8,Lwówek,Lwówek
 3015032,3015,7,Miedzichowo,gmina Miedzichowo
 3015043,3015,7,Nowy Tomyśl,gmina Nowy Tomyśl
 3015044,3015,8,Nowy Tomyśl,miasto Nowy Tomyśl
-3015045,3015,8,Nowy Tomyśl,obszar wiejski Nowy Tomyśl
+3015045,3015,8,Nowy Tomyśl,Nowy Tomyśl
 3015053,3015,7,Opalenica,gmina Opalenica
 3015054,3015,8,Opalenica,miasto Opalenica
-3015055,3015,8,Opalenica,obszar wiejski Opalenica
+3015055,3015,8,Opalenica,Opalenica
 3015063,3015,7,Zbąszyń,gmina Zbąszyń
 3015064,3015,8,Zbąszyń,miasto Zbąszyń
-3015065,3015,8,Zbąszyń,obszar wiejski Zbąszyń
+3015065,3015,8,Zbąszyń,Zbąszyń
 3016,30,6,obornicki,powiat obornicki
 3016013,3016,7,Oborniki,gmina Oborniki
 3016014,3016,8,Oborniki,miasto Oborniki
-3016015,3016,8,Oborniki,obszar wiejski Oborniki
+3016015,3016,8,Oborniki,Oborniki
 3016023,3016,7,Rogoźno,gmina Rogoźno
 3016024,3016,8,Rogoźno,miasto Rogoźno
-3016025,3016,8,Rogoźno,obszar wiejski Rogoźno
+3016025,3016,8,Rogoźno,Rogoźno
 3016032,3016,7,Ryczywół,gmina Ryczywół
 3017,30,6,ostrowski,powiat ostrowski
 3017011,3017,7,Ostrów Wielkopolski,gmina Ostrów Wielkopolski
 3017023,3017,7,Nowe Skalmierzyce,gmina Nowe Skalmierzyce
 3017024,3017,8,Nowe Skalmierzyce,miasto Nowe Skalmierzyce
-3017025,3017,8,Nowe Skalmierzyce,obszar wiejski Nowe Skalmierzyce
+3017025,3017,8,Nowe Skalmierzyce,Nowe Skalmierzyce
 3017033,3017,7,Odolanów,gmina Odolanów
 3017034,3017,8,Odolanów,miasto Odolanów
-3017035,3017,8,Odolanów,obszar wiejski Odolanów
+3017035,3017,8,Odolanów,Odolanów
 3017042,3017,7,Ostrów Wielkopolski,gmina Ostrów Wielkopolski
 3017052,3017,7,Przygodzice,gmina Przygodzice
 3017063,3017,7,Raszków,gmina Raszków
 3017064,3017,8,Raszków,miasto Raszków
-3017065,3017,8,Raszków,obszar wiejski Raszków
+3017065,3017,8,Raszków,Raszków
 3017072,3017,7,Sieroszewice,gmina Sieroszewice
 3017082,3017,7,Sośnie,gmina Sośnie
 3018,30,6,ostrzeszowski,powiat ostrzeszowski
@@ -3668,33 +3668,33 @@ id,parent_id,admin_level,name,relation_name
 3018022,3018,7,Doruchów,gmina Doruchów
 3018033,3018,7,Grabów nad Prosną,gmina Grabów nad Prosną
 3018034,3018,8,Grabów nad Prosną,miasto Grabów nad Prosną
-3018035,3018,8,Grabów nad Prosną,obszar wiejski Grabów nad Prosną
+3018035,3018,8,Grabów nad Prosną,Grabów nad Prosną
 3018042,3018,7,Kobyla Góra,gmina Kobyla Góra
 3018052,3018,7,Kraszewice,gmina Kraszewice
 3018063,3018,7,Mikstat,gmina Mikstat
 3018064,3018,8,Mikstat,miasto Mikstat
-3018065,3018,8,Mikstat,obszar wiejski Mikstat
+3018065,3018,8,Mikstat,Mikstat
 3018073,3018,7,Ostrzeszów,gmina Ostrzeszów
 3018074,3018,8,Ostrzeszów,miasto Ostrzeszów
-3018075,3018,8,Ostrzeszów,obszar wiejski Ostrzeszów
+3018075,3018,8,Ostrzeszów,Ostrzeszów
 3019,30,6,pilski,powiat pilski
 3019011,3019,7,Piła,gmina Piła
 3019022,3019,7,Białośliwie,gmina Białośliwie
 3019032,3019,7,Kaczory,gmina Kaczory
 3019043,3019,7,Łobżenica,gmina Łobżenica
 3019044,3019,8,Łobżenica,miasto Łobżenica
-3019045,3019,8,Łobżenica,obszar wiejski Łobżenica
+3019045,3019,8,Łobżenica,Łobżenica
 3019052,3019,7,Miasteczko Krajeńskie,gmina Miasteczko Krajeńskie
 3019062,3019,7,Szydłowo,gmina Szydłowo
 3019073,3019,7,Ujście,gmina Ujście
 3019074,3019,8,Ujście,miasto Ujście
-3019075,3019,8,Ujście,obszar wiejski Ujście
+3019075,3019,8,Ujście,Ujście
 3019083,3019,7,Wyrzysk,gmina Wyrzysk
 3019084,3019,8,Wyrzysk,miasto Wyrzysk
-3019085,3019,8,Wyrzysk,obszar wiejski Wyrzysk
+3019085,3019,8,Wyrzysk,Wyrzysk
 3019093,3019,7,Wysoka,gmina Wysoka
 3019094,3019,8,Wysoka,miasto Wysoka
-3019095,3019,8,Wysoka,obszar wiejski Wysoka
+3019095,3019,8,Wysoka,Wysoka
 3020,30,6,pleszewski,powiat pleszewski
 3020012,3020,7,Chocz,gmina Chocz
 3020022,3020,7,Czermin,gmina Czermin
@@ -3703,55 +3703,55 @@ id,parent_id,admin_level,name,relation_name
 3020052,3020,7,Gołuchów,gmina Gołuchów
 3020063,3020,7,Pleszew,gmina Pleszew
 3020064,3020,8,Pleszew,miasto Pleszew
-3020065,3020,8,Pleszew,obszar wiejski Pleszew
+3020065,3020,8,Pleszew,Pleszew
 3021,30,6,poznański,powiat poznański
 3021011,3021,7,Luboń,gmina Luboń
 3021021,3021,7,Puszczykowo,gmina Puszczykowo
 3021033,3021,7,Buk,gmina Buk
 3021034,3021,8,Buk,miasto Buk
-3021035,3021,8,Buk,obszar wiejski Buk
+3021035,3021,8,Buk,Buk
 3021042,3021,7,Czerwonak,gmina Czerwonak
 3021052,3021,7,Dopiewo,gmina Dopiewo
 3021062,3021,7,Kleszczewo,gmina Kleszczewo
 3021072,3021,7,Komorniki,gmina Komorniki
 3021083,3021,7,Kostrzyn,gmina Kostrzyn
 3021084,3021,8,Kostrzyn,miasto Kostrzyn
-3021085,3021,8,Kostrzyn,obszar wiejski Kostrzyn
+3021085,3021,8,Kostrzyn,Kostrzyn
 3021093,3021,7,Kórnik,gmina Kórnik
 3021094,3021,8,Kórnik,miasto Kórnik
-3021095,3021,8,Kórnik,obszar wiejski Kórnik
+3021095,3021,8,Kórnik,Kórnik
 3021103,3021,7,Mosina,gmina Mosina
 3021104,3021,8,Mosina,miasto Mosina
-3021105,3021,8,Mosina,obszar wiejski Mosina
+3021105,3021,8,Mosina,Mosina
 3021113,3021,7,Murowana Goślina,gmina Murowana Goślina
 3021114,3021,8,Murowana Goślina,miasto Murowana Goślina
-3021115,3021,8,Murowana Goślina,obszar wiejski Murowana Goślina
+3021115,3021,8,Murowana Goślina,Murowana Goślina
 3021123,3021,7,Pobiedziska,gmina Pobiedziska
 3021124,3021,8,Pobiedziska,miasto Pobiedziska
-3021125,3021,8,Pobiedziska,obszar wiejski Pobiedziska
+3021125,3021,8,Pobiedziska,Pobiedziska
 3021132,3021,7,Rokietnica,gmina Rokietnica
 3021143,3021,7,Stęszew,gmina Stęszew
 3021144,3021,8,Stęszew,miasto Stęszew
-3021145,3021,8,Stęszew,obszar wiejski Stęszew
+3021145,3021,8,Stęszew,Stęszew
 3021152,3021,7,Suchy Las,gmina Suchy Las
 3021163,3021,7,Swarzędz,gmina Swarzędz
 3021164,3021,8,Swarzędz,miasto Swarzędz
-3021165,3021,8,Swarzędz,obszar wiejski Swarzędz
+3021165,3021,8,Swarzędz,Swarzędz
 3021172,3021,7,Tarnowo Podgórne,gmina Tarnowo Podgórne
 3022,30,6,rawicki,powiat rawicki
 3022013,3022,7,Bojanowo,gmina Bojanowo
 3022014,3022,8,Bojanowo,miasto Bojanowo
-3022015,3022,8,Bojanowo,obszar wiejski Bojanowo
+3022015,3022,8,Bojanowo,Bojanowo
 3022023,3022,7,Jutrosin,gmina Jutrosin
 3022024,3022,8,Jutrosin,miasto Jutrosin
-3022025,3022,8,Jutrosin,obszar wiejski Jutrosin
+3022025,3022,8,Jutrosin,Jutrosin
 3022033,3022,7,Miejska Górka,gmina Miejska Górka
 3022034,3022,8,Miejska Górka,miasto Miejska Górka
-3022035,3022,8,Miejska Górka,obszar wiejski Miejska Górka
+3022035,3022,8,Miejska Górka,Miejska Górka
 3022042,3022,7,Pakosław,gmina Pakosław
 3022053,3022,7,Rawicz,gmina Rawicz
 3022054,3022,8,Rawicz,miasto Rawicz
-3022055,3022,8,Rawicz,obszar wiejski Rawicz
+3022055,3022,8,Rawicz,Rawicz
 3023,30,6,słupecki,powiat słupecki
 3023011,3023,7,Słupca,gmina Słupca
 3023022,3023,7,Lądek,gmina Lądek
@@ -3762,7 +3762,7 @@ id,parent_id,admin_level,name,relation_name
 3023072,3023,7,Strzałkowo,gmina Strzałkowo
 3023083,3023,7,Zagórów,gmina Zagórów
 3023084,3023,8,Zagórów,miasto Zagórów
-3023085,3023,8,Zagórów,obszar wiejski Zagórów
+3023085,3023,8,Zagórów,Zagórów
 3024,30,6,szamotulski,powiat szamotulski
 3024011,3024,7,Obrzycko,gmina Obrzycko
 3024022,3024,7,Duszniki,gmina Duszniki
@@ -3770,47 +3770,47 @@ id,parent_id,admin_level,name,relation_name
 3024042,3024,7,Obrzycko,gmina Obrzycko
 3024053,3024,7,Ostroróg,gmina Ostroróg
 3024054,3024,8,Ostroróg,miasto Ostroróg
-3024055,3024,8,Ostroróg,obszar wiejski Ostroróg
+3024055,3024,8,Ostroróg,Ostroróg
 3024063,3024,7,Pniewy,gmina Pniewy
 3024064,3024,8,Pniewy,miasto Pniewy
-3024065,3024,8,Pniewy,obszar wiejski Pniewy
+3024065,3024,8,Pniewy,Pniewy
 3024073,3024,7,Szamotuły,gmina Szamotuły
 3024074,3024,8,Szamotuły,miasto Szamotuły
-3024075,3024,8,Szamotuły,obszar wiejski Szamotuły
+3024075,3024,8,Szamotuły,Szamotuły
 3024083,3024,7,Wronki,gmina Wronki
 3024084,3024,8,Wronki,miasto Wronki
-3024085,3024,8,Wronki,obszar wiejski Wronki
+3024085,3024,8,Wronki,Wronki
 3025,30,6,średzki,powiat średzki
 3025012,3025,7,Dominowo,gmina Dominowo
 3025022,3025,7,Krzykosy,gmina Krzykosy
 3025032,3025,7,Nowe Miasto nad Wartą,gmina Nowe Miasto nad Wartą
 3025043,3025,7,Środa Wielkopolska,gmina Środa Wielkopolska
 3025044,3025,8,Środa Wielkopolska,miasto Środa Wielkopolska
-3025045,3025,8,Środa Wielkopolska,obszar wiejski Środa Wielkopolska
+3025045,3025,8,Środa Wielkopolska,Środa Wielkopolska
 3025052,3025,7,Zaniemyśl,gmina Zaniemyśl
 3026,30,6,śremski,powiat śremski
 3026012,3026,7,Brodnica,gmina Brodnica
 3026023,3026,7,Dolsk,gmina Dolsk
 3026024,3026,8,Dolsk,miasto Dolsk
-3026025,3026,8,Dolsk,obszar wiejski Dolsk
+3026025,3026,8,Dolsk,Dolsk
 3026033,3026,7,Książ Wielkopolski,gmina Książ Wielkopolski
 3026034,3026,8,Książ Wielkopolski,miasto Książ Wielkopolski
-3026035,3026,8,Książ Wielkopolski,obszar wiejski Książ Wielkopolski
+3026035,3026,8,Książ Wielkopolski,Książ Wielkopolski
 3026043,3026,7,Śrem,gmina Śrem
 3026044,3026,8,Śrem,miasto Śrem
-3026045,3026,8,Śrem,obszar wiejski Śrem
+3026045,3026,8,Śrem,Śrem
 3027,30,6,turecki,powiat turecki
 3027011,3027,7,Turek,gmina Turek
 3027022,3027,7,Brudzew,gmina Brudzew
 3027033,3027,7,Dobra,gmina Dobra
 3027034,3027,8,Dobra,miasto Dobra
-3027035,3027,8,Dobra,obszar wiejski Dobra
+3027035,3027,8,Dobra,Dobra
 3027042,3027,7,Kawęczyn,gmina Kawęczyn
 3027052,3027,7,Malanów,gmina Malanów
 3027062,3027,7,Przykona,gmina Przykona
 3027073,3027,7,Tuliszków,gmina Tuliszków
 3027074,3027,8,Tuliszków,miasto Tuliszków
-3027075,3027,8,Tuliszków,obszar wiejski Tuliszków
+3027075,3027,8,Tuliszków,Tuliszków
 3027082,3027,7,Turek,gmina Turek
 3027092,3027,7,Władysławów,gmina Władysławów
 3028,30,6,wągrowiecki,powiat wągrowiecki
@@ -3818,11 +3818,11 @@ id,parent_id,admin_level,name,relation_name
 3028022,3028,7,Damasławek,gmina Damasławek
 3028033,3028,7,Gołańcz,gmina Gołańcz
 3028034,3028,8,Gołańcz,miasto Gołańcz
-3028035,3028,8,Gołańcz,obszar wiejski Gołańcz
+3028035,3028,8,Gołańcz,Gołańcz
 3028042,3028,7,Mieścisko,gmina Mieścisko
 3028053,3028,7,Skoki,gmina Skoki
 3028054,3028,8,Skoki,miasto Skoki
-3028055,3028,8,Skoki,obszar wiejski Skoki
+3028055,3028,8,Skoki,Skoki
 3028062,3028,7,Wapno,gmina Wapno
 3028072,3028,7,Wągrowiec,gmina Wągrowiec
 3029,30,6,wolsztyński,powiat wolsztyński
@@ -3830,99 +3830,99 @@ id,parent_id,admin_level,name,relation_name
 3029022,3029,7,Siedlec,gmina Siedlec
 3029033,3029,7,Wolsztyn,gmina Wolsztyn
 3029034,3029,8,Wolsztyn,miasto Wolsztyn
-3029035,3029,8,Wolsztyn,obszar wiejski Wolsztyn
+3029035,3029,8,Wolsztyn,Wolsztyn
 3030,30,6,wrzesiński,powiat wrzesiński
 3030012,3030,7,Kołaczkowo,gmina Kołaczkowo
 3030023,3030,7,Miłosław,gmina Miłosław
 3030024,3030,8,Miłosław,miasto Miłosław
-3030025,3030,8,Miłosław,obszar wiejski Miłosław
+3030025,3030,8,Miłosław,Miłosław
 3030033,3030,7,Nekla,gmina Nekla
 3030034,3030,8,Nekla,miasto Nekla
-3030035,3030,8,Nekla,obszar wiejski Nekla
+3030035,3030,8,Nekla,Nekla
 3030043,3030,7,Pyzdry,gmina Pyzdry
 3030044,3030,8,Pyzdry,miasto Pyzdry
-3030045,3030,8,Pyzdry,obszar wiejski Pyzdry
+3030045,3030,8,Pyzdry,Pyzdry
 3030053,3030,7,Września,gmina Września
 3030054,3030,8,Września,miasto Września
-3030055,3030,8,Września,obszar wiejski Września
+3030055,3030,8,Września,Września
 3031,30,6,złotowski,powiat złotowski
 3031011,3031,7,Złotów,gmina Złotów
 3031023,3031,7,Jastrowie,gmina Jastrowie
 3031024,3031,8,Jastrowie,miasto Jastrowie
-3031025,3031,8,Jastrowie,obszar wiejski Jastrowie
+3031025,3031,8,Jastrowie,Jastrowie
 3031033,3031,7,Krajenka,gmina Krajenka
 3031034,3031,8,Krajenka,miasto Krajenka
-3031035,3031,8,Krajenka,obszar wiejski Krajenka
+3031035,3031,8,Krajenka,Krajenka
 3031042,3031,7,Lipka,gmina Lipka
 3031053,3031,7,Okonek,gmina Okonek
 3031054,3031,8,Okonek,miasto Okonek
-3031055,3031,8,Okonek,obszar wiejski Okonek
+3031055,3031,8,Okonek,Okonek
 3031062,3031,7,Tarnówka,gmina Tarnówka
 3031072,3031,7,Zakrzewo,gmina Zakrzewo
 3031082,3031,7,Złotów,gmina Złotów
-3061,30,6,Kalisz,miasto na prawach powiatu Kalisz
+3061,30,6,Kalisz,Kalisz
 3061011,3061,7,Kalisz,gmina Kalisz
-3062,30,6,Konin,miasto na prawach powiatu Konin
+3062,30,6,Konin,Konin
 3062011,3062,7,Konin,gmina Konin
-3063,30,6,Leszno,miasto na prawach powiatu Leszno
+3063,30,6,Leszno,Leszno
 3063011,3063,7,Leszno,gmina Leszno
-3064,30,6,Poznań,miasto na prawach powiatu Poznań
+3064,30,6,Poznań,Poznań
 3064011,3064,7,Poznań,gmina Poznań
-3064029,3064,,Poznań-Grunwald,delegatura Poznań-Grunwald
-3064039,3064,,Poznań-Jeżyce,delegatura Poznań-Jeżyce
-3064049,3064,,Poznań-Nowe Miasto,delegatura Poznań-Nowe Miasto
-3064059,3064,,Poznań-Stare Miasto,delegatura Poznań-Stare Miasto
-3064069,3064,,Poznań-Wilda,delegatura Poznań-Wilda
+3064029,3064,,Poznań-Grunwald,Poznań-Grunwald
+3064039,3064,,Poznań-Jeżyce,Poznań-Jeżyce
+3064049,3064,,Poznań-Nowe Miasto,Poznań-Nowe Miasto
+3064059,3064,,Poznań-Stare Miasto,Poznań-Stare Miasto
+3064069,3064,,Poznań-Wilda,Poznań-Wilda
 32,1,4,zachodniopomorskie,województwo zachodniopomorskie
 3201,32,6,białogardzki,powiat białogardzki
 3201011,3201,7,Białogard,gmina Białogard
 3201022,3201,7,Białogard,gmina Białogard
 3201033,3201,7,Karlino,gmina Karlino
 3201034,3201,8,Karlino,miasto Karlino
-3201035,3201,8,Karlino,obszar wiejski Karlino
+3201035,3201,8,Karlino,Karlino
 3201043,3201,7,Tychowo,gmina Tychowo
 3201044,3201,8,Tychowo,miasto Tychowo
-3201045,3201,8,Tychowo,obszar wiejski Tychowo
+3201045,3201,8,Tychowo,Tychowo
 3202,32,6,choszczeński,powiat choszczeński
 3202012,3202,7,Bierzwnik,gmina Bierzwnik
 3202023,3202,7,Choszczno,gmina Choszczno
 3202024,3202,8,Choszczno,miasto Choszczno
-3202025,3202,8,Choszczno,obszar wiejski Choszczno
+3202025,3202,8,Choszczno,Choszczno
 3202033,3202,7,Drawno,gmina Drawno
 3202034,3202,8,Drawno,miasto Drawno
-3202035,3202,8,Drawno,obszar wiejski Drawno
+3202035,3202,8,Drawno,Drawno
 3202042,3202,7,Krzęcin,gmina Krzęcin
 3202053,3202,7,Pełczyce,gmina Pełczyce
 3202054,3202,8,Pełczyce,miasto Pełczyce
-3202055,3202,8,Pełczyce,obszar wiejski Pełczyce
+3202055,3202,8,Pełczyce,Pełczyce
 3202063,3202,7,Recz,gmina Recz
 3202064,3202,8,Recz,miasto Recz
-3202065,3202,8,Recz,obszar wiejski Recz
+3202065,3202,8,Recz,Recz
 3203,32,6,drawski,powiat drawski
 3203013,3203,7,Czaplinek,gmina Czaplinek
 3203014,3203,8,Czaplinek,miasto Czaplinek
-3203015,3203,8,Czaplinek,obszar wiejski Czaplinek
+3203015,3203,8,Czaplinek,Czaplinek
 3203023,3203,7,Drawsko Pomorskie,gmina Drawsko Pomorskie
 3203024,3203,8,Drawsko Pomorskie,miasto Drawsko Pomorskie
-3203025,3203,8,Drawsko Pomorskie,obszar wiejski Drawsko Pomorskie
+3203025,3203,8,Drawsko Pomorskie,Drawsko Pomorskie
 3203033,3203,7,Kalisz Pomorski,gmina Kalisz Pomorski
 3203034,3203,8,Kalisz Pomorski,miasto Kalisz Pomorski
-3203035,3203,8,Kalisz Pomorski,obszar wiejski Kalisz Pomorski
+3203035,3203,8,Kalisz Pomorski,Kalisz Pomorski
 3203042,3203,7,Ostrowice,gmina Ostrowice
 3203052,3203,7,Wierzchowo,gmina Wierzchowo
 3203063,3203,7,Złocieniec,gmina Złocieniec
 3203064,3203,8,Złocieniec,miasto Złocieniec
-3203065,3203,8,Złocieniec,obszar wiejski Złocieniec
+3203065,3203,8,Złocieniec,Złocieniec
 3204,32,6,goleniowski,powiat goleniowski
 3204023,3204,7,Goleniów,gmina Goleniów
 3204024,3204,8,Goleniów,miasto Goleniów
-3204025,3204,8,Goleniów,obszar wiejski Goleniów
+3204025,3204,8,Goleniów,Goleniów
 3204033,3204,7,Maszewo,gmina Maszewo
 3204034,3204,8,Maszewo,miasto Maszewo
-3204035,3204,8,Maszewo,obszar wiejski Maszewo
+3204035,3204,8,Maszewo,Maszewo
 3204043,3204,7,Nowogard,gmina Nowogard
 3204044,3204,8,Nowogard,miasto Nowogard
-3204045,3204,8,Nowogard,obszar wiejski Nowogard
+3204045,3204,8,Nowogard,Nowogard
 3204052,3204,7,Osina,gmina Osina
 3204062,3204,7,Przybiernów,gmina Przybiernów
 3204072,3204,7,Stepnica,gmina Stepnica
@@ -3930,60 +3930,60 @@ id,parent_id,admin_level,name,relation_name
 3205012,3205,7,Brojce,gmina Brojce
 3205023,3205,7,Gryfice,gmina Gryfice
 3205024,3205,8,Gryfice,miasto Gryfice
-3205025,3205,8,Gryfice,obszar wiejski Gryfice
+3205025,3205,8,Gryfice,Gryfice
 3205032,3205,7,Karnice,gmina Karnice
 3205043,3205,7,Płoty,gmina Płoty
 3205044,3205,8,Płoty,miasto Płoty
-3205045,3205,8,Płoty,obszar wiejski Płoty
+3205045,3205,8,Płoty,Płoty
 3205072,3205,7,Rewal,gmina Rewal
 3205083,3205,7,Trzebiatów,gmina Trzebiatów
 3205084,3205,8,Trzebiatów,miasto Trzebiatów
-3205085,3205,8,Trzebiatów,obszar wiejski Trzebiatów
+3205085,3205,8,Trzebiatów,Trzebiatów
 3206,32,6,gryfiński,powiat gryfiński
 3206012,3206,7,Banie,gmina Banie
 3206023,3206,7,Cedynia,gmina Cedynia
 3206024,3206,8,Cedynia,miasto Cedynia
-3206025,3206,8,Cedynia,obszar wiejski Cedynia
+3206025,3206,8,Cedynia,Cedynia
 3206033,3206,7,Chojna,gmina Chojna
 3206034,3206,8,Chojna,miasto Chojna
-3206035,3206,8,Chojna,obszar wiejski Chojna
+3206035,3206,8,Chojna,Chojna
 3206043,3206,7,Gryfino,gmina Gryfino
 3206044,3206,8,Gryfino,miasto Gryfino
-3206045,3206,8,Gryfino,obszar wiejski Gryfino
+3206045,3206,8,Gryfino,Gryfino
 3206053,3206,7,Mieszkowice,gmina Mieszkowice
 3206054,3206,8,Mieszkowice,miasto Mieszkowice
-3206055,3206,8,Mieszkowice,obszar wiejski Mieszkowice
+3206055,3206,8,Mieszkowice,Mieszkowice
 3206063,3206,7,Moryń,gmina Moryń
 3206064,3206,8,Moryń,miasto Moryń
-3206065,3206,8,Moryń,obszar wiejski Moryń
+3206065,3206,8,Moryń,Moryń
 3206072,3206,7,Stare Czarnowo,gmina Stare Czarnowo
 3206083,3206,7,Trzcińsko-Zdrój,gmina Trzcińsko-Zdrój
 3206084,3206,8,Trzcińsko-Zdrój,miasto Trzcińsko-Zdrój
-3206085,3206,8,Trzcińsko-Zdrój,obszar wiejski Trzcińsko-Zdrój
+3206085,3206,8,Trzcińsko-Zdrój,Trzcińsko-Zdrój
 3206092,3206,7,Widuchowa,gmina Widuchowa
 3207,32,6,kamieński,powiat kamieński
 3207013,3207,7,Dziwnów,gmina Dziwnów
 3207014,3207,8,Dziwnów,miasto Dziwnów
-3207015,3207,8,Dziwnów,obszar wiejski Dziwnów
+3207015,3207,8,Dziwnów,Dziwnów
 3207023,3207,7,Golczewo,gmina Golczewo
 3207024,3207,8,Golczewo,miasto Golczewo
-3207025,3207,8,Golczewo,obszar wiejski Golczewo
+3207025,3207,8,Golczewo,Golczewo
 3207033,3207,7,Kamień Pomorski,gmina Kamień Pomorski
 3207034,3207,8,Kamień Pomorski,miasto Kamień Pomorski
-3207035,3207,8,Kamień Pomorski,obszar wiejski Kamień Pomorski
+3207035,3207,8,Kamień Pomorski,Kamień Pomorski
 3207043,3207,7,Międzyzdroje,gmina Międzyzdroje
 3207044,3207,8,Międzyzdroje,miasto Międzyzdroje
-3207045,3207,8,Międzyzdroje,obszar wiejski Międzyzdroje
+3207045,3207,8,Międzyzdroje,Międzyzdroje
 3207052,3207,7,Świerzno,gmina Świerzno
 3207063,3207,7,Wolin,gmina Wolin
 3207064,3207,8,Wolin,miasto Wolin
-3207065,3207,8,Wolin,obszar wiejski Wolin
+3207065,3207,8,Wolin,Wolin
 3208,32,6,kołobrzeski,powiat kołobrzeski
 3208011,3208,7,Kołobrzeg,gmina Kołobrzeg
 3208022,3208,7,Dygowo,gmina Dygowo
 3208033,3208,7,Gościno,gmina Gościno
 3208034,3208,8,Gościno,miasto Gościno
-3208035,3208,8,Gościno,obszar wiejski Gościno
+3208035,3208,8,Gościno,Gościno
 3208042,3208,7,Kołobrzeg,gmina Kołobrzeg
 3208052,3208,7,Rymań,gmina Rymań
 3208062,3208,7,Siemyśl,gmina Siemyśl
@@ -3993,47 +3993,47 @@ id,parent_id,admin_level,name,relation_name
 3209022,3209,7,Biesiekierz,gmina Biesiekierz
 3209033,3209,7,Bobolice,gmina Bobolice
 3209034,3209,8,Bobolice,miasto Bobolice
-3209035,3209,8,Bobolice,obszar wiejski Bobolice
+3209035,3209,8,Bobolice,Bobolice
 3209042,3209,7,Manowo,gmina Manowo
 3209052,3209,7,Mielno,gmina Mielno
 3209063,3209,7,Polanów,gmina Polanów
 3209064,3209,8,Polanów,miasto Polanów
-3209065,3209,8,Polanów,obszar wiejski Polanów
+3209065,3209,8,Polanów,Polanów
 3209073,3209,7,Sianów,gmina Sianów
 3209074,3209,8,Sianów,miasto Sianów
-3209075,3209,8,Sianów,obszar wiejski Sianów
+3209075,3209,8,Sianów,Sianów
 3209082,3209,7,Świeszyno,gmina Świeszyno
 3210,32,6,myśliborski,powiat myśliborski
 3210013,3210,7,Barlinek,gmina Barlinek
 3210014,3210,8,Barlinek,miasto Barlinek
-3210015,3210,8,Barlinek,obszar wiejski Barlinek
+3210015,3210,8,Barlinek,Barlinek
 3210022,3210,7,Boleszkowice,gmina Boleszkowice
 3210033,3210,7,Dębno,gmina Dębno
 3210034,3210,8,Dębno,miasto Dębno
-3210035,3210,8,Dębno,obszar wiejski Dębno
+3210035,3210,8,Dębno,Dębno
 3210043,3210,7,Myślibórz,gmina Myślibórz
 3210044,3210,8,Myślibórz,miasto Myślibórz
-3210045,3210,8,Myślibórz,obszar wiejski Myślibórz
+3210045,3210,8,Myślibórz,Myślibórz
 3210052,3210,7,Nowogródek Pomorski,gmina Nowogródek Pomorski
 3211,32,6,policki,powiat policki
 3211012,3211,7,Dobra (Szczecińska),gmina Dobra (Szczecińska)
 3211022,3211,7,Kołbaskowo,gmina Kołbaskowo
 3211033,3211,7,Nowe Warpno,gmina Nowe Warpno
 3211034,3211,8,Nowe Warpno,miasto Nowe Warpno
-3211035,3211,8,Nowe Warpno,obszar wiejski Nowe Warpno
+3211035,3211,8,Nowe Warpno,Nowe Warpno
 3211043,3211,7,Police,gmina Police
 3211044,3211,8,Police,miasto Police
-3211045,3211,8,Police,obszar wiejski Police
+3211045,3211,8,Police,Police
 3212,32,6,pyrzycki,powiat pyrzycki
 3212012,3212,7,Bielice,gmina Bielice
 3212022,3212,7,Kozielice,gmina Kozielice
 3212033,3212,7,Lipiany,gmina Lipiany
 3212034,3212,8,Lipiany,miasto Lipiany
-3212035,3212,8,Lipiany,obszar wiejski Lipiany
+3212035,3212,8,Lipiany,Lipiany
 3212042,3212,7,Przelewice,gmina Przelewice
 3212053,3212,7,Pyrzyce,gmina Pyrzyce
 3212054,3212,8,Pyrzyce,miasto Pyrzyce
-3212055,3212,8,Pyrzyce,obszar wiejski Pyrzyce
+3212055,3212,8,Pyrzyce,Pyrzyce
 3212062,3212,7,Warnice,gmina Warnice
 3213,32,6,sławieński,powiat sławieński
 3213011,3213,7,Darłowo,gmina Darłowo
@@ -4046,32 +4046,32 @@ id,parent_id,admin_level,name,relation_name
 3214011,3214,7,Stargard Szczeciński,gmina Stargard Szczeciński
 3214023,3214,7,Chociwel,gmina Chociwel
 3214024,3214,8,Chociwel,miasto Chociwel
-3214025,3214,8,Chociwel,obszar wiejski Chociwel
+3214025,3214,8,Chociwel,Chociwel
 3214033,3214,7,Dobrzany,gmina Dobrzany
 3214034,3214,8,Dobrzany,miasto Dobrzany
-3214035,3214,8,Dobrzany,obszar wiejski Dobrzany
+3214035,3214,8,Dobrzany,Dobrzany
 3214042,3214,7,Dolice,gmina Dolice
 3214053,3214,7,Ińsko,gmina Ińsko
 3214054,3214,8,Ińsko,miasto Ińsko
-3214055,3214,8,Ińsko,obszar wiejski Ińsko
+3214055,3214,8,Ińsko,Ińsko
 3214062,3214,7,Kobylanka,gmina Kobylanka
 3214082,3214,7,Marianowo,gmina Marianowo
 3214092,3214,7,Stara Dąbrowa,gmina Stara Dąbrowa
 3214102,3214,7,Stargard Szczeciński,gmina Stargard Szczeciński
 3214113,3214,7,Suchań,gmina Suchań
 3214114,3214,8,Suchań,miasto Suchań
-3214115,3214,8,Suchań,obszar wiejski Suchań
+3214115,3214,8,Suchań,Suchań
 3215,32,6,szczecinecki,powiat szczecinecki
 3215011,3215,7,Szczecinek,gmina Szczecinek
 3215023,3215,7,Barwice,gmina Barwice
 3215024,3215,8,Barwice,miasto Barwice
-3215025,3215,8,Barwice,obszar wiejski Barwice
+3215025,3215,8,Barwice,Barwice
 3215033,3215,7,Biały Bór,gmina Biały Bór
 3215034,3215,8,Biały Bór,miasto Biały Bór
-3215035,3215,8,Biały Bór,obszar wiejski Biały Bór
+3215035,3215,8,Biały Bór,Biały Bór
 3215043,3215,7,Borne Sulinowo,gmina Borne Sulinowo
 3215044,3215,8,Borne Sulinowo,miasto Borne Sulinowo
-3215045,3215,8,Borne Sulinowo,obszar wiejski Borne Sulinowo
+3215045,3215,8,Borne Sulinowo,Borne Sulinowo
 3215052,3215,7,Grzmiąca,gmina Grzmiąca
 3215062,3215,7,Szczecinek,gmina Szczecinek
 3216,32,6,świdwiński,powiat świdwiński
@@ -4079,7 +4079,7 @@ id,parent_id,admin_level,name,relation_name
 3216022,3216,7,Brzeżno,gmina Brzeżno
 3216033,3216,7,Połczyn-Zdrój,gmina Połczyn-Zdrój
 3216034,3216,8,Połczyn-Zdrój,miasto Połczyn-Zdrój
-3216035,3216,8,Połczyn-Zdrój,obszar wiejski Połczyn-Zdrój
+3216035,3216,8,Połczyn-Zdrój,Połczyn-Zdrój
 3216042,3216,7,Rąbino,gmina Rąbino
 3216052,3216,7,Sławoborze,gmina Sławoborze
 3216062,3216,7,Świdwin,gmina Świdwin
@@ -4087,31 +4087,31 @@ id,parent_id,admin_level,name,relation_name
 3217011,3217,7,Wałcz,gmina Wałcz
 3217023,3217,7,Człopa,gmina Człopa
 3217024,3217,8,Człopa,miasto Człopa
-3217025,3217,8,Człopa,obszar wiejski Człopa
+3217025,3217,8,Człopa,Człopa
 3217033,3217,7,Mirosławiec,gmina Mirosławiec
 3217034,3217,8,Mirosławiec,miasto Mirosławiec
-3217035,3217,8,Mirosławiec,obszar wiejski Mirosławiec
+3217035,3217,8,Mirosławiec,Mirosławiec
 3217043,3217,7,Tuczno,gmina Tuczno
 3217044,3217,8,Tuczno,miasto Tuczno
-3217045,3217,8,Tuczno,obszar wiejski Tuczno
+3217045,3217,8,Tuczno,Tuczno
 3217052,3217,7,Wałcz,gmina Wałcz
 3218,32,6,łobeski,powiat łobeski
 3218013,3218,7,Dobra,gmina Dobra
 3218014,3218,8,Dobra,miasto Dobra
-3218015,3218,8,Dobra,obszar wiejski Dobra
+3218015,3218,8,Dobra,Dobra
 3218023,3218,7,Łobez,gmina Łobez
 3218024,3218,8,Łobez,miasto Łobez
-3218025,3218,8,Łobez,obszar wiejski Łobez
+3218025,3218,8,Łobez,Łobez
 3218032,3218,7,Radowo Małe,gmina Radowo Małe
 3218043,3218,7,Resko,gmina Resko
 3218044,3218,8,Resko,miasto Resko
-3218045,3218,8,Resko,obszar wiejski Resko
+3218045,3218,8,Resko,Resko
 3218053,3218,7,Węgorzyno,gmina Węgorzyno
 3218054,3218,8,Węgorzyno,miasto Węgorzyno
-3218055,3218,8,Węgorzyno,obszar wiejski Węgorzyno
-3261,32,6,Koszalin,miasto na prawach powiatu Koszalin
+3218055,3218,8,Węgorzyno,Węgorzyno
+3261,32,6,Koszalin,Koszalin
 3261011,3261,7,Koszalin,gmina Koszalin
-3262,32,6,Szczecin,miasto na prawach powiatu Szczecin
+3262,32,6,Szczecin,Szczecin
 3262011,3262,7,Szczecin,gmina Szczecin
-3263,32,6,Świnoujście,miasto na prawach powiatu Świnoujście
+3263,32,6,Świnoujście,Świnoujście
 3263011,3263,7,Świnoujście,gmina Świnoujście
