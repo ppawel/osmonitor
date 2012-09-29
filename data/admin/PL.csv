@@ -309,11 +309,11 @@ id,parent_id,admin_level,name,relation_name
 0262011,0262,7,Legnica,gmina Legnica
 0264,02,6,Wrocław,Wrocław
 0264011,0264,7,Wrocław,gmina Wrocław
-0264029,0264,,Wrocław-Fabryczna,Wrocław-Fabryczna
-0264039,0264,,Wrocław-Krzyki,Wrocław-Krzyki
-0264049,0264,,Wrocław-Psie Pole,Wrocław-Psie Pole
-0264059,0264,,Wrocław-Stare Miasto,Wrocław-Stare Miasto
-0264069,0264,,Wrocław-Śródmieście,Wrocław-Śródmieście
+0264029,0264,10,Wrocław-Fabryczna,Wrocław-Fabryczna
+0264039,0264,10,Wrocław-Krzyki,Wrocław-Krzyki
+0264049,0264,10,Wrocław-Psie Pole,Wrocław-Psie Pole
+0264059,0264,10,Wrocław-Stare Miasto,Wrocław-Stare Miasto
+0264069,0264,10,Wrocław-Śródmieście,Wrocław-Śródmieście
 04,1,4,kujawsko-pomorskie,województwo kujawsko-pomorskie
 0401,04,6,aleksandrowski,powiat aleksandrowski
 0401011,0401,7,Aleksandrów Kujawski,gmina Aleksandrów Kujawski
@@ -1248,11 +1248,11 @@ id,parent_id,admin_level,name,relation_name
 1021052,1021,7,Rogów,gmina Rogów
 1061,10,6,Łódź,Łódź
 1061011,1061,7,Łódź,gmina Łódź
-1061029,1061,,Łódź-Bałuty,Łódź-Bałuty
-1061039,1061,,Łódź-Górna,Łódź-Górna
-1061049,1061,,Łódź-Polesie,Łódź-Polesie
-1061059,1061,,Łódź-Śródmieście,Łódź-Śródmieście
-1061069,1061,,Łódź-Widzew,Łódź-Widzew
+1061029,1061,10,Łódź-Bałuty,Łódź-Bałuty
+1061039,1061,10,Łódź-Górna,Łódź-Górna
+1061049,1061,10,Łódź-Polesie,Łódź-Polesie
+1061059,1061,10,Łódź-Śródmieście,Łódź-Śródmieście
+1061069,1061,10,Łódź-Widzew,Łódź-Widzew
 1062,10,6,Piotrków Trybunalski,Piotrków Trybunalski
 1062011,1062,7,Piotrków Trybunalski,gmina Piotrków Trybunalski
 1063,10,6,Skierniewice,Skierniewice
@@ -1552,10 +1552,10 @@ id,parent_id,admin_level,name,relation_name
 1219055,1219,8,Wieliczka,Wieliczka
 1261,12,6,Kraków,Kraków
 1261011,1261,7,Kraków,gmina Kraków
-1261029,1261,,Kraków-Krowodrza,Kraków-Krowodrza
-1261039,1261,,Kraków-Nowa Huta,Kraków-Nowa Huta
-1261049,1261,,Kraków-Podgórze,Kraków-Podgórze
-1261059,1261,,Kraków-Śródmieście,Kraków-Śródmieście
+1261029,1261,10,Kraków-Krowodrza,Kraków-Krowodrza
+1261039,1261,10,Kraków-Nowa Huta,Kraków-Nowa Huta
+1261049,1261,10,Kraków-Podgórze,Kraków-Podgórze
+1261059,1261,10,Kraków-Śródmieście,Kraków-Śródmieście
 1262,12,6,Nowy Sącz,Nowy Sącz
 1262011,1262,7,Nowy Sącz,gmina Nowy Sącz
 1263,12,6,Tarnów,Tarnów
@@ -3868,11 +3868,11 @@ id,parent_id,admin_level,name,relation_name
 3063011,3063,7,Leszno,gmina Leszno
 3064,30,6,Poznań,Poznań
 3064011,3064,7,Poznań,gmina Poznań
-3064029,3064,,Poznań-Grunwald,Poznań-Grunwald
-3064039,3064,,Poznań-Jeżyce,Poznań-Jeżyce
-3064049,3064,,Poznań-Nowe Miasto,Poznań-Nowe Miasto
-3064059,3064,,Poznań-Stare Miasto,Poznań-Stare Miasto
-3064069,3064,,Poznań-Wilda,Poznań-Wilda
+3064029,3064,10,Poznań-Grunwald,Poznań-Grunwald
+3064039,3064,10,Poznań-Jeżyce,Poznań-Jeżyce
+3064049,3064,10,Poznań-Nowe Miasto,Poznań-Nowe Miasto
+3064059,3064,10,Poznań-Stare Miasto,Poznań-Stare Miasto
+3064069,3064,10,Poznań-Wilda,Poznań-Wilda
 32,1,4,zachodniopomorskie,województwo zachodniopomorskie
 3201,32,6,białogardzki,powiat białogardzki
 3201011,3201,7,Białogard,gmina Białogard
