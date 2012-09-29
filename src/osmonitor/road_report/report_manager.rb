@@ -27,7 +27,7 @@ class ReportManager
     RoadStatus.new(road)
   end
 
-  def generate_report(country, input, use_cache = false)
+  def generate_report(country, report_request, input, use_cache = false)
     report = create_report_instance
     report = OSMonitor::RoadReport::RoadReport.new
     report.report_request = ReportRequest.new
