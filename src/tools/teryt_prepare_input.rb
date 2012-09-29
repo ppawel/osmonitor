@@ -31,7 +31,9 @@ def get_admin_level(row)
 
   return '7' if rodz == '1' or rodz == '2' or rodz == '3'
   return '8' if rodz == '4' or rodz == '5'
-  return '10' if rodz == '9'
+  return '10' if rodz == '8' or rodz == '9'
+
+  throw "No admin_level for #{row}"
 end
 
 def get_name(row)

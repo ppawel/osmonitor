@@ -2017,24 +2017,24 @@ id,parent_id,admin_level,name,relation_name
 1464011,1464,7,Siedlce,gmina Siedlce
 1465,14,6,Warszawa,Warszawa
 1465011,1465,7,Warszawa,gmina Warszawa
-1465028,1465,,Bemowo,Bemowo
-1465038,1465,,Białołęka,Białołęka
-1465048,1465,,Bielany,Bielany
-1465058,1465,,Mokotów,Mokotów
-1465068,1465,,Ochota,Ochota
-1465078,1465,,Praga-Południe,Praga-Południe
-1465088,1465,,Praga-Północ,Praga-Północ
-1465098,1465,,Rembertów,Rembertów
-1465108,1465,,Śródmieście,Śródmieście
-1465118,1465,,Targówek,Targówek
-1465128,1465,,Ursus,Ursus
-1465138,1465,,Ursynów,Ursynów
-1465148,1465,,Wawer,Wawer
-1465158,1465,,Wesoła,Wesoła
-1465168,1465,,Wilanów,Wilanów
-1465178,1465,,Włochy,Włochy
-1465188,1465,,Wola,Wola
-1465198,1465,,Żoliborz,Żoliborz
+1465028,1465,10,Bemowo,Bemowo
+1465038,1465,10,Białołęka,Białołęka
+1465048,1465,10,Bielany,Bielany
+1465058,1465,10,Mokotów,Mokotów
+1465068,1465,10,Ochota,Ochota
+1465078,1465,10,Praga-Południe,Praga-Południe
+1465088,1465,10,Praga-Północ,Praga-Północ
+1465098,1465,10,Rembertów,Rembertów
+1465108,1465,10,Śródmieście,Śródmieście
+1465118,1465,10,Targówek,Targówek
+1465128,1465,10,Ursus,Ursus
+1465138,1465,10,Ursynów,Ursynów
+1465148,1465,10,Wawer,Wawer
+1465158,1465,10,Wesoła,Wesoła
+1465168,1465,10,Wilanów,Wilanów
+1465178,1465,10,Włochy,Włochy
+1465188,1465,10,Wola,Wola
+1465198,1465,10,Żoliborz,Żoliborz
 16,1,4,opolskie,województwo opolskie
 1601,16,6,brzeski,powiat brzeski
 1601011,1601,7,Brzeg,gmina Brzeg
