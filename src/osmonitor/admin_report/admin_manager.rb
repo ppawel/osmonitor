@@ -48,7 +48,7 @@ class AdminManager
   end
 
   def load_relations_by_id(boundary)
-    load_relations_with_sql("r.tags @> 'teryt:terc=>''#{boundary.input['id']}'''::hstore")
+    load_relations_with_sql("r.tags @> 'teryt:terc=>#{boundary.input['id']}'::hstore")
   end
 
   def load_relations_with_sql(where_clause)
@@ -88,7 +88,7 @@ class AdminManager
     r.changeset_id AS last_update_changeset_id
     FROM relations r
     INNER JOIN users u ON (u.id = r.user_id)
-    WHERE #{where_clause}
+    WHERE r.tags @> 'boundary=>administrative'::hstore AND #{where_clause}
     ORDER BY r.id"
   end
 
