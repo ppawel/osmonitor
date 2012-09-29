@@ -24,6 +24,7 @@ class ReportRequest
   attr_accessor :country
   attr_accessor :ids
   attr_accessor :id_prefix
+  attr_accessor :filter
 end
 
 class Report

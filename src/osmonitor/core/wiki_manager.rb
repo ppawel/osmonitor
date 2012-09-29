@@ -48,7 +48,7 @@ class WikiManager
     report_text = nil
 
     input = @input_manager.load(report_request)
-    report = manager.generate_report(country, input)
+    report = manager.generate_report(country, report_request, input)
     report.report_request = report_request
     overall_report.add(report)
 
@@ -92,7 +92,7 @@ class WikiManager
   end
 
   def parse_params(params_string)
-    Hash[params_string.scan(/([^\s\=]+)\=([^\s\=]+)/)]
+    Hash[params_string.scan(/([^\s\=]+)\="?([^"]+)"/)]
   end
 end
 
@@ -124,6 +124,7 @@ class OSMonitorWikiPageSegment
     request.country = params['country']
     request.ids = params['refs']
     request.id_prefix = params['ref_prefix']
+    request.filter = params['filter']
     request
   end
 end

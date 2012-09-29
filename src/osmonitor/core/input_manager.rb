@@ -9,7 +9,8 @@ class InputManager
     result = load_admin(report_request) if report_request.report_type == :ADMIN_REPORT.to_s
     result = load_cycleways(report_request) if report_request.report_type == :CYCLEWAY_REPORT.to_s
     result = load_roads(report_request) if report_request.report_type == :ROAD_REPORT.to_s
-    result
+
+    filter_input(result, report_request)
   end
 
   protected
@@ -23,15 +24,23 @@ class InputManager
   end
 
   def load_roads(report_request)
-    result = to_hash_array(CSV.read("#{get_data_path}/road_refs/#{report_request.country}.csv", {:headers => true}))
+    to_hash_array(CSV.read("#{get_data_path}/road_refs/#{report_request.country}.csv", {:headers => true}))
+  end
 
+  def filter_input(input, report_request)
+    result = input
     if report_request.id_prefix
       result = filter_by_prefix(result, report_request.id_prefix)
     elsif report_request.ids
       result = filter_by_refs(result, report_request.ids.split(','))
+    elsif report_request.filter
+      #result = filter_by_expression(result, report_request.filter)
     end
-
     result
+  end
+
+  def filter_by_expression(all_input, filter)
+    all_input.select {|input| eval(filter)}
   end
 
   def filter_by_prefix(all_input, prefix)

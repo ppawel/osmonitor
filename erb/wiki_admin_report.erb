@@ -1,6 +1,6 @@
 
 <% prev_admin_level = -1 %>
-<% report.statuses.each do |status| %>
+<% report.statuses.each_with_index do |status, index| %>
 <%
   color = nil
   color = 'PaleGreen' if status.green?
@@ -10,7 +10,7 @@
   name = status.entity.input['name']
 %>
 
-<% if admin_level <= 4 and prev_admin_level != admin_level %>
+<% if (admin_level <= 4 and prev_admin_level != admin_level) or index == 0 %>
 
 <% if prev_admin_level != -1 %>
 </table>

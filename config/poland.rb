@@ -11,12 +11,13 @@ module OSMonitor
   '4' => '"r.tags->\'admin_level\' = \'4\'
       AND LOWER(r.tags->\'name\') = \'województwo #{UnicodeUtils.downcase(boundary.input[\'name\'])}\'"',
 
-  '6' => '"
-      r.tags->\'type\' = \'boundary\' AND
-      (((LOWER(r.tags->\'name\') = \'powiat #{UnicodeUtils.downcase(boundary.input[\'name\'])}\' OR
+  '6' => '"(LOWER(r.tags->\'name\') = \'powiat #{UnicodeUtils.downcase(boundary.input[\'name\'])}\' OR
         LOWER(r.tags->\'name\') = \'#{UnicodeUtils.downcase(boundary.input[\'name\'])}\' OR
-        LOWER(r.tags->\'name\') ilike \'Miasto #{UnicodeUtils.downcase(boundary.input[\'name\'])}\') AND (r.tags->\'admin_level\' = \'6\' OR NOT r.tags?\'admin_level\'))
-        OR (r.tags?\'teryt:terc\' AND r.tags->\'teryt:terc\' = \'#{boundary.input[\'id\']}\'))"'
+        LOWER(r.tags->\'name\') ilike \'Miasto #{UnicodeUtils.downcase(boundary.input[\'name\'])}\') AND (r.tags->\'admin_level\' = \'6\' OR NOT r.tags?\'admin_level\')"',
+
+  '7' => '"r.tags->\'admin_level\' = \'7\' AND LOWER(r.tags->\'name\') ~ \'(\s*)?#{UnicodeUtils.downcase(boundary.input[\'name\'])}\'"',
+
+  '8' => '"r.tags->\'admin_level\' = \'8\' AND LOWER(r.tags->\'name\') ~ \'(\s*)?#{UnicodeUtils.downcase(boundary.input[\'name\'])}\'"',
 }
 
 # ROAD REPORT
