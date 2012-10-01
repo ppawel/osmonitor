@@ -36,7 +36,7 @@
 
       all_ways_layer = new OpenLayers.Layer.Vector("Road (all ways)",
         {visibility: true, styleMap: new OpenLayers.StyleMap({'strokeWidth': 20, 'strokeColor': "black", strokeOpacity: 0.25})});
-      showWaysFromString(all_ways_layer, '<%= @road.geom_wkt %>', 'green', true);
+      showWaysFromString(all_ways_layer, '<%= @road.comps_wkt %>', 'green', true);
       map.addLayer(all_ways_layer);
 
       <% @road.comps.each_with_index do |comp, comp_index| %>
@@ -238,9 +238,9 @@
 <small>icons from <a href="http://www.fatcow.com/free-icons">FatCow</a></small>
 </p>
 </div>
-</section>  
-  
-            <section id="right">  
+</section>
+
+            <section id="right">
 <div id="map" class="smallmap"></div>
 <table>
 <tr>
@@ -249,5 +249,5 @@
 <td>beginning of a road</td>
 <td><%= image_tag "road_end.png" %></td><td>end of a road</td>
 </tr></table>
-            </section>  
-        </div>  
+            </section>
+        </div>

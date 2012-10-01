@@ -231,8 +231,15 @@ class Road < OSMonitor::Entity
 
   def geom_wkt
     return '' if @ways.empty?
-    puts @ways.values.select {|w| w.linestring.nil?}.inspect
     ways_wkt = @ways.values.reduce('') {|result, way| result + way.linestring.as_text + ','}[0..-2]
+    "GEOMETRYCOLLECTION(#{ways_wkt})"
+  end
+
+  def comps_wkt
+    return '' if @comps.empty?
+    all_comp_ways = []
+    @comps.each {|comp| all_comp_ways += comp.ways}
+    ways_wkt = all_comp_ways.uniq.reduce('') {|result, way| result + way.linestring.as_text + ','}[0..-2]
     "GEOMETRYCOLLECTION(#{ways_wkt})"
   end
 end
@@ -400,7 +407,7 @@ class RoadComponent
   end
 
   def ways
-    @graph.labels.values.uniq.collect {|segment| segment.way}.uniq
+    @graph.labels.values.uniq.collect {|segment| segment.way}.uniq.select {|w| !w.nil?}
   end
 
   # Returns a list of nodes that are within max_dist of given node.
