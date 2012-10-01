@@ -153,7 +153,10 @@ class Road < OSMonitor::Entity
     graph.to_undirected.connected_components_nonrecursive.each do |comp|
       # Use Set here because include? method is much faster on Set than Array.
       induced = graph.induced_subgraph(Set.new(comp.vertices))
-      @comps << RoadComponent.new(self, induced)
+      component = RoadComponent.new(self, induced)
+      # Ignore components in construction
+      next if component.in_construction?
+      @comps << component
     end
   end
 
@@ -276,6 +279,11 @@ class RoadComponent
     !self.beginning_nodes.empty? and !self.end_nodes.empty?
   end
 
+  # Decides if this component is in construction
+  def in_construction?
+    ways.detect {|w| !w.in_construction?}.nil?
+  end
+
   # Calculates beginning and end of this road component and tries to find a roundtrip.
   def calculate
     roundtrips = []
@@ -389,6 +397,10 @@ class RoadComponent
     segments = []
     path.each_cons(2) {|node1, node2| segments << road.graph.get_label(node1, node2) if road.graph.get_label(node1, node2)}
     segments
+  end
+
+  def ways
+    @graph.labels.values.uniq.collect {|segment| segment.way}.uniq
   end
 
   # Returns a list of nodes that are within max_dist of given node.

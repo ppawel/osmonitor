@@ -107,6 +107,10 @@ class Way
     !@relation.nil?
   end
 
+  def in_construction?
+    @tags.has_key?('construction') or @tags['highway'] == 'construction' or @tags['access'] == 'no'
+  end
+
   def length
     @segments.reduce(0) {|total, segment| total + segment.length}
   end
