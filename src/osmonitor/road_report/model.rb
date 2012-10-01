@@ -120,10 +120,10 @@ class Road < OSMonitor::Entity
     return true if !way.tags.has_key?('highway') and way.tags['route'] != 'ferry'
 
     # Skip ways that are in construction (don't exist) - but note that ways that are repaired are NOT skipped
-    return true if way.tags['highway'] == 'proposed' or way.tags['highway'] == 'construction'
+    return true if way.tags['highway'] == 'proposed' #or way.tags['highway'] == 'construction'
 
     # Skip ways that exist and are not accessible.
-    return true if way.tags['access'] == 'no' and way.tags['highway'] != 'construction'
+    #return true if way.tags['access'] == 'no' and way.tags['highway'] != 'construction'
 
     # Otherwise the way is cool.
     return false
@@ -228,6 +228,7 @@ class Road < OSMonitor::Entity
 
   def geom_wkt
     return '' if @ways.empty?
+    puts @ways.values.select {|w| w.linestring.nil?}.inspect
     ways_wkt = @ways.values.reduce('') {|result, way| result + way.linestring.as_text + ','}[0..-2]
     "GEOMETRYCOLLECTION(#{ways_wkt})"
   end

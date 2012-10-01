@@ -19,7 +19,7 @@ end
 class BrowseController < ApplicationController
   def road_report
     road_report_manager = OSMonitor::RoadReport::ReportManager.new(get_conn)
-    @report = road_report_manager.generate_report(params[:country], get_input, use_cache)
+    @report = road_report_manager.generate_report(params[:country], get_report_request, get_input, use_cache)
 
     if @report.statuses.empty?
       render :file => "#{Rails.root}/public/404.html", :status => :not_found
@@ -63,12 +63,16 @@ class BrowseController < ApplicationController
     PGconn.open(:host => $config['host'], :port => $config['port'], :dbname => $config['dbname'], :user => $config['user'], :password => $config['password'])
   end
 
-  def get_input
-    input_manager = OSMonitor::InputManager.new
+  def get_report_request
     report_request = OSMonitor::ReportRequest.new
     report_request.report_type = 'ROAD_REPORT'
     report_request.country = params[:country]
     report_request.ids = params[:ref]
-    input_manager.load(report_request)
+    report_request
+  end
+
+  def get_input
+    input_manager = OSMonitor::InputManager.new
+    input_manager.load(get_report_request)
   end
 end
