@@ -94,11 +94,7 @@ class Road < OSMonitor::Entity
 
   def length
     return nil if !all_components_have_roundtrip? or empty?
-    meters = 0
-    meters_oneway = 0
-    comps.each {|comp| meters += comp.length if find_sister_component(comp).empty?}
-    comps.each {|comp| meters_oneway += comp.length if !find_sister_component(comp).empty?}
-    return (meters + meters_oneway / 2.0) / 1000.0 if meters
+    comps.reduce(0) {|total, comp| total + comp.length - comp.construction_length} / 1000.0
   end
 
   def approx_length
@@ -276,6 +272,10 @@ class RoadComponent
 
   def length
     roundtrip.length if roundtrip
+  end
+
+  def construction_length
+    roundtrip.construction_length if roundtrip
   end
 
   def segment_length
@@ -479,6 +479,7 @@ class RoadSuperComponent < RoadComponent
   def end_nodes; @subcomp1.end_nodes + @subcomp2.end_nodes end
   def exit_nodes; @subcomp1.exit_nodes + @subcomp2.exit_nodes end
   def segment_length; @subcomp1.segment_length end
+  def construction_length; (@subcomp1.construction_length + @subcomp2.construction_length) / 2.0 end
   def ways; (@subcomp1.ways + @subcomp2.ways).uniq end
 
   def roundtrip
@@ -512,6 +513,7 @@ class RoadComponentPath
   attr_accessor :to
   attr_accessor :complete
   attr_accessor :length
+  attr_accessor :construction_length
   attr_accessor :segments
 
   def initialize(from, to, complete, segments)
@@ -520,6 +522,8 @@ class RoadComponentPath
     self.complete = complete
     self.segments = segments
     self.length = segments.reduce(0) {|total, segment| segment.length ? total + segment.length : total}
+    self.construction_length = segments.reduce(0) {|total, segment| (segment.length and segment.way and
+      segment.way.in_construction?) ? total + segment.length : total}
   end
 
   def wkt_points
@@ -571,6 +575,13 @@ class RoadComponentRoundtrip
     return @forward_path.length if @forward_path and @forward_path.complete and @component.oneway?
     return @backward_path.length if @backward_path and @backward_path.complete and @component.oneway?
     (@forward_path.length + @backward_path.length) / 2.0
+  end
+
+  def construction_length
+    return nil if !complete?
+    return @forward_path.construction_length if @forward_path and @forward_path.complete and @component.oneway?
+    return @backward_path.construction_length if @backward_path and @backward_path.complete and @component.oneway?
+    (@forward_path.construction_length + @backward_path.construction_length) / 2.0
   end
 
   def <=>(other_roundtrip)
