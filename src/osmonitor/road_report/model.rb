@@ -479,6 +479,7 @@ class RoadSuperComponent < RoadComponent
   def end_nodes; @subcomp1.end_nodes + @subcomp2.end_nodes end
   def exit_nodes; @subcomp1.exit_nodes + @subcomp2.exit_nodes end
   def segment_length; @subcomp1.segment_length end
+  def ways; (@subcomp1.ways + @subcomp2.ways).uniq end
 
   def roundtrip
     RoadComponentRoundtrip.new(self, beginning_nodes, end_nodes, forward_path, backward_path)
