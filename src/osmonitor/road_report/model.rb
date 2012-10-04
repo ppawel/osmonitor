@@ -78,6 +78,7 @@ class Road < OSMonitor::Entity
   end
 
   def correct_num_comps
+    return @input['num_comps'].to_i if @input['num_comps']
     return @relation.tags['osmonitor:road_components'].to_i if @relation and @relation.tags['osmonitor:road_components']
     1
   end
@@ -93,7 +94,8 @@ class Road < OSMonitor::Entity
   end
 
   def length
-    return nil if !all_components_have_roundtrip? or empty?
+    return 0 if correct_num_comps == 0 or empty?
+    return nil if !all_components_have_roundtrip?
     comps.reduce(0) {|total, comp| total + comp.length - comp.construction_length} / 1000.0
   end
 

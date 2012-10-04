@@ -9,35 +9,33 @@ class RoadStatus < OSMonitor::Status
       return
     end
 
-    if input_length
-      add_info('osm_length') if !@entity.empty?
-    else
-      # No input length = warning.
-      add_warning('osm_length') if !@entity.empty?
-    end
+    return if @entity.correct_num_comps == 0 and has_correct_num_comps?
 
     add_info('last_update')
+
+    if input_length
+      add_info('osm_length')
+    else
+      # No input length = warning.
+      add_warning('osm_length')
+    end
 
     add_error('no_relation') if !@entity.relation
     add_error('has_many_covered_relations') if @entity.relation and has_many_covered_relations
     add_error('has_ways_without_highway_tag', {:ways => ways_without_highway_tag}) if !ways_without_highway_tag.empty?
 
-    if @entity.empty?
-      add_error('empty')
+    if !has_correct_num_comps?
+      add_error('road_disconnected')
     else
-      if !connected?
-        add_error('road_disconnected')
-      else
-        add_error('no_beginning_and_end') if !found_beginning_and_end?
-        add_warning('wrong_length') if @entity.length and input_length and !has_proper_length
-        add_error('not_navigable') if found_beginning_and_end? and @entity.length.nil?#@entity.has_incomplete_paths?
-      end
+      add_error('no_beginning_and_end') if !found_beginning_and_end?
+      add_warning('wrong_length') if @entity.length and input_length and !has_proper_length
+      add_error('not_navigable') if found_beginning_and_end? and @entity.length.nil?#@entity.has_incomplete_paths?
     end
 
     add_warning('wrong_network') if @entity.relation and !has_proper_network
   end
 
-  def connected?
+  def has_correct_num_comps?
     @entity.num_comps == @entity.correct_num_comps
   end
 

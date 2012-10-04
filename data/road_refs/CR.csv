@@ -1,11 +1,11 @@
-id,ref
+id,ref,num_comps
 D1,D1
 D2,D2
 D3,D3
 D5,D5
 D8,D8
 D11,D11
-D47,D47
+D47,D47,0
 R1,R1
 R3,R3
 R4,R4
