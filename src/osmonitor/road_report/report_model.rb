@@ -49,7 +49,7 @@ class RoadStatus < OSMonitor::Status
 
   def input_length
     return @entity.relation.distance if @entity.relation and @entity.relation.distance
-    return @entity.input['distance'].to_f if @entity.input.has_key?('distance')
+    return @entity.input['distance'].to_f if @entity.input['distance'] != ''
   end
 
   def found_beginning_and_end?
