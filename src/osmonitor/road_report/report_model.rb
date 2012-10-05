@@ -48,7 +48,7 @@ class RoadStatus < OSMonitor::Status
   end
 
   def input_length
-    return @entity.input['distance'].to_f if @entity.input['distance'] != ''
+    return @entity.input['distance'].to_f if !@entity.input['distance'].nil?
     return @entity.relation.distance if @entity.relation and @entity.relation.distance
   end
 
