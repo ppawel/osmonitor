@@ -296,12 +296,17 @@ class RoadComponent
   # Calculates beginning and end of this road component and tries to find a roundtrip.
   def calculate
     roundtrips = []
-    closest_to_all = closest_nodes_to_all(graph.vertices, @exit_nodes, 666)
 
-    roundtrips << find_roundtrip(Array.new(@exit_nodes))
-    roundtrips << find_roundtrip(Array.new(@exit_nodes), true)
-    roundtrips << find_roundtrip(Array.new(@exit_nodes) + closest_to_all)
-    roundtrips << find_roundtrip(Array.new(@exit_nodes) + closest_to_all, true)
+    if !@exit_nodes.empty?
+      closest_to_all = closest_nodes_to_all(@graph.vertices, @exit_nodes, 666)
+      roundtrips << find_roundtrip(Array.new(@exit_nodes))
+      roundtrips << find_roundtrip(Array.new(@exit_nodes), true)
+      roundtrips << find_roundtrip(Array.new(@exit_nodes) + closest_to_all)
+      roundtrips << find_roundtrip(Array.new(@exit_nodes) + closest_to_all, true)
+    else
+      # No exit nodes - component is probably a loop. Need to consider all nodes and try to find two furthest ones.
+      roundtrips << find_roundtrip(@graph.to_undirected.furthest_pair_of_nodes(@graph.vertices))
+    end
 
     @@log.debug " roundtrips = #{roundtrips}"
     @roundtrip = select_best_roundtrip(roundtrips)
