@@ -117,8 +117,8 @@ class Road < OSMonitor::Entity
     # Ferry routes are an exception to accommodate roads in Poland :)
     return true if !way.tags.has_key?('highway') and way.tags['route'] != 'ferry'
 
-    # Skip ways that are in construction (don't exist) - but note that ways that are repaired are NOT skipped
-    return true if way.tags['highway'] == 'proposed' #or way.tags['highway'] == 'construction'
+    # Skip ways that are in construction (don't exist) - but note that ways that are being repaired are NOT skipped
+    return true if way.tags['highway'] == 'proposed' or way.tags['highway'] == 'construction'
 
     # Skip ways that exist and are not accessible.
     #return true if way.tags['access'] == 'no' and way.tags['highway'] != 'construction'
