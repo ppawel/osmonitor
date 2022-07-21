@@ -105,10 +105,11 @@ GEM
     treetop (1.4.10)
       polyglot
       polyglot (>= 0.3.1)
-    tzinfo (0.3.33)
+    tzinfo (0.3.61)
     uglifier (1.2.7)
       execjs (>= 0.3.0)
       multi_json (~> 1.3)
+    unicode_utils (1.4.0)
 
 PLATFORMS
   ruby
@@ -125,3 +126,4 @@ DEPENDENCIES
   stream
   therubyracer
   uglifier (>= 1.0.3)
+  unicode_utils
